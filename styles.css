@@ -624,3 +624,31 @@ html[dir="rtl"] .lang-dropdown {
     padding: 24px;
   }
 }
+
+/* Easter Egg */
+.easter-egg {
+  cursor: default;
+  transition: all 0.3s ease;
+}
+
+.easter-egg:hover {
+  font-size: 0;
+}
+
+.easter-egg:hover::after {
+  content: '🪥';
+  font-size: 1rem;
+  animation: brush 0.5s ease infinite;
+}
+
+@keyframes brush {
+
+  0%,
+  100% {
+    transform: rotate(-10deg);
+  }
+
+  50% {
+    transform: rotate(10deg);
+  }
+}
