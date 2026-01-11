@@ -340,8 +340,8 @@ html[dir="rtl"] .lang-dropdown {
 }
 
 .hero-logo {
-  width: 180px;
-  height: 180px;
+  width: 220px;
+  height: 220px;
   margin: 0 auto 48px;
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-card);
@@ -576,8 +576,8 @@ html[dir="rtl"] .lang-dropdown {
   }
 
   .hero-logo {
-    width: 140px;
-    height: 140px;
+    width: 160px;
+    height: 160px;
   }
 
   .store-buttons {
