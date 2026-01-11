@@ -340,9 +340,9 @@ html[dir="rtl"] .lang-dropdown {
 }
 
 .hero-logo {
-  width: 120px;
-  height: 120px;
-  margin: 0 auto 32px;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 48px;
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-card);
   animation: fadeInUp 0.8s ease-out;
@@ -354,12 +354,13 @@ html[dir="rtl"] .lang-dropdown {
 }
 
 .hero .tagline {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   color: var(--color-text-muted);
-  margin-bottom: 40px;
-  max-width: 600px;
+  margin-bottom: 48px;
+  max-width: 700px;
   margin-left: auto;
   margin-right: auto;
+  line-height: 1.7;
   animation: fadeInUp 0.8s ease-out 0.2s backwards;
 }
 
@@ -491,8 +492,10 @@ html[dir="rtl"] .lang-dropdown {
 
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .gallery-item {
@@ -500,7 +503,7 @@ html[dir="rtl"] .lang-dropdown {
   overflow: hidden;
   box-shadow: var(--shadow-card);
   transition: var(--transition-smooth);
-  aspect-ratio: 1;
+  aspect-ratio: auto;
 }
 
 .gallery-item:hover {
@@ -573,8 +576,8 @@ html[dir="rtl"] .lang-dropdown {
   }
 
   .hero-logo {
-    width: 100px;
-    height: 100px;
+    width: 140px;
+    height: 140px;
   }
 
   .store-buttons {
