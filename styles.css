@@ -565,6 +565,22 @@ html[dir="rtl"] .lang-dropdown {
   border-radius: 12px;
 }
 
+.footer-links {
+  margin: 20px 0;
+}
+
+.footer-links a {
+  margin: 0 10px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: var(--transition-smooth);
+}
+
+.footer-links a:hover {
+  color: var(--color-primary);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   section {
