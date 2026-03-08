@@ -773,6 +773,10 @@ section:not(.hero) {
   font-size: 1.25rem;
 }
 
+.cta .waitlist-submit {
+  color: var(--color-white);
+}
+
 .cta .store-btn {
   background: var(--color-primary);
   color: var(--color-white);
