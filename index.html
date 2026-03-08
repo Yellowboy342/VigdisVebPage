@@ -61,16 +61,17 @@
     <!-- 01. Hook (Hero Section) & 02. Audience -->
     <section class="hero" id="home">
         <div class="container">
-            <div class="hero-content fade-in-up">
-                <div class="hero-icon-container shadow-premium">
+            <div class="hero-content">
+                <div class="hero-icon-container shadow-premium reveal">
                     <img src="152x152bb-80.png" alt="Vigdís App Icon" class="hero-logo">
                 </div>
-                <p class="acronym-badge">VISUAL GUIDE FOR DAILY ACTIVITIES</p>
-                <h1>Visual structure for peaceful daily rhythms.</h1>
-                <p class="tagline">An intuitive, local-first visual schedule app designed by professionals and parents
+                <p class="acronym-badge reveal delay-100">VISUAL GUIDE FOR DAILY ACTIVITIES</p>
+                <h1 class="reveal delay-200">Visual structure for peaceful daily rhythms.</h1>
+                <p class="tagline reveal delay-300">An intuitive, local-first visual schedule app designed by
+                    professionals and parents
                     for everyone who wants increased predictability in daily life.</p>
 
-                <div class="audience-banner">
+                <div class="audience-banner reveal delay-400">
                     <p>Designed for neurodivergent children, individuals with ADHD, and the caregivers who support them.
                     </p>
                 </div>
@@ -96,7 +97,7 @@
     <!-- 04. Trust Banner (Authority) -->
     <section class="trust-banner">
         <div class="container fade-in-up">
-            <div class="trust-content glass-card">
+            <div class="trust-content glass-card reveal">
                 <div class="trust-item">
                     <span class="trust-icon">🔒</span>
                     <p><strong>100% Private & Local.</strong> Your family's data never leaves your device. No cloud, no
@@ -108,10 +109,10 @@
 
     <!-- 05. Services (Bento Features) -->
     <section class="features" id="features">
-        <div class="container fade-in-up">
+        <div class="container">
             <div class="bento-grid">
                 <!-- Main Feature (Large) -->
-                <div class="bento-card bento-large glass-card">
+                <div class="bento-card bento-large glass-card reveal">
                     <div class="bento-content">
                         <h3>Step-by-step clarity</h3>
                         <p>Break down overwhelming tasks into clear, actionable, and accessible visual steps.</p>
@@ -134,50 +135,45 @@
                 </div>
 
                 <!-- Secondary Feature -->
-                <div class="bento-card glass-card">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                        </svg>
-                    </div>
-                    <div class="bento-content">
-                        <h3>Customizable routines</h3>
-                        <p>Easily adapt activities and schedules to fit your family's unique and changing needs.</p>
-                    </div>
+                <div class="bento-card glass-card reveal delay-100">
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                    </svg>
                 </div>
-
-                <!-- Tertiary Feature -->
-                <div class="bento-card glass-card">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10" />
-                            <polyline points="12 6 12 12 16 14" />
-                        </svg>
-                    </div>
-                    <div class="bento-content">
-                        <h3>Daily empowerment</h3>
-                        <p>Give your child the confidence to navigate their day independently and proudly.</p>
-                    </div>
+                <div class="bento-content">
+                    <h3>Customizable routines</h3>
+                    <p>Easily adapt activities and schedules to fit your family's unique and changing needs.</p>
                 </div>
             </div>
+
+            <div class="bento-card glass-card reveal delay-200">
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+                </svg>
+            </div>
+            <div class="bento-content">
+                <h3>Daily empowerment</h3>
+                <p>Give your child the confidence to navigate their day independently and proudly.</p>
+            </div>
+        </div>
+        </div>
         </div>
     </section>
 
     <!-- 06. Social Proof (Testimonials & Gallery) -->
     <section class="proof" id="proof">
-        <div class="container fade-in-up">
-            <div class="section-header text-center">
+        <div class="container">
+            <div class="section-header text-center reveal">
                 <h2>See Vigdís in action</h2>
             </div>
 
             <div class="gallery-grid mt-40">
-                <div class="gallery-item shadow-premium">
+                <div class="gallery-item shadow-premium reveal delay-100">
                     <img src="assets/DSC004543.jpeg" alt="Person using Vigdís app in a cafe" loading="lazy">
                 </div>
-                <div class="gallery-item shadow-premium">
+                <div class="gallery-item shadow-premium reveal delay-200">
                     <img src="assets/IphoneOgIpad.png" alt="Vigdís app on iPhone and iPad" loading="lazy">
                 </div>
             </div>
@@ -186,7 +182,7 @@
 
     <!-- 07. Tell me what to do next (Final CTA) -->
     <section class="cta" id="cta">
-        <div class="container fade-in-up">
+        <div class="container reveal">
             <h2>Ready for smoother days?</h2>
             <p>Try Vigdís with your family today.</p>
             <div class="waitlist-container">
@@ -216,18 +212,27 @@
         </div>
     </footer>
 
-    <!-- Simple Scroll Anim Script -->
+    <!-- Simplified Animation Script -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // 1. Immediately trigger hero animations upon DOM load
+            setTimeout(() => {
+                document.querySelectorAll('.hero .reveal').forEach(el => {
+                    el.classList.add('active');
+                });
+            }, 100);
+
+            // 2. Setup IntersectionObserver for scroll animations further down
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
+                        entry.target.classList.add('active');
                     }
                 });
             }, { threshold: 0.1 });
 
-            document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+            // Only observe reveal elements that are NOT in the hero (hero is handled above)
+            document.querySelectorAll('section:not(.hero) .reveal').forEach(el => observer.observe(el));
         });
     </script>
     <script src="assets/waitlist.js"></script>
