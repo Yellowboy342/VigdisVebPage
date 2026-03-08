@@ -59,37 +59,41 @@
     </header>
 
     <!-- 01. Hook (Hero Section) & 02. Audience -->
-    <section class="hero" id="home">
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-icon-container shadow-premium reveal">
-                    <img src="../152x152bb-80.png" alt="Vigdís App Icon" class="hero-logo">
+    <div class="hero-wrapper">
+        <section class="hero" id="home">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-icon-container shadow-premium reveal">
+                        <img src="../152x152bb-80.png" alt="Vigdís App Icon" class="hero-logo">
+                    </div>
+                    <p class="acronym-badge reveal delay-100">EINFALDAÐU DAGLEGA LÍFIÐ</p>
+                    <h1 class="reveal delay-200">Sjónrænt skipulag fyrir friðsæla daglega rútínu.</h1>
+                    <p class="tagline reveal delay-300">Notendavænt og staðbundið sjónrænt dagskrárapp hannað af
+                        fagfólki og
+                        foreldrum fyrir
+                        alla þá sem vilja aukinn fyrirsjáanleika í daglegt líf.</p>
+
+                    <div class="audience-banner reveal delay-400">
+                        <p>Hannað fyrir skynsegin börn, einstaklinga með ADHD, og aðstandendur sem styðja þá.</p>
+                    </div>
+
+
+                    <div class="waitlist-container reveal delay-500">
+                        <form id="waitlist-form" class="waitlist-form" data-loading="Skrái..."
+                            data-success="Takk! Þú ert komin(n) á biðlistann."
+                            data-error="Villa! Eitthvað fór úrskeiðis. Reyndu aftur.">
+                            <input type="email" name="email" placeholder="Sláðu inn netfangið þitt" required
+                                class="waitlist-input">
+                            <button type="submit" class="waitlist-submit">Skrá mig á biðlista</button>
+                        </form>
+                        <div id="waitlist-message" class="waitlist-message"></div>
+                    </div>
+
                 </div>
-                <p class="acronym-badge reveal delay-100">EINFALDAÐU DAGLEGA LÍFIÐ</p>
-                <h1 class="reveal delay-200">Sjónrænt skipulag fyrir friðsæla daglega rútínu.</h1>
-                <p class="tagline reveal delay-300">Notendavænt og staðbundið sjónrænt dagskrárapp hannað af fagfólki og
-                    foreldrum fyrir
-                    alla þá sem vilja aukinn fyrirsjáanleika í daglegt líf.</p>
-
-                <div class="audience-banner reveal delay-400">
-                    <p>Hannað fyrir skynsegin börn, einstaklinga með ADHD, og aðstandendur sem styðja þá.</p>
-                </div>
-
-
-                <div class="waitlist-container reveal delay-500">
-                    <form id="waitlist-form" class="waitlist-form" data-loading="Skrái..."
-                        data-success="Takk! Þú ert komin(n) á biðlistann."
-                        data-error="Villa! Eitthvað fór úrskeiðis. Reyndu aftur.">
-                        <input type="email" name="email" placeholder="Sláðu inn netfangið þitt" required
-                            class="waitlist-input">
-                        <button type="submit" class="waitlist-submit">Skrá mig á biðlista</button>
-                    </form>
-                    <div id="waitlist-message" class="waitlist-message"></div>
-                </div>
-
             </div>
-        </div>
+    </div>
     </section>
+    </div>
 
     <!-- 04. Trust Banner (Authority) -->
     <section class="trust-banner">
@@ -110,7 +114,7 @@
     <section class="proof" id="proof">
         <div class="container">
             <div class="section-header text-center">
-                <h2>Sjáðu hvernig Vigdís virkar</h2>
+                <h2 class="scrub-text">Sjáðu hvernig Vigdís virkar</h2>
             </div>
 
             <div class="gallery-grid mt-40">
@@ -127,7 +131,7 @@
     <!-- 07. Tell me what to do next (Final CTA) -->
     <section class="cta" id="cta">
         <div class="container reveal">
-            <h2>Ertu tilbúin(n) fyrir auðveldari daga?</h2>
+            <h2 class="scrub-text">Ertu tilbúin(n) fyrir auðveldari daga?</h2>
             <p>Prófaðu Vigdísi með fjölskyldunni í dag.</p>
             <div class="waitlist-container">
                 <form id="waitlist-form-cta" class="waitlist-form-cta" data-loading="Skrái..."
@@ -178,9 +182,10 @@
 
             document.querySelectorAll('section:not(.hero) .reveal').forEach(el => observer.observe(el));
 
-            // 3. Advanced Scroll Scrubbing (Parallax and Header)
+            // 3. Advanced Scroll Scrubbing (Parallax, Headers, and Text Masks)
             const header = document.querySelector('.header');
             const galleryImages = document.querySelectorAll('.gallery-item');
+            const scrubTexts = document.querySelectorAll('.scrub-text');
 
             let ticking = false;
 
@@ -194,12 +199,18 @@
                 // Update individual gallery image zoom based on their viewport position
                 galleryImages.forEach(item => {
                     const rect = item.getBoundingClientRect();
-                    // Calculate how far the element is through the viewport (0 at bottom, 1 at top)
                     let progress = 1 - ((rect.top) / windowHeight);
-                    // Clamp between 0 and 1
                     progress = Math.max(0, Math.min(1, progress));
-
                     item.style.setProperty('--reveal-progress', progress);
+                });
+
+                // Update text fills for scrubbed masks (activates when element is in middle of screen)
+                scrubTexts.forEach(text => {
+                    const rect = text.getBoundingClientRect();
+                    // Maps progress so it fills as it moves from bottom third to top third of screen
+                    let progress = (windowHeight * 0.8 - rect.top) / (windowHeight * 0.4);
+                    progress = Math.max(0, Math.min(1, progress));
+                    text.style.setProperty('--scrub-progress', progress);
                 });
 
                 ticking = false;

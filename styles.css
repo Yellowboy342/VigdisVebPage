@@ -324,7 +324,15 @@ section {
   text-transform: uppercase;
 }
 
-/* Hero Section - Parallax Effect */
+/* Hero Section - Level 2 Parallax (Curtain Pull) */
+.hero-wrapper {
+  height: 120vh;
+  /* Extra scroll space for parallax before curtain covers it */
+  position: relative;
+  z-index: 1;
+  /* Bottom layer */
+}
+
 .hero {
   min-height: 100vh;
   display: flex;
@@ -333,11 +341,13 @@ section {
   text-align: center;
   padding-top: 140px;
   background: var(--color-background);
-  position: relative;
+  position: sticky;
+  /* Sticks to viewport while parent scrolls */
+  top: 0;
   overflow: hidden;
   /* Parallax modifiers powered by JS */
-  transform: translateY(calc(var(--scroll-y, 0) * 0.3px)) scale(max(0.9, 1 - (var(--scroll-y, 0) * 0.0005)));
-  opacity: max(0, 1 - (var(--scroll-y, 0) * 0.002));
+  transform: translateY(calc(var(--scroll-y, 0) * 0.1px)) scale(max(0.9, 1 - (var(--scroll-y, 0) * 0.0005)));
+  opacity: max(0, 1 - (var(--scroll-y, 0) * 0.0015));
   transform-origin: center top;
 }
 
@@ -445,6 +455,27 @@ section {
 .store-btn-text strong {
   font-size: 1.1rem;
   font-weight: 600;
+}
+
+/* Apple-Style Scrubbed Masks Utilities */
+.scrub-text {
+  /* Fills text with solid color from Left to Right based on JS variable */
+  background: linear-gradient(to right,
+      var(--color-text-dark) calc(var(--scrub-progress, 0) * 100%),
+      rgba(0, 0, 0, 0.15) calc(var(--scrub-progress, 0) * 100%));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+/* Ensure sections after hero stack ON TOP of the sticky hero (Curtain Pull) */
+section:not(.hero) {
+  position: relative;
+  z-index: 10;
+  /* Top Layer */
+  background: var(--color-background);
+  /* Solid curtain */
 }
 
 /* Trust Banner */
@@ -711,8 +742,9 @@ section {
   object-fit: cover;
   /* Smooth parallax scaling driven by JS. Start slightly zoomed in */
   transform: scale(calc(1.1 - (var(--reveal-progress, 0) * 0.1)));
-  transition: transform 0.1s linear;
-  /* Fast linear transition for smooth scrubbing */
+  /* Center-out opening aperture mask driven by JS */
+  clip-path: inset(calc((1 - var(--reveal-progress, 0)) * 30%) 0);
+  transition: transform 0.1s linear, clip-path 0.1s linear;
 }
 
 .gallery-item:hover img {

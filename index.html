@@ -59,40 +59,43 @@
     </header>
 
     <!-- 01. Hook (Hero Section) & 02. Audience -->
-    <section class="hero" id="home">
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-icon-container shadow-premium reveal">
-                    <img src="152x152bb-80.png" alt="Vigdís App Icon" class="hero-logo">
+    <div class="hero-wrapper">
+        <section class="hero" id="home">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-icon-container shadow-premium reveal">
+                        <img src="152x152bb-80.png" alt="Vigdís App Icon" class="hero-logo">
+                    </div>
+                    <p class="acronym-badge reveal delay-100">VISUAL GUIDE FOR DAILY ACTIVITIES</p>
+                    <h1 class="reveal delay-200">Visual structure for peaceful daily rhythms.</h1>
+                    <p class="tagline reveal delay-300">An intuitive, local-first visual schedule app designed by
+                        professionals and parents
+                        for everyone who wants increased predictability in daily life.</p>
+
+                    <div class="audience-banner reveal delay-400">
+                        <p>Designed for neurodivergent children, individuals with ADHD, and the caregivers who support
+                            them.
+                        </p>
+                    </div>
+
+
+
+
+                    <div class="waitlist-container">
+                        <form id="waitlist-form" class="waitlist-form" data-loading="Joining..."
+                            data-success="Success! You have been added to the waitlist."
+                            data-error="Error! Something went wrong. Please try again.">
+                            <input type="email" name="email" placeholder="Enter your email" required
+                                class="waitlist-input">
+                            <button type="submit" class="waitlist-submit">Join Waitlist</button>
+                        </form>
+                        <div id="waitlist-message" class="waitlist-message"></div>
+                    </div>
                 </div>
-                <p class="acronym-badge reveal delay-100">VISUAL GUIDE FOR DAILY ACTIVITIES</p>
-                <h1 class="reveal delay-200">Visual structure for peaceful daily rhythms.</h1>
-                <p class="tagline reveal delay-300">An intuitive, local-first visual schedule app designed by
-                    professionals and parents
-                    for everyone who wants increased predictability in daily life.</p>
 
-                <div class="audience-banner reveal delay-400">
-                    <p>Designed for neurodivergent children, individuals with ADHD, and the caregivers who support them.
-                    </p>
-                </div>
-
-
-
-
-                <div class="waitlist-container">
-                    <form id="waitlist-form" class="waitlist-form" data-loading="Joining..."
-                        data-success="Success! You have been added to the waitlist."
-                        data-error="Error! Something went wrong. Please try again.">
-                        <input type="email" name="email" placeholder="Enter your email" required class="waitlist-input">
-                        <button type="submit" class="waitlist-submit">Join Waitlist</button>
-                    </form>
-                    <div id="waitlist-message" class="waitlist-message"></div>
-                </div>
             </div>
-
-        </div>
-        </div>
-    </section>
+        </section>
+    </div>
 
     <!-- 04. Trust Banner (Authority) -->
     <section class="trust-banner">
@@ -113,7 +116,7 @@
     <section class="proof" id="proof">
         <div class="container">
             <div class="section-header text-center reveal">
-                <h2>See Vigdís in action</h2>
+                <h2 class="scrub-text">See Vigdís in action</h2>
             </div>
 
             <div class="gallery-grid mt-40">
@@ -130,7 +133,7 @@
     <!-- 07. Tell me what to do next (Final CTA) -->
     <section class="cta" id="cta">
         <div class="container reveal">
-            <h2>Ready for smoother days?</h2>
+            <h2 class="scrub-text">Ready for smoother days?</h2>
             <p>Try Vigdís with your family today.</p>
             <div class="waitlist-container">
                 <form id="waitlist-form-cta" class="waitlist-form-cta" data-loading="Joining..."
@@ -180,9 +183,10 @@
 
             document.querySelectorAll('section:not(.hero) .reveal').forEach(el => observer.observe(el));
 
-            // 3. Advanced Scroll Scrubbing (Parallax and Header)
+            // 3. Advanced Scroll Scrubbing (Parallax, Headers, and Text Masks)
             const header = document.querySelector('.header');
             const galleryImages = document.querySelectorAll('.gallery-item');
+            const scrubTexts = document.querySelectorAll('.scrub-text');
 
             let ticking = false;
 
@@ -193,15 +197,21 @@
                 // Update global scroll variable for Hero Parallax and Header Glass
                 document.documentElement.style.setProperty('--scroll-y', scrollY);
 
-                // Update individual gallery image zoom based on their viewport position
+                // Update individual gallery image aperture masks
                 galleryImages.forEach(item => {
                     const rect = item.getBoundingClientRect();
-                    // Calculate how far the element is through the viewport (0 at bottom, 1 at top)
                     let progress = 1 - ((rect.top) / windowHeight);
-                    // Clamp between 0 and 1
                     progress = Math.max(0, Math.min(1, progress));
-
                     item.style.setProperty('--reveal-progress', progress);
+                });
+
+                // Update text fills for scrubbed masks (activates when element is in middle of screen)
+                scrubTexts.forEach(text => {
+                    const rect = text.getBoundingClientRect();
+                    // Maps progress so it fills as it moves from bottom third to top third of screen
+                    let progress = (windowHeight * 0.8 - rect.top) / (windowHeight * 0.4);
+                    progress = Math.max(0, Math.min(1, progress));
+                    text.style.setProperty('--scrub-progress', progress);
                 });
 
                 ticking = false;
