@@ -764,6 +764,15 @@ section:not(.hero) {
   margin-bottom: 16px;
 }
 
+.cta .scrub-text {
+  background: linear-gradient(to right,
+      var(--color-white) calc(var(--scrub-progress, 0) * 100%),
+      rgba(255, 255, 255, 0.15) calc(var(--scrub-progress, 0) * 100%));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 .cta p {
   color: rgba(255, 255, 255, 0.7);
   max-width: 500px;
