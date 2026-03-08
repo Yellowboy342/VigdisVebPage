@@ -67,14 +67,28 @@
                     <strong>D</strong>aily Act<strong>I</strong>vitie<strong>S</strong>
                 </p>
                 <h1>Visual structure for peaceful daily rhythms.</h1>
-                <p class="tagline">An intuitive, local-first visual schedule app designed by professionals and parents for everyone who wants increased predictability in daily life.</p>
+                <p class="tagline">An intuitive, local-first visual schedule app designed by professionals and parents
+                    for everyone who wants increased predictability in daily life.</p>
 
                 <div class="audience-banner">
-                    <p>Designed for neurodivergent children, individuals with ADHD, and the caregivers who support them.</p>
+                    <p>Designed for neurodivergent children, individuals with ADHD, and the caregivers who support them.
+                    </p>
                 </div>
 
 
-                
+
+
+                                <div class="waitlist-container">
+                    <form id="waitlist-form" class="waitlist-form" 
+                          data-loading="Joining..." 
+                          data-success="Success! You have been added to the waitlist." 
+                          data-error="Error! Something went wrong. Please try again.">
+                        <input type="email" name="email" placeholder="Enter your email" required class="waitlist-input">
+                        <button type="submit" class="waitlist-submit">Join Waitlist</button>
+                    </form>
+                    <div id="waitlist-message" class="waitlist-message"></div>
+                </div>
+                </div>
 
                 <div class="store-buttons" id="download">
                     <!-- App Store Button -->
@@ -256,6 +270,7 @@
             document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
         });
     </script>
+    <script src="assets/waitlist.js"></script>
 </body>
 
-</html> 
+</html>

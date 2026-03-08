@@ -852,3 +852,84 @@ section {
     transform: rotate(10deg);
   }
 }
+/* Waitlist Styles */
+.waitlist-container {
+  margin: 2.5rem 0;
+  width: 100%;
+  max-width: 500px;
+}
+
+.waitlist-form {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--color-white);
+  padding: 0.6rem;
+  border-radius: 200px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-premium);
+  transition: var(--transition-smooth);
+}
+
+.waitlist-form:focus-within {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 45px rgba(232, 138, 138, 0.15);
+  border-color: var(--color-primary-light);
+}
+
+.waitlist-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 0.8rem 1.8rem;
+  color: var(--color-text-dark);
+  font-family: inherit;
+  font-size: 1rem;
+  outline: none;
+}
+
+.waitlist-input::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.6;
+}
+
+.waitlist-submit {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  padding: 0.8rem 2.2rem;
+  border-radius: 200px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  white-space: nowrap;
+}
+
+.waitlist-submit:hover {
+  background: var(--color-primary-dark);
+  transform: scale(1.02);
+}
+
+.waitlist-message {
+  margin-top: 1.2rem;
+  font-size: 0.95rem;
+  min-height: 1.5rem;
+  font-weight: 500;
+  padding-left: 1rem;
+}
+
+.waitlist-message.success {
+  color: #2D6A4F;
+}
+
+.waitlist-message.error {
+  color: #C94C4C;
+}
+
+/* RTL Adjustment for Arabic */
+[dir="rtl"] .waitlist-form {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .waitlist-input {
+  padding: 0.8rem 1.8rem;
+}

@@ -74,6 +74,17 @@
                 </div>
 
 
+                                <div class="waitlist-container">
+                    <form id="waitlist-form" class="waitlist-form" 
+                          data-loading="Skrái..." 
+                          data-success="Takk! Þú ert komin(n) á biðlistann." 
+                          data-error="Villa! Eitthvað fór úrskeiðis. Reyndu aftur.">
+                        <input type="email" name="email" placeholder="Sláðu inn netfangið þitt" required class="waitlist-input">
+                        <button type="submit" class="waitlist-submit">Skrá mig á biðlista</button>
+                    </form>
+                    <div id="waitlist-message" class="waitlist-message"></div>
+                </div>
+
                 <div class="store-buttons" id="download">
                     <!-- App Store Button -->
                     <a href="#" class="store-btn" id="app-store-btn" aria-label="Download on the App Store">
@@ -260,6 +271,7 @@
             document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
         });
     </script>
+    <script src="../assets/waitlist.js"></script>
 </body>
 
 </html>

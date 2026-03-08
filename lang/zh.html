@@ -76,6 +76,17 @@
 
                 
 
+                                <div class="waitlist-container">
+                    <form id="waitlist-form" class="waitlist-form" 
+                          data-loading="Joining..." 
+                          data-success="Success! You have been added to the waitlist." 
+                          data-error="Error! Something went wrong. Please try again.">
+                        <input type="email" name="email" placeholder="Enter your email" required class="waitlist-input">
+                        <button type="submit" class="waitlist-submit">Join Waitlist</button>
+                    </form>
+                    <div id="waitlist-message" class="waitlist-message"></div>
+                </div>
+
                 <div class="store-buttons" id="download">
                     <!-- App Store Button -->
                     <a href="#" class="store-btn" id="app-store-btn" aria-label="Download on the App Store">
@@ -256,6 +267,7 @@
             document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
         });
     </script>
+    <script src="../assets/waitlist.js"></script>
 </body>
 
 </html>
