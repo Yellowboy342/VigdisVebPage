@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const waitlistForm = document.getElementById('waitlist-form');
     const waitlistMessage = document.getElementById('waitlist-message');
-    const scriptURL = 'https://script.google.com/macros/s/AKfycby7QJGhYzRyj49U0kfYF3QVj71YYPKNhO4YrWNSJEvot77rzVIwAFIQ7nMmTrUkFUDF7A/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwRnbN7F1WMgHIGQ8ebJw2Zpl3q_CcobxSlAYqwcDuX9PSQr5Y-Yha5xGFOHdAgyoeimA/exec';
 
     // Basic email regex for client side validation
     const validateEmail = (email) => {
