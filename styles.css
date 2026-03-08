@@ -373,6 +373,21 @@ section {
   width: 68px;
   height: 68px;
   border-radius: 14px;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px) scale(1);
+  }
+
+  50% {
+    transform: translateY(-8px) scale(1.02);
+  }
+
+  100% {
+    transform: translateY(0px) scale(1);
+  }
 }
 
 .hero h1 {
@@ -572,6 +587,27 @@ section:not(.hero) {
   border: 1px solid rgba(0, 0, 0, 0.03);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glassmorphism Shine */
+.bento-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
+  transform: skewX(-25deg);
+  transition: left 0.8s ease-in-out;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.bento-card:hover::after {
+  left: 200%;
 }
 
 .bento-card:hover {
@@ -963,8 +999,8 @@ section:not(.hero) {
 .waitlist-form:focus-within,
 .waitlist-form-cta:focus-within {
   transform: translateY(-2px);
-  box-shadow: 0 15px 45px rgba(232, 138, 138, 0.15);
-  border-color: var(--color-primary-light);
+  box-shadow: 0 0 0 4px rgba(232, 138, 138, 0.15), 0 15px 45px rgba(232, 138, 138, 0.15);
+  border-color: var(--color-primary);
   background: var(--color-white);
 }
 
@@ -1028,6 +1064,25 @@ section:not(.hero) {
   transition: var(--transition-smooth);
   box-shadow: 0 4px 15px rgba(232, 138, 138, 0.3);
   white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Button Shine */
+.waitlist-submit::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
+  transform: skewX(-25deg);
+  transition: left 0.6s ease;
+}
+
+.waitlist-submit:not(:disabled):hover::after {
+  left: 200%;
 }
 
 .waitlist-submit:disabled {
