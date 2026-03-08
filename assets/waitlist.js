@@ -12,9 +12,12 @@ document.addEventListener("DOMContentLoaded", function () {
             );
     };
 
-    if (waitlistForm) {
+    const waitlistForms = document.querySelectorAll('.waitlist-form, .waitlist-form-cta');
+
+    waitlistForms.forEach(waitlistForm => {
         const emailInput = waitlistForm.querySelector('input[type="email"]');
         const submitBtn = waitlistForm.querySelector('button');
+        const waitlistMessage = waitlistForm.nextElementSibling; // div.waitlist-message or ...-cta
 
         // Initial state: Disable the button to start
         submitBtn.disabled = true;
@@ -32,7 +35,6 @@ document.addEventListener("DOMContentLoaded", function () {
         waitlistForm.addEventListener('submit', e => {
             e.preventDefault();
 
-            const submitBtn = waitlistForm.querySelector('button');
             const originalBtnText = submitBtn.innerText;
             const emailValue = emailInput.value.trim();
 
@@ -84,5 +86,5 @@ document.addEventListener("DOMContentLoaded", function () {
                     console.error('Waitlist Error:', error);
                 });
         });
-    }
+    });
 });

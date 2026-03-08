@@ -282,13 +282,14 @@ section {
   display: inline-block;
   background: var(--color-text-dark);
   color: var(--color-white);
-  padding: 8px 20px;
+  padding: 8px 16px;
   border-radius: 50px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  margin-bottom: 32px;
-  letter-spacing: 0.5px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  letter-spacing: 1px;
   text-transform: uppercase;
+  box-shadow: var(--shadow-card);
 }
 
 /* Hero Section */
@@ -300,7 +301,7 @@ section {
   text-align: center;
   padding-top: 140px;
   /* Offset for header */
-  background: linear-gradient(180deg, var(--color-accent) 0%, var(--color-background) 100%);
+  background: var(--color-background);
   position: relative;
   overflow: hidden;
 }
@@ -312,11 +313,21 @@ section {
   margin: 0 auto;
 }
 
+.hero-icon-container {
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 32px;
+  background: var(--color-white);
+  border-radius: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .hero-logo {
-  width: 180px;
-  height: 180px;
-  margin: 0 auto 40px;
-  border-radius: 36px;
+  width: 100px;
+  height: 100px;
+  border-radius: 20px;
 }
 
 .hero h1 {
@@ -860,27 +871,28 @@ section {
   max-width: 550px;
 }
 
-.waitlist-form {
+.waitlist-form,
+.waitlist-form-cta {
   display: flex;
   gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: var(--color-white);
   padding: 0.8rem;
   border-radius: 200px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 8px 32px rgba(232, 138, 138, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
   transition: var(--transition-smooth);
 }
 
-.waitlist-form:focus-within {
+.waitlist-form:focus-within,
+.waitlist-form-cta:focus-within {
   transform: translateY(-2px);
-  box-shadow: 0 15px 45px rgba(232, 138, 138, 0.25);
-  border-color: rgba(255, 255, 255, 0.9);
-  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 15px 45px rgba(232, 138, 138, 0.15);
+  border-color: var(--color-primary-light);
+  background: var(--color-white);
 }
 
-.waitlist-form.invalid {
+.waitlist-form.invalid,
+.waitlist-form-cta.invalid {
   animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
   border-color: #C94C4C;
   box-shadow: 0 8px 32px rgba(201, 76, 76, 0.15);
@@ -983,7 +995,8 @@ section {
 }
 
 /* RTL Adjustment for Arabic */
-[dir="rtl"] .waitlist-form {
+[dir="rtl"] .waitlist-form,
+[dir="rtl"] .waitlist-form-cta {
   flex-direction: row-reverse;
 }
 
@@ -993,7 +1006,9 @@ section {
 
 /* Mobile Responsive Waitlist */
 @media (max-width: 550px) {
-  .waitlist-form {
+
+  .waitlist-form,
+  .waitlist-form-cta {
     flex-direction: column;
     border-radius: 24px;
     padding: 1.2rem;
