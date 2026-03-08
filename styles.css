@@ -855,7 +855,7 @@ section {
 
 /* Waitlist Styles */
 .waitlist-container {
-  margin: 2.5rem 0;
+  margin: 2.5rem auto;
   width: 100%;
   max-width: 500px;
 }
@@ -941,12 +941,20 @@ section {
   white-space: nowrap;
 }
 
-.waitlist-submit:hover {
+.waitlist-submit:disabled {
+  background: #E5E7EB;
+  color: #9CA3AF;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.waitlist-submit:not(:disabled):hover {
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 8px 25px rgba(232, 138, 138, 0.4);
 }
 
-.waitlist-submit:active {
+.waitlist-submit:not(:disabled):active {
   transform: translateY(0) scale(0.98);
 }
 

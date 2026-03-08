@@ -14,11 +14,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (waitlistForm) {
         const emailInput = waitlistForm.querySelector('input[type="email"]');
+        const submitBtn = waitlistForm.querySelector('button');
 
-        // Real-time clearing of invalid state
+        // Initial state: Disable the button to start
+        submitBtn.disabled = true;
+
+        // Real-time evaluation of valid state
         emailInput.addEventListener('input', () => {
             waitlistForm.classList.remove('invalid');
             waitlistMessage.classList.remove('show');
+
+            // Enable button if valid, disable if invalid
+            const emailValue = emailInput.value.trim();
+            submitBtn.disabled = !validateEmail(emailValue);
         });
 
         waitlistForm.addEventListener('submit', e => {
