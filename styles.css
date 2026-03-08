@@ -465,6 +465,8 @@ section {
       rgba(0, 0, 0, 0.15) calc(var(--scrub-progress, 0) * 100%));
   -webkit-background-clip: text;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* CRITICAL for Safari */
   color: transparent;
   display: inline-block;
 }
@@ -770,6 +772,8 @@ section:not(.hero) {
       rgba(255, 255, 255, 0.15) calc(var(--scrub-progress, 0) * 100%));
   -webkit-background-clip: text;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* CRITICAL for Safari */
   color: transparent;
 }
 

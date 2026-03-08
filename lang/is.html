@@ -207,8 +207,9 @@
                 // Update text fills for scrubbed masks (activates when element is in middle of screen)
                 scrubTexts.forEach(text => {
                     const rect = text.getBoundingClientRect();
-                    // Maps progress so it fills as it moves from bottom third to top third of screen
-                    let progress = (windowHeight * 0.8 - rect.top) / (windowHeight * 0.4);
+                    // Maps progress so it fills as it moves from the bottom 85% to 55% of screen
+                    // This ensures elements near the bottom of the page fully resolve
+                    let progress = (windowHeight * 0.85 - rect.top) / (windowHeight * 0.3);
                     progress = Math.max(0, Math.min(1, progress));
                     text.style.setProperty('--scrub-progress', progress);
                 });
