@@ -755,30 +755,19 @@ section:not(.hero) {
 
 /* CTA Section */
 .cta {
-  background: var(--color-text-dark);
+  background: var(--color-accent);
   text-align: center;
-  color: var(--color-white);
+  color: var(--color-text-dark);
   padding: 120px 0;
 }
 
 .cta h2 {
-  color: var(--color-white);
+  color: var(--color-text-dark);
   margin-bottom: 16px;
 }
 
-.cta .scrub-text {
-  background: linear-gradient(to right,
-      var(--color-white) calc(var(--scrub-progress, 0) * 100%),
-      rgba(255, 255, 255, 0.15) calc(var(--scrub-progress, 0) * 100%));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  /* CRITICAL for Safari */
-  color: transparent;
-}
-
 .cta p {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--color-text-muted);
   max-width: 500px;
   margin: 0 auto 40px;
   font-size: 1.25rem;
