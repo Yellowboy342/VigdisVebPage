@@ -172,19 +172,21 @@ section {
   transition-delay: 600ms;
 }
 
-/* Navigation / Header */
+/* Navigation / Header - Dynamic Frosted Glass */
 .header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  background: rgba(255, 250, 248, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  /* Dynamic values set by JS scroll listener */
+  background: rgba(255, 250, 248, min(0.85, max(0, var(--scroll-y, 0) / 300)));
+  backdrop-filter: blur(calc(min(16, max(0, var(--scroll-y, 0) / 20)) * 1px));
+  -webkit-backdrop-filter: blur(calc(min(16, max(0, var(--scroll-y, 0) / 20)) * 1px));
   padding: 16px 0;
-  transition: var(--transition-smooth);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+  transition: padding var(--transition-smooth);
+  /* Only transition padding, let JS handle the rest instantly */
+  border-bottom: 1px solid rgba(0, 0, 0, min(0.08, max(0, var(--scroll-y, 0) / 500)));
 }
 
 .header .container {
@@ -322,7 +324,7 @@ section {
   text-transform: uppercase;
 }
 
-/* Hero Section */
+/* Hero Section - Parallax Effect */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -330,10 +332,13 @@ section {
   justify-content: center;
   text-align: center;
   padding-top: 140px;
-  /* Offset for header */
   background: var(--color-background);
   position: relative;
   overflow: hidden;
+  /* Parallax modifiers powered by JS */
+  transform: translateY(calc(var(--scroll-y, 0) * 0.3px)) scale(max(0.9, 1 - (var(--scroll-y, 0) * 0.0005)));
+  opacity: max(0, 1 - (var(--scroll-y, 0) * 0.002));
+  transform-origin: center top;
 }
 
 .hero-content {
@@ -704,7 +709,10 @@ section {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.8s ease;
+  /* Smooth parallax scaling driven by JS. Start slightly zoomed in */
+  transform: scale(calc(1.1 - (var(--reveal-progress, 0) * 0.1)));
+  transition: transform 0.1s linear;
+  /* Fast linear transition for smooth scrubbing */
 }
 
 .gallery-item:hover img {

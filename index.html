@@ -159,7 +159,7 @@
         </div>
     </footer>
 
-    <!-- Simplified Animation Script -->
+    <!-- Advanced Scroll Animation Script -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // 1. Immediately trigger hero animations upon DOM load
@@ -178,8 +178,44 @@
                 });
             }, { threshold: 0.1 });
 
-            // Only observe reveal elements that are NOT in the hero (hero is handled above)
             document.querySelectorAll('section:not(.hero) .reveal').forEach(el => observer.observe(el));
+
+            // 3. Advanced Scroll Scrubbing (Parallax and Header)
+            const header = document.querySelector('.header');
+            const galleryImages = document.querySelectorAll('.gallery-item');
+
+            let ticking = false;
+
+            function updateScrollEffects() {
+                const scrollY = window.scrollY;
+                const windowHeight = window.innerHeight;
+
+                // Update global scroll variable for Hero Parallax and Header Glass
+                document.documentElement.style.setProperty('--scroll-y', scrollY);
+
+                // Update individual gallery image zoom based on their viewport position
+                galleryImages.forEach(item => {
+                    const rect = item.getBoundingClientRect();
+                    // Calculate how far the element is through the viewport (0 at bottom, 1 at top)
+                    let progress = 1 - ((rect.top) / windowHeight);
+                    // Clamp between 0 and 1
+                    progress = Math.max(0, Math.min(1, progress));
+
+                    item.style.setProperty('--reveal-progress', progress);
+                });
+
+                ticking = false;
+            }
+
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(updateScrollEffects);
+                    ticking = true;
+                }
+            }, { passive: true });
+
+            // Initial call to set positions immediately
+            updateScrollEffects();
         });
     </script>
     <script src="assets/waitlist.js"></script>
