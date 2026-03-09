@@ -1085,14 +1085,53 @@ section:not(.hero) {
 
 /* Mobile Responsive Adjustments */
 @media (max-width: 768px) {
+
+  /* Navigation Fixes */
+  .nav-links {
+    display: none;
+  }
+
+  .nav-cta {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  .header-logo img {
+    height: 28px;
+  }
+
+  /* Typography Scaling */
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  .scrub-text {
+    font-size: 2rem !important;
+  }
+
+  /* Layout Constraints */
   .hero {
-    padding-top: 120px;
+    padding-top: 100px;
   }
 
   .hero-logo {
-    width: 120px;
-    height: 120px;
-    margin-bottom: 32px;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 24px;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .team-photo {
+    width: 100%;
+    margin: 0 auto;
   }
 
   .audience-banner {
