@@ -39,8 +39,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const emailValue = emailInput.value.trim();
 
             // Get localized messages
-            const loadingText = waitlistForm.getAttribute('data-loading') || 'Joining...';
-            const successText = waitlistForm.getAttribute('data-success') || 'Success! You have been added to the waitlist.';
+            const loadingText = waitlistForm.getAttribute('data-loading') || 'Subscribing...';
+            const successText = waitlistForm.getAttribute('data-success') || 'Success! You are now subscribed.';
             const errorText = waitlistForm.getAttribute('data-error') || 'Error! Something went wrong. Please try again.';
 
             // Waitlist specific language detection for invalid email message
