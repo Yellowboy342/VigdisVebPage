@@ -324,6 +324,34 @@ section {
   text-transform: uppercase;
 }
 
+/* Level 3: Ambient Aurora Background */
+.aurora-bg {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(232, 138, 138, 0.15) 0%, rgba(232, 138, 138, 0) 60%),
+    radial-gradient(circle at 80% 20%, rgba(240, 160, 160, 0.1) 0%, rgba(240, 160, 160, 0) 50%);
+  z-index: 0;
+  pointer-events: none;
+  animation: aurora-shift 20s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-shift {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+
+  50% {
+    transform: translate(5%, 5%) scale(1.1) rotate(5deg);
+  }
+
+  100% {
+    transform: translate(-5%, -5%) scale(0.9) rotate(-5deg);
+  }
+}
+
 /* Hero Section - Level 2 Parallax (Curtain Pull) */
 .hero-wrapper {
   height: 120vh;
@@ -349,6 +377,8 @@ section {
   transform: translateY(calc(var(--scroll-y, 0) * 0.1px)) scale(max(0.9, 1 - (var(--scroll-y, 0) * 0.0005)));
   opacity: max(0, 1 - (var(--scroll-y, 0) * 0.0015));
   transform-origin: center top;
+  /* 3D Perspective Context for Magnetic Elements */
+  perspective: 1000px;
 }
 
 .hero-content {
@@ -575,6 +605,9 @@ section:not(.hero) {
   gap: 24px;
   max-width: 1000px;
   margin: 0 auto;
+  /* Glow Border tracking variable context */
+  --mouse-x: -100px;
+  --mouse-y: -100px;
 }
 
 .bento-card {
@@ -582,13 +615,16 @@ section:not(.hero) {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: var(--transition-smooth);
+  transition: transform 0.1s ease-out, box-shadow var(--transition-smooth);
   background: var(--color-white);
   border: 1px solid rgba(0, 0, 0, 0.03);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-card);
   position: relative;
   overflow: hidden;
+  /* Magnetic CSS transforms */
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 /* Glassmorphism Shine */
@@ -606,8 +642,39 @@ section:not(.hero) {
   pointer-events: none;
 }
 
+/* Proximity Glow Border applied around cards using Grid background */
+.bento-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: var(--border-radius-lg);
+  padding: 2px;
+  /* Border thickness */
+  background: radial-gradient(400px circle at var(--mouse-x, -400px) var(--mouse-y, -400px), var(--color-primary-light), transparent 40%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s;
+  z-index: 2;
+}
+
+.bento-grid:hover .bento-card::before {
+  opacity: 1;
+}
+
 .bento-card:hover::after {
   left: 200%;
+}
+
+.bento-card.magnetic:hover {
+  /* Box shadow deepens during 3D tilt */
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
 }
 
 .bento-card:hover {

@@ -61,6 +61,7 @@
     <!-- 01. Hook (Hero Section) & 02. Audience -->
     <div class="hero-wrapper">
         <section class="hero" id="home">
+            <div class="aurora-bg"></div>
             <div class="container">
                 <div class="hero-content">
                     <div class="hero-icon-container shadow-premium reveal">
@@ -84,7 +85,7 @@
                             data-error="Villa! Eitthvað fór úrskeiðis. Reyndu aftur.">
                             <input type="email" name="email" placeholder="Sláðu inn netfangið þitt" required
                                 class="waitlist-input">
-                            <button type="submit" class="waitlist-submit">Skrá mig á biðlista</button>
+                            <button type="submit" class="waitlist-submit magnetic">Skrá mig á biðlista</button>
                         </form>
                         <div id="waitlist-message" class="waitlist-message"></div>
                     </div>
@@ -118,10 +119,10 @@
             </div>
 
             <div class="gallery-grid mt-40">
-                <div class="gallery-item shadow-premium reveal delay-100">
+                <div class="gallery-item shadow-premium reveal delay-100 magnetic">
                     <img src="../assets/DSC004543.jpeg" alt="Person using Vigdís app in a cafe" loading="lazy">
                 </div>
-                <div class="gallery-item shadow-premium reveal delay-200">
+                <div class="gallery-item shadow-premium reveal delay-200 magnetic">
                     <img src="../assets/IphoneOgIpad.png" alt="Vigdís app on iPhone and iPad" loading="lazy">
                 </div>
             </div>
@@ -139,7 +140,7 @@
                     data-error="Villa! Eitthvað fór úrskeiðis. Reyndu aftur.">
                     <input type="email" name="email" placeholder="Sláðu inn netfangið þitt" required
                         class="waitlist-input">
-                    <button type="submit" class="waitlist-submit">Skrá mig á biðlista</button>
+                    <button type="submit" class="waitlist-submit magnetic">Skrá mig á biðlista</button>
                 </form>
                 <div id="waitlist-message-cta" class="waitlist-message-cta"></div>
             </div>
@@ -226,6 +227,33 @@
 
             // Initial call to set positions immediately
             updateScrollEffects();
+
+            // 4. Magnetic & 3D Tilt Effects (Level 3 Physics)
+            const magneticElements = document.querySelectorAll('.magnetic');
+            magneticElements.forEach(el => {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    // CSS Glow Border coordinates
+                    el.style.setProperty('--mouse-x', `${x}px`);
+                    el.style.setProperty('--mouse-y', `${y}px`);
+
+                    // 3D Tilt Math
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const tiltX = ((y - centerY) / centerY) * -10; // Max rotate 10deg
+                    const tiltY = ((x - centerX) / centerX) * 10;
+
+                    el.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(1.02, 1.02, 1.02)`;
+                });
+
+                el.addEventListener('mouseleave', () => {
+                    // Reset smoothly
+                    el.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                });
+            });
         });
     </script>
     <script src="../assets/waitlist.js"></script>
