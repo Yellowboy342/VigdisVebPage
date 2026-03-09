@@ -981,40 +981,88 @@ section:not(.hero) {
 /* Footer */
 .footer {
   background: var(--color-background);
-  padding: 60px 0;
-  text-align: center;
+  padding: 80px 0 40px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.footer p {
-  color: var(--color-text-muted);
-  font-size: 0.9rem;
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 60px;
+  margin-bottom: 60px;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .footer-logo {
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 24px;
+  width: 56px;
+  height: 56px;
   border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-soft);
+}
+
+.footer-tagline {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--color-text-dark);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.acronym-footer {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 .acronym-footer strong {
-  color: var(--color-text-dark);
-}
-
-.footer-links {
-  margin: 24px 0;
-}
-
-.footer-links a {
-  margin: 0 16px;
-  color: var(--color-text-muted);
-  font-weight: 500;
-  font-size: 0.9rem;
-  transition: var(--transition-smooth);
-}
-
-.footer-links a:hover {
   color: var(--color-primary);
+  font-weight: 600;
+}
+
+.footer-heading {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  margin-bottom: 24px;
+}
+
+.footer-col a {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 16px;
+  transition: var(--transition-smooth);
+  font-weight: 500;
+}
+
+.footer-col a:hover {
+  color: var(--color-primary);
+  transform: translateX(4px);
+}
+
+.footer-contact {
+  font-weight: 600 !important;
+  color: var(--color-text-dark) !important;
+}
+
+.footer-contact:hover {
+  color: var(--color-primary) !important;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 30px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.footer-bottom p {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
 }
 
 /* Responsive Design */
@@ -1089,6 +1137,13 @@ section:not(.hero) {
     width: 100%;
     max-width: 320px;
     justify-content: center;
+  }
+
+  /* Responsive Footer */
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
   }
 }
 
