@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="Vigdís - Visual Guidance for Daily Activities. Helping families build independence through visual schedules.">
-    <meta name="keywords" content="Vigdis, autism, ADHD, visual schedule, daily routines, special needs">
+        content="Vigdís - Orientación visual para las actividades diarias. Ayudando a las familias a construir independencia a través de horarios visuales.">
+    <meta name="keywords" content="Vigdis, autismo, TDAH, horario visual, rutinas diarias, necesidades especiales">
     <meta name="author" content="Vigdís">
 
-    <title>Vigdís - Visual Guidance for Daily Activities</title>
+    <title>Vigdís - Orientación visual para las actividades diarias</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="../152x152bb-80.png">
@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../styles.css?v=2.0">
 </head>
 
 <body>
@@ -33,6 +33,13 @@
                 <img src="../152x152bb-80.png" alt="Vigdís Logo">
                 <span class="logo-text">Vigdís</span>
             </a>
+
+            <nav class="nav-links">
+                <a href="#home" class="nav-item">Inicio</a>
+                <a href="#about" class="nav-item">Sobre nosotros</a>
+                <a href="#cta" class="nav-item">Soporte</a>
+            </nav>
+
             <div class="header-right">
                 <!-- Language Switcher -->
                 <div class="lang-switcher">
@@ -53,129 +60,115 @@
                         <a href="is.html">Íslenska</a>
                     </div>
                 </div>
-                <a href="#home" class="nav-cta">Join Waitlist</a>
+                <a href="#home" class="nav-cta">Únete a la lista de espera</a>
             </div>
         </div>
     </header>
 
     <!-- 01. Hook (Hero Section) & 02. Audience -->
-    <section class="hero" id="home">
-        <div class="container">
-            <div class="hero-content fade-in-up">
-                <div class="hero-icon-container shadow-premium">
-                    <img src="../152x152bb-80.png" alt="Vigdís App Icon" class="hero-logo">
+    <div class="hero-wrapper">
+        <section class="hero" id="home">
+            <!-- Animated SVG Background -->
+            <div class="hero-bg-container">
+                <svg class="hero-bg-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="blobGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="var(--color-primary-light)" stop-opacity="0.6" />
+                            <stop offset="100%" stop-color="var(--color-primary)" stop-opacity="0.1" />
+                        </linearGradient>
+                        <linearGradient id="blobGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#E2B49A" stop-opacity="0.5" />
+                            <stop offset="100%" stop-color="var(--color-primary-light)" stop-opacity="0.1" />
+                        </linearGradient>
+                    </defs>
+                    <!-- Base Wash -->
+                    <rect width="100%" height="100%" fill="var(--color-background)" />
+                    <!-- Floating Blobs (No SVG filter) -->
+                    <path class="bg-blob bg-blob-1" fill="url(#blobGrad1)"
+                        d="M300,300 C500,100 800,400 700,600 C600,800 200,800 100,600 C0,400 100,500 300,300 Z" />
+                    <path class="bg-blob bg-blob-2" fill="url(#blobGrad2)"
+                        d="M800,200 C900,400 700,800 400,700 C100,600 200,200 500,100 C800,0 700,0 800,200 Z" />
+                </svg>
+            </div>
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-icon-container shadow-premium reveal">
+                        <img src="../152x152bb-80.png" alt="Vigdís App Icon" class="hero-logo">
+                    </div>
+                    <p class="acronym-badge reveal delay-100">SIMPLIFICA LA VIDA DIARIA</p>
+                    <h1 class="reveal delay-200">Estructura visual para rutinas diarias</h1>
+                    <p class="tagline reveal delay-300">Una aplicación de horarios visuales intuitiva y local, diseñada
+                        por profesionales y padres para apoyar a individuos y familias brindando una visión clara de las
+                        actividades diarias.</p>
+
+                    <div class="audience-banner reveal delay-400">
+                        <p>Vigdís es una herramienta para cualquiera que desee mayor previsibilidad.
+                            Vigdís está diseñada para satisfacer las diversas necesidades de las personas y es útil
+                            tanto para quienes utilizan una amplia gama de servicios como para todos los demás.</p>
+                    </div>
+
+
+
                 </div>
-                <p class="acronym-badge">VISUAL GUIDE FOR DAILY ACTIVITIES</p>
-                <h1>Visual structure for peaceful daily rhythms.</h1>
-                <p class="tagline">An intuitive, local-first visual schedule app designed by professionals and parents for everyone who wants increased predictability in daily life.</p>
-
-                <div class="audience-banner">
-                    <p>Designed for neurodivergent children, individuals with ADHD, and the caregivers who support them.</p>
-                </div>
-
-
-                
-
-                                <div class="waitlist-container">
-                    <form id="waitlist-form" class="waitlist-form" 
-                          data-loading="Joining..." 
-                          data-success="Success! You have been added to the waitlist." 
-                          data-error="Error! Something went wrong. Please try again.">
-                        <input type="email" name="email" placeholder="Enter your email" required class="waitlist-input">
-                        <button type="submit" class="waitlist-submit">Join Waitlist</button>
-                    </form>
-                    <div id="waitlist-message" class="waitlist-message"></div>
-                </div>
-
-                </div>
-        </div>
+            </div>
+    </div>
     </section>
+    </div>
 
     <!-- 04. Trust Banner (Authority) -->
     <section class="trust-banner">
-        <div class="container fade-in-up">
-            <div class="trust-content glass-card">
+        <div class="container">
+            <div class="trust-content glass-card reveal">
                 <div class="trust-item">
                     <span class="trust-icon">🔒</span>
-                    <p><strong>100% Private & Local.</strong> Your family's data never leaves your device. No cloud, no
-                        tracking, no ads.</p>
+                    <p><strong>Segura y local.</strong> Los datos de su familia nunca salen del dispositivo. Sin nube,
+                        sin rastreo, sin anuncios.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 05. Services (Bento Features) -->
-    <section class="features" id="features">
-        <div class="container fade-in-up">
-            <div class="bento-grid">
-                <!-- Main Feature (Large) -->
-                <div class="bento-card bento-large glass-card">
-                    <div class="bento-content">
-                        <h3>Step-by-step clarity</h3>
-                        <p>Break down overwhelming tasks into clear, actionable, and accessible visual steps.</p>
-                    </div>
-                    <!-- Minimalist UI Representation -->
-                    <div class="bento-ui">
-                        <div class="ui-item">
-                            <div class="ui-checkbox checked"></div>
-                            <div class="ui-text-bar"></div>
-                        </div>
-                        <div class="ui-item">
-                            <div class="ui-checkbox"></div>
-                            <div class="ui-text-bar short"></div>
-                        </div>
-                        <div class="ui-item">
-                            <div class="ui-checkbox"></div>
-                            <div class="ui-text-bar half"></div>
-                        </div>
+
+
+    <!-- 05. About Us (Empathy & Origin) -->
+    <section class="about-us" id="about">
+        <div class="container">
+            <div class="about-grid">
+
+                <div class="about-text">
+                    <h2 class="scrub-text reveal">Construida por necesidad.<br>Diseñada con amor.</h2>
+                    <p class="reveal delay-100 mt-20">Como padres y profesionales que trabajan con niños con múltiples
+                        necesidades de apoyo, no pudimos encontrar una herramienta de organización visual que se
+                        adaptara a nosotros. Así nació Vigdís. Sin registros complicados, sin menús confusos.
+                    </p>
+                    <p class="reveal delay-200 mt-20">Solo una previsibilidad visual pura y local para hacer la vida
+                        diaria más fácil a familias como la nuestra.</p>
+                </div>
+
+                <div class="about-image-container reveal delay-300">
+                    <div class="about-card glass-card magnetic">
+                        <img src="../assets/the_team.jpeg" alt="Fundadores de Vigdís" class="team-photo"
+                            onerror="this.src='../assets/DSC004543.jpeg';">
                     </div>
                 </div>
 
-                <!-- Secondary Feature -->
-                <div class="bento-card glass-card">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                        </svg>
-                    </div>
-                    <div class="bento-content">
-                        <h3>Customizable routines</h3>
-                        <p>Easily adapt activities and schedules to fit your family's unique and changing needs.</p>
-                    </div>
-                </div>
-
-                <!-- Tertiary Feature -->
-                <div class="bento-card glass-card">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10" />
-                            <polyline points="12 6 12 12 16 14" />
-                        </svg>
-                    </div>
-                    <div class="bento-content">
-                        <h3>Daily empowerment</h3>
-                        <p>Give your child the confidence to navigate their day independently and proudly.</p>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
 
     <!-- 06. Social Proof (Testimonials & Gallery) -->
     <section class="proof" id="proof">
-        <div class="container fade-in-up">
+        <div class="container">
             <div class="section-header text-center">
-                <h2>Gallery</h2>
+                <h2 class="scrub-text">Mira cómo funciona Vigdís</h2>
             </div>
 
             <div class="gallery-grid mt-40">
-                <div class="gallery-item shadow-premium">
+                <div class="gallery-item shadow-premium reveal delay-100 magnetic">
                     <img src="../assets/DSC004543.jpeg" alt="Person using Vigdís app in a cafe" loading="lazy">
                 </div>
-                <div class="gallery-item shadow-premium">
+                <div class="gallery-item shadow-premium reveal delay-200 magnetic">
                     <img src="../assets/IphoneOgIpad.png" alt="Vigdís app on iPhone and iPad" loading="lazy">
                 </div>
             </div>
@@ -184,49 +177,150 @@
 
     <!-- 07. Tell me what to do next (Final CTA) -->
     <section class="cta" id="cta">
-        <div class="container fade-in-up">
-            <h2>Ready for smoother days?</h2>
-            <p>Try Vigdís with your family today.</p>
+        <div class="container reveal">
+            <h2 class="scrub-text">Sé el primero en saber cuándo lanzaremos la aplicación</h2>
             <div class="waitlist-container">
-                    <form id="waitlist-form-cta" class="waitlist-form-cta" 
-                          data-loading="Joining..." 
-                          data-success="Success! You have been added to the waitlist." 
-                          data-error="Error! Something went wrong. Please try again.">
-                        <input type="email" name="email" placeholder="Enter your email" required class="waitlist-input">
-                        <button type="submit" class="waitlist-submit">Join Waitlist</button>
-                    </form>
-                    <div id="waitlist-message-cta" class="waitlist-message-cta"></div>
-                </div>
+                <form id="waitlist-form-cta" class="waitlist-form-cta" data-loading="Registrando..."
+                    data-success="¡Gracias! Te has unido a la lista de espera."
+                    data-error="¡Error! Algo salió mal. Por favor, inténtalo de nuevo.">
+                    <input type="email" name="email" placeholder="Ingresa tu correo electrónico" required
+                        class="waitlist-input">
+                    <button type="submit" class="waitlist-submit magnetic">Unirse a la lista de espera</button>
+                </form>
+                <div id="waitlist-message-cta" class="waitlist-message-cta"></div>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer" id="footer">
         <div class="container">
-            <img src="../152x152bb-80.png" alt="Vigdís Logo" class="footer-logo">
-            <p class="acronym-footer">Vigdís: <strong>VI</strong>sual <strong>G</strong>uide for
-                <strong>D</strong>aily Act<strong>I</strong>tivitie<strong>S</strong>
-            </p>
-            <div class="footer-links">
-                <a href="../privacy.html">Privacy Policy</a> | <a href="../terms.html">Terms of Service</a>
+            <div class="footer-grid">
+                <!-- Column 1: Brand -->
+                <div class="footer-col brand-col">
+                    <img src="../152x152bb-80.png" alt="Vigdís Logo" class="footer-logo">
+                    <p class="footer-tagline">Estructura visual para un ritmo diario más tranquilo.</p>
+                    <p class="acronym-footer">Vigdís: <strong>VI</strong>sual <strong>G</strong>uide for
+                        <strong>D</strong>aily Act<strong>I</strong>tivitie<strong>S</strong>
+                    </p>
+                </div>
+
+                <!-- Column 2: Quick Links -->
+                <div class="footer-col links-col">
+                    <h4 class="footer-heading">Enlaces rápidos</h4>
+                    <a href="#home">Inicio</a>
+                    <a href="#about">Sobre nosotros</a>
+                </div>
+
+                <!-- Column 3: Legal & Contact -->
+                <div class="footer-col legal-col">
+                    <h4 class="footer-heading">Legal y Contacto</h4>
+                    <a href="../privacy.html">Política de Privacidad</a>
+                    <a href="../terms.html">Términos de Servicio</a>
+                    <a href="mailto:support@vigdisapp.is" class="footer-contact mt-10">support@vigdisapp.is</a>
+                </div>
             </div>
-            <p>&copy; 2026 Vigdís. All rights reserved<span class="easter-egg"
-                    title="You found the toothbrush!">.</span></p>
+
+            <!-- Bottom Bar -->
+            <div class="footer-bottom mt-40">
+                <p>&copy; 2026 Vigdís. Todos los derechos reservados.<span class="easter-egg"
+                        title="¡Encontraste el cepillo de dientes!">.</span></p>
+            </div>
         </div>
     </footer>
 
-    <!-- Simple Scroll Anim Script -->
+    <!-- Advanced Scroll Animation Script -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // 1. Immediately trigger hero animations upon DOM load
+            setTimeout(() => {
+                document.querySelectorAll('.hero .reveal').forEach(el => {
+                    el.classList.add('active');
+                });
+            }, 100);
+
+            // 2. Setup IntersectionObserver for scroll animations further down
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
+                        entry.target.classList.add('active');
                     }
                 });
             }, { threshold: 0.1 });
 
-            document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+            document.querySelectorAll('section:not(.hero) .reveal').forEach(el => observer.observe(el));
+
+            // 3. Advanced Scroll Scrubbing (Parallax, Headers, and Text Masks)
+            const header = document.querySelector('.header');
+            const galleryImages = document.querySelectorAll('.gallery-item');
+            const scrubTexts = document.querySelectorAll('.scrub-text');
+
+            let ticking = false;
+
+            function updateScrollEffects() {
+                const scrollY = window.scrollY;
+                const windowHeight = window.innerHeight;
+
+                // Update global scroll variable for Hero Parallax and Header Glass
+                document.documentElement.style.setProperty('--scroll-y', scrollY);
+
+                // Update individual gallery image zoom based on their viewport position
+                galleryImages.forEach(item => {
+                    const rect = item.getBoundingClientRect();
+                    let progress = 1 - ((rect.top) / windowHeight);
+                    progress = Math.max(0, Math.min(1, progress));
+                    item.style.setProperty('--reveal-progress', progress);
+                });
+
+                // Update text fills for scrubbed masks (activates when element is in middle of screen)
+                scrubTexts.forEach(text => {
+                    const rect = text.getBoundingClientRect();
+                    // Maps progress so it fills as it moves from the bottom 85% to 55% of screen
+                    // This ensures elements near the bottom of the page fully resolve
+                    let progress = (windowHeight * 0.85 - rect.top) / (windowHeight * 0.3);
+                    progress = Math.max(0, Math.min(1, progress));
+                    text.style.setProperty('--scrub-progress', progress);
+                });
+
+                ticking = false;
+            }
+
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(updateScrollEffects);
+                    ticking = true;
+                }
+            }, { passive: true });
+
+            // Initial call to set positions immediately
+            updateScrollEffects();
+
+            // 4. Magnetic & 3D Tilt Effects (Level 3 Physics)
+            const magneticElements = document.querySelectorAll('.magnetic');
+            magneticElements.forEach(el => {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    // CSS Glow Border coordinates
+                    el.style.setProperty('--mouse-x', `${x}px`);
+                    el.style.setProperty('--mouse-y', `${y}px`);
+
+                    // 3D Tilt Math
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const tiltX = ((y - centerY) / centerY) * -10; // Max rotate 10deg
+                    const tiltY = ((x - centerX) / centerX) * 10;
+
+                    el.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(1.02, 1.02, 1.02)`;
+                });
+
+                el.addEventListener('mouseleave', () => {
+                    // Reset smoothly
+                    el.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                });
+            });
         });
     </script>
     <script src="../assets/waitlist.js"></script>
