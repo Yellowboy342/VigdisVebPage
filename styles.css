@@ -479,21 +479,6 @@ section {
   width: 68px;
   height: 68px;
   border-radius: 14px;
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes float {
-  0% {
-    transform: translateY(0px) scale(1);
-  }
-
-  50% {
-    transform: translateY(-8px) scale(1.02);
-  }
-
-  100% {
-    transform: translateY(0px) scale(1);
-  }
 }
 
 .hero h1 {
@@ -1453,3 +1438,368 @@ section:not(.hero) {
     padding: 1rem 1.5rem;
   }
 }
+
+/* Waitlist Success State */
+.waitlist-success-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px 20px;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.waitlist-success-state.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Animated Checkmark */
+.checkmark-svg {
+  width: 56px;
+  height: 56px;
+}
+
+.checkmark-circle {
+  stroke: #2D6A4F;
+  stroke-width: 2;
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  animation: checkStroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) 0.2s forwards;
+}
+
+.checkmark-check {
+  stroke: #2D6A4F;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: checkStroke 0.4s cubic-bezier(0.65, 0, 0.45, 1) 0.6s forwards;
+}
+
+@keyframes checkStroke {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.success-heading {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #2D6A4F;
+  text-align: center;
+}
+
+/* Confetti Animation */
+@keyframes confettiFall {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--confetti-x), var(--confetti-y)) rotate(var(--confetti-r));
+    opacity: 0;
+  }
+}
+
+/* Button Loading Spinner */
+.btn-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spinBtn 0.6s linear infinite;
+}
+
+@keyframes spinBtn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error icon in message */
+.error-icon {
+  margin-right: 4px;
+}
+
+/* =========================================================================
+   Coming Soon Store Badges
+   ========================================================================= */
+
+.store-badges {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.store-badges-label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.store-badges-row {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.store-badge {
+  opacity: 0.5;
+  filter: grayscale(0.3);
+  transition: var(--transition-smooth);
+  cursor: default;
+  position: relative;
+}
+
+.store-badge svg {
+  width: 140px;
+  height: auto;
+}
+
+.store-badge:hover {
+  opacity: 0.7;
+  filter: grayscale(0);
+}
+
+/* =========================================================================
+   Dark Mode (Toggle + Auto-detect)
+   ========================================================================= */
+
+body.dark-mode {
+  --color-primary: #E88A8A;
+  --color-primary-light: #F0A0A0;
+  --color-primary-dark: #D87070;
+  --color-accent: #1E1E2F;
+  --color-background: #141420;
+  --color-text-dark: #F0F0F0;
+  --color-text-muted: #A0A0B0;
+  --color-white: #1E1E30;
+  --color-glass: rgba(30, 30, 50, 0.7);
+  --color-glass-border: rgba(255, 255, 255, 0.1);
+  --shadow-soft: 0 12px 40px rgba(0, 0, 0, 0.3);
+  --shadow-premium: 0 20px 50px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.2);
+  background-color: var(--color-background);
+}
+
+/* Header */
+body.dark-mode .header {
+  background: rgba(20, 20, 32, 0.8);
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .header.scrolled {
+  background: rgba(20, 20, 32, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+body.dark-mode .nav-cta {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: #fff;
+}
+
+/* Hero */
+body.dark-mode .hero {
+  background: var(--color-background);
+}
+
+body.dark-mode .hero-icon-container {
+  background: var(--color-white);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.dark-mode .hero-bg-svg {
+  opacity: 0.5;
+}
+
+body.dark-mode .audience-banner {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+body.dark-mode .acronym-badge {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Trust Banner */
+body.dark-mode .trust-content {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Glass Cards */
+body.dark-mode .glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* About */
+body.dark-mode .about-us {
+  background: var(--color-background);
+}
+
+body.dark-mode .about-card {
+  background: var(--color-white);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+/* Gallery / Proof */
+body.dark-mode .proof {
+  background: var(--color-accent);
+}
+
+/* CTA */
+body.dark-mode .cta {
+  background: var(--color-accent);
+}
+
+/* Waitlist Form */
+body.dark-mode .waitlist-form,
+body.dark-mode .waitlist-form-cta {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .waitlist-form:focus-within,
+body.dark-mode .waitlist-form-cta:focus-within {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(232, 138, 138, 0.15), 0 15px 45px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .waitlist-input {
+  color: var(--color-text-dark);
+}
+
+body.dark-mode .waitlist-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+body.dark-mode .waitlist-submit:disabled {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Language Dropdown */
+body.dark-mode .lang-dropdown {
+  background: rgba(30, 30, 50, 0.95);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .lang-dropdown a:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Footer */
+body.dark-mode .footer {
+  background: var(--color-background);
+  border-top-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .footer-bottom {
+  border-top-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .footer-contact {
+  color: var(--color-text-dark) !important;
+}
+
+/* Bento Cards */
+body.dark-mode .bento-card {
+  background: var(--color-white);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .bento-ui {
+  background: var(--color-background);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .ui-item {
+  background: var(--color-white);
+}
+
+body.dark-mode .ui-text-bar {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .feature-icon {
+  background: rgba(232, 138, 138, 0.15);
+}
+
+/* Store badges */
+body.dark-mode .store-badge {
+  filter: grayscale(0) invert(0);
+  opacity: 0.6;
+}
+
+body.dark-mode .store-badge:hover {
+  opacity: 0.85;
+}
+
+/* Success checkmark in dark mode */
+body.dark-mode .checkmark-circle,
+body.dark-mode .checkmark-check {
+  stroke: #4ADE80;
+}
+
+body.dark-mode .success-heading {
+  color: #4ADE80;
+}
+
+/* Gallery items */
+body.dark-mode .gallery-item {
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+/* =========================================================================
+   Theme Toggle Button
+   ========================================================================= */
+
+.theme-toggle {
+  background: none;
+  border: 1.5px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  color: var(--color-text-dark);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+  background: rgba(0, 0, 0, 0.05);
+  transform: rotate(30deg);
+}
+
+body.dark-mode .theme-toggle {
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--color-text-dark);
+}
+
+body.dark-mode .theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Icon swap */
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: inline; }
+body.dark-mode .theme-toggle .icon-sun { display: inline; }
+body.dark-mode .theme-toggle .icon-moon { display: none; }

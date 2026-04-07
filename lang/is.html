@@ -9,6 +9,21 @@
     <meta name="keywords" content="Vigdis, einhverfa, ADHD, sjónræn dagskrá, daglegar venjur, sérþarfir">
     <meta name="author" content="Vigdís">
 
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vigdisapp.is/lang/is.html">
+    <meta property="og:title" content="Vigdís — Sjónrænt skipulag fyrir daglegar athafnir">
+    <meta property="og:description" content="Notendavænt og staðbundið sjónrænt dagskrárforrit hannað af fagfólki og foreldrum. Einfaldaðu daglega lífið.">
+    <meta property="og:image" content="https://vigdisapp.is/152x152bb-80.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Vigdís — Sjónrænt skipulag fyrir daglegar athafnir">
+    <meta name="twitter:description" content="Notendavænt og staðbundið sjónrænt dagskrárforrit hannað af fagfólki og foreldrum. Einfaldaðu daglega lífið.">
+    <meta name="twitter:image" content="https://vigdisapp.is/152x152bb-80.png">
+
     <title>Vigdís - Sjónræn leiðsögn fyrir daglegar athafnir</title>
 
     <!-- Favicon -->
@@ -25,6 +40,15 @@
 </head>
 
 <body>
+    <!-- Theme: apply saved preference or system default before paint -->
+    <script>
+        (function() {
+            const saved = localStorage.getItem('vigdis-theme');
+            if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+    </script>
 
     <!-- Header -->
     <header class="header" id="header">
@@ -60,6 +84,10 @@
                         <a href="is.html" class="active">Íslenska</a>
                     </div>
                 </div>
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+                    <span class="icon-moon">🌙</span>
+                    <span class="icon-sun">☀️</span>
+                </button>
                 <a href="#home" class="nav-cta">Skrá mig á biðlista</a>
             </div>
         </div>
@@ -183,6 +211,36 @@
                     <button type="submit" class="waitlist-submit magnetic">Skrá mig á biðlista</button>
                 </form>
                 <div id="waitlist-message-cta" class="waitlist-message-cta"></div>
+            </div>
+
+            <!-- Coming Soon Store Badges -->
+            <div class="store-badges">
+                <p class="store-badges-label">Kemur bráðlega á</p>
+                <div class="store-badges-row">
+                    <div class="store-badge" title="Kemur bráðlega á App Store">
+                        <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="120" height="40" rx="6" fill="#000"/>
+                            <text x="38" y="13" fill="#fff" font-size="6" font-family="Inter, sans-serif">Download on the</text>
+                            <text x="38" y="27" fill="#fff" font-size="12" font-weight="600" font-family="Inter, sans-serif">App Store</text>
+                            <g transform="translate(10, 7) scale(0.65)" fill="#fff">
+                                <path d="M18.9 14.3C18.7 11.8 20.9 10.5 21 10.5c-1.1-1.6-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-2-.9-3.3-.8-1.7 0-3.3 1-4.2 2.5-1.8 3.1-.5 7.7 1.3 10.3.9 1.2 1.9 2.6 3.3 2.5 1.3-.1 1.8-.8 3.4-.8s2 .8 3.4.8c1.4 0 2.3-1.2 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.7-1-2.7-4.1M16.4 7c.7-.9 1.2-2.1 1.1-3.4-1 0-2.3.7-3 1.6-.7.8-1.2 2-1.1 3.2 1.2.1 2.3-.6 3-1.4"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="store-badge" title="Kemur bráðlega á Google Play">
+                        <svg viewBox="0 0 135 40" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="135" height="40" rx="6" fill="#000"/>
+                            <text x="48" y="13" fill="#fff" font-size="5.5" font-family="Inter, sans-serif" letter-spacing="0.5">GET IT ON</text>
+                            <text x="48" y="27" fill="#fff" font-size="11" font-weight="600" font-family="Inter, sans-serif">Google Play</text>
+                            <g transform="translate(10, 5) scale(0.72)">
+                                <path d="M7.5 3.7L24.5 13.5c.8.5.8 1.5 0 2L7.5 25.3c-.8.5-1.5.1-1.5-.8V4.5c0-.9.7-1.3 1.5-.8z" fill="#4285F4"/>
+                                <path d="M6 4.5v20c0 .5.2.8.5.9L19.7 14.5 6.5 3.6c-.3.1-.5.4-.5.9z" fill="#34A853"/>
+                                <path d="M6.5 3.6L19.7 14.5l4.8-4.8L7.5 0c-.5-.3-1-.1-1 .6L6.5 3.6z" fill="#FBBC05"/>
+                                <path d="M6.5 25.4l17-9.7-3.8-3.8L6.5 25.4z" fill="#EA4335"/>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -319,6 +377,14 @@
         });
     </script>
     <script src="../assets/waitlist.js"></script>
+    <!-- Theme Toggle Logic -->
+    <script>
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('vigdis-theme', isDark ? 'dark' : 'light');
+        });
+    </script>
 </body>
 
 </html>

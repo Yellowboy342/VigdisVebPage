@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const waitlistForm = document.getElementById('waitlist-form');
-    const waitlistMessage = document.getElementById('waitlist-message');
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwRnbN7F1WMgHIGQ8ebJw2Zpl3q_CcobxSlAYqwcDuX9PSQr5Y-Yha5xGFOHdAgyoeimA/exec';
 
     // Basic email regex for client side validation
@@ -8,16 +6,43 @@ document.addEventListener("DOMContentLoaded", function () {
         return String(email)
             .toLowerCase()
             .match(
-                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                /^(([^<>()[\]\\.,;:\s@"]+(\.?[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             );
     };
+
+    // Mini confetti burst (pure JS, no libraries)
+    function spawnConfetti(container) {
+        const colors = ['#E88A8A', '#F0A0A0', '#D87070', '#FEF5F0', '#FFB800', '#2D6A4F'];
+        const confettiCount = 30;
+        for (let i = 0; i < confettiCount; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti-piece';
+            confetti.style.cssText = `
+                position: absolute;
+                width: ${Math.random() * 8 + 4}px;
+                height: ${Math.random() * 8 + 4}px;
+                background: ${colors[Math.floor(Math.random() * colors.length)]};
+                border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+                left: 50%;
+                top: 50%;
+                pointer-events: none;
+                z-index: 10;
+                animation: confettiFall ${Math.random() * 1.5 + 1}s cubic-bezier(.25,.46,.45,.94) forwards;
+                --confetti-x: ${(Math.random() - 0.5) * 300}px;
+                --confetti-y: ${Math.random() * -200 - 50}px;
+                --confetti-r: ${Math.random() * 720 - 360}deg;
+            `;
+            container.appendChild(confetti);
+            setTimeout(() => confetti.remove(), 2500);
+        }
+    }
 
     const waitlistForms = document.querySelectorAll('.waitlist-form, .waitlist-form-cta');
 
     waitlistForms.forEach(waitlistForm => {
         const emailInput = waitlistForm.querySelector('input[type="email"]');
         const submitBtn = waitlistForm.querySelector('button');
-        const waitlistMessage = waitlistForm.nextElementSibling; // div.waitlist-message or ...-cta
+        const waitlistMessage = waitlistForm.nextElementSibling;
 
         // Initial state: Disable the button to start
         submitBtn.disabled = true;
@@ -27,7 +52,6 @@ document.addEventListener("DOMContentLoaded", function () {
             waitlistForm.classList.remove('invalid');
             waitlistMessage.classList.remove('show');
 
-            // Enable button if valid, disable if invalid
             const emailValue = emailInput.value.trim();
             submitBtn.disabled = !validateEmail(emailValue);
         });
@@ -43,7 +67,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const successText = waitlistForm.getAttribute('data-success') || 'Success! You are now subscribed.';
             const errorText = waitlistForm.getAttribute('data-error') || 'Error! Something went wrong. Please try again.';
 
-            // Waitlist specific language detection for invalid email message
             const invalidEmailText = document.documentElement.lang.startsWith('is')
                 ? 'Vinsamlegast sláðu inn gilt netfang.'
                 : 'Please enter a valid email address.';
@@ -52,16 +75,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 waitlistForm.classList.add('invalid');
                 waitlistMessage.innerText = invalidEmailText;
                 waitlistMessage.className = 'waitlist-message error show';
-
-                // Remove the shake class after animation completes so it can trigger again
                 setTimeout(() => {
                     waitlistForm.classList.remove('invalid');
                 }, 400);
                 return;
             }
 
-            // UI Feedback: Loading
-            submitBtn.innerText = loadingText;
+            // UI Feedback: Loading state with spinner
+            submitBtn.innerHTML = `<span class="btn-spinner"></span>`;
             submitBtn.disabled = true;
             waitlistMessage.className = 'waitlist-message';
 
@@ -70,18 +91,47 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: new FormData(waitlistForm)
             })
                 .then(response => {
-                    submitBtn.innerText = originalBtnText;
-                    submitBtn.disabled = false;
+                    // SUCCESS: Replace the form with an animated success state
+                    const parentContainer = waitlistForm.parentElement;
+                    parentContainer.style.position = 'relative';
 
-                    waitlistMessage.innerText = successText;
-                    waitlistMessage.className = 'waitlist-message success show';
+                    waitlistForm.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    waitlistForm.style.opacity = '0';
+                    waitlistForm.style.transform = 'scale(0.95)';
+
+                    setTimeout(() => {
+                        waitlistForm.style.display = 'none';
+
+                        // Build success UI
+                        const successEl = document.createElement('div');
+                        successEl.className = 'waitlist-success-state';
+                        successEl.innerHTML = `
+                            <svg class="checkmark-svg" viewBox="0 0 52 52">
+                                <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                                <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                            </svg>
+                            <p class="success-heading">${successText}</p>
+                        `;
+
+                        // Hide the old message
+                        waitlistMessage.style.display = 'none';
+
+                        parentContainer.appendChild(successEl);
+
+                        // Trigger animation
+                        requestAnimationFrame(() => {
+                            successEl.classList.add('active');
+                            spawnConfetti(parentContainer);
+                        });
+                    }, 300);
+
                     waitlistForm.reset();
                 })
                 .catch(error => {
                     submitBtn.innerText = originalBtnText;
                     submitBtn.disabled = false;
 
-                    waitlistMessage.innerText = errorText;
+                    waitlistMessage.innerHTML = `<span class="error-icon">⚠️</span> ${errorText}`;
                     waitlistMessage.className = 'waitlist-message error show';
                     console.error('Waitlist Error:', error);
                 });
