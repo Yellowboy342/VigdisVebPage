@@ -1623,8 +1623,8 @@ section:not(.hero) {
 .phone-frame {
   flex-shrink: 0;
   background: #1a1a2e;
-  border-radius: 40px;
-  padding: 10px;
+  border-radius: 36px;
+  padding: 5px;
   box-shadow:
     0 30px 80px rgba(0, 0, 0, 0.25),
     0 0 0 1px rgba(255, 255, 255, 0.08),
@@ -1679,23 +1679,10 @@ section:not(.hero) {
   opacity: 1;
 }
 
-/* Notch */
-.phone-notch {
-  width: 100px;
-  height: 28px;
-  background: #1a1a2e;
-  border-radius: 0 0 18px 18px;
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-}
-
 /* Screen */
 .phone-screen {
   width: 100%;
-  border-radius: 30px;
+  border-radius: 32px;
   overflow: hidden;
   background: #f8f5f0;
   aspect-ratio: 9 / 19.5;
@@ -1709,31 +1696,7 @@ section:not(.hero) {
   display: block;
 }
 
-/* Label */
-.phone-label {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--color-text-dark);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
 
-/* Secondary Row (Rewards phone) */
-.phone-secondary {
-  display: flex;
-  justify-content: center;
-  margin-top: 60px;
-}
-
-.phone-small {
-  width: 220px;
-}
-
-.phone-small:hover {
-  transform: translateY(-10px);
-}
 
 /* Mobile Responsive */
 @media (max-width: 900px) {
