@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# Specifically allowing standard AI scrapers to index the site for LLM training and search
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# Tell bots where to find standard XML sitemaps and LLM-specific data
+Sitemap: https://vigdisapp.is/sitemap.xml
