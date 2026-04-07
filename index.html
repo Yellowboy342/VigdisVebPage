@@ -169,40 +169,47 @@
                 <h2 class="scrub-text">See the app in action</h2>
                 <p class="preview-subtitle">Designed to be intuitive, calming, and powerful — all at the same time.</p>
             </div>
-            <div class="phone-carousel-wrapper reveal delay-200">
-                <div class="phone-carousel" id="phone-carousel">
-                    <!-- Phone 1: Tasks -->
-                    <div class="phone-frame">
-                        <div class="phone-notch"></div>
-                        <div class="phone-screen">
-                            <img src="assets/rawAppScreenshots/tasks.png" alt="Vigdís Daily Tasks View" loading="lazy">
-                        </div>
-                        <p class="phone-label">Daily Routines</p>
+
+            <!-- Staggered Phone Display -->
+            <div class="phone-showcase reveal delay-200">
+                <div class="phone-glow"></div>
+
+                <!-- Left phone (tilted) -->
+                <div class="phone-frame phone-side phone-left">
+                    <div class="phone-notch"></div>
+                    <div class="phone-screen">
+                        <img src="assets/rawAppScreenshots/subtasks.png" alt="Vigdís Subtask Breakdown" loading="lazy">
                     </div>
-                    <!-- Phone 2: Subtasks -->
-                    <div class="phone-frame">
-                        <div class="phone-notch"></div>
-                        <div class="phone-screen">
-                            <img src="assets/rawAppScreenshots/subtasks.png" alt="Vigdís Subtask Breakdown" loading="lazy">
-                        </div>
-                        <p class="phone-label">Step-by-Step Subtasks</p>
+                    <p class="phone-label">Step-by-Step Subtasks</p>
+                </div>
+
+                <!-- Center phone (hero, largest) -->
+                <div class="phone-frame phone-hero">
+                    <div class="phone-notch"></div>
+                    <div class="phone-screen">
+                        <img src="assets/rawAppScreenshots/tasks.png" alt="Vigdís Daily Tasks View" loading="lazy">
                     </div>
-                    <!-- Phone 3: Analytics -->
-                    <div class="phone-frame">
-                        <div class="phone-notch"></div>
-                        <div class="phone-screen">
-                            <img src="assets/rawAppScreenshots/analytics.png" alt="Vigdís Analytics Dashboard" loading="lazy">
-                        </div>
-                        <p class="phone-label">Progress Analytics</p>
+                    <p class="phone-label">Daily Routines</p>
+                </div>
+
+                <!-- Right phone (tilted) -->
+                <div class="phone-frame phone-side phone-right">
+                    <div class="phone-notch"></div>
+                    <div class="phone-screen">
+                        <img src="assets/rawAppScreenshots/analytics.png" alt="Vigdís Analytics Dashboard" loading="lazy">
                     </div>
-                    <!-- Phone 4: Rewards -->
-                    <div class="phone-frame">
-                        <div class="phone-notch"></div>
-                        <div class="phone-screen">
-                            <img src="assets/rawAppScreenshots/rewards.png" alt="Vigdís Rewards System" loading="lazy">
-                        </div>
-                        <p class="phone-label">Rewards System</p>
+                    <p class="phone-label">Progress Analytics</p>
+                </div>
+            </div>
+
+            <!-- Secondary row -->
+            <div class="phone-secondary reveal delay-300">
+                <div class="phone-frame phone-small">
+                    <div class="phone-notch"></div>
+                    <div class="phone-screen">
+                        <img src="assets/rawAppScreenshots/rewards.png" alt="Vigdís Rewards System" loading="lazy">
                     </div>
+                    <p class="phone-label">Rewards & Motivation</p>
                 </div>
             </div>
         </div>
