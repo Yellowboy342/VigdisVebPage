@@ -37,6 +37,9 @@
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="../styles.css?v=2.0">
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 
 <body>
@@ -140,11 +143,11 @@
                 <p class="preview-subtitle">Hannað til að vera leiðandi og róandi – allt á sama tíma.</p>
             </div>
 
-            <!-- Premium 3D Spinning Wheel Carousel -->
-            <div class="carousel-container reveal delay-200">
-                <div class="carousel-track" id="app-carousel">
-                    <!-- Carousel Item 1 -->
-                    <div class="carousel-item">
+            <!-- Swiper 3D Coverflow Carousel -->
+            <div class="swiper mySwiper reveal delay-200">
+                <div class="swiper-wrapper">
+                    <!-- Slide 1 -->
+                    <div class="swiper-slide">
                         <div class="phone-frame">
                             <div class="phone-screen">
                                 <img src="../assets/rawAppScreenshots/tasks.png" alt="Vigdís dagleg verkefni" loading="lazy">
@@ -152,8 +155,8 @@
                         </div>
                     </div>
 
-                    <!-- Carousel Item 2 -->
-                    <div class="carousel-item">
+                    <!-- Slide 2 -->
+                    <div class="swiper-slide">
                         <div class="phone-frame">
                             <div class="phone-screen">
                                 <img src="../assets/rawAppScreenshots/subtasks.png" alt="Vigdís undirverkefni" loading="lazy">
@@ -161,8 +164,8 @@
                         </div>
                     </div>
 
-                    <!-- Carousel Item 3 -->
-                    <div class="carousel-item">
+                    <!-- Slide 3 -->
+                    <div class="swiper-slide">
                         <div class="phone-frame">
                             <div class="phone-screen">
                                 <img src="../assets/rawAppScreenshots/analytics.png" alt="Vigdís framvindugreining" loading="lazy">
@@ -170,8 +173,8 @@
                         </div>
                     </div>
 
-                    <!-- Carousel Item 4 -->
-                    <div class="carousel-item">
+                    <!-- Slide 4 -->
+                    <div class="swiper-slide">
                         <div class="phone-frame">
                             <div class="phone-screen">
                                 <img src="../assets/rawAppScreenshots/rewards.png" alt="Vigdís verðlaunakerfi" loading="lazy">
@@ -180,19 +183,9 @@
                     </div>
                 </div>
 
-                <!-- Nav Buttons Overlay -->
-                <div class="carousel-nav-layer">
-                    <button class="carousel-btn carousel-prev" aria-label="Fyrri">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="15 18 9 12 15 6"></polyline>
-                        </svg>
-                    </button>
-                    <button class="carousel-btn carousel-next" aria-label="Næsta">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </button>
-                </div>
+                <!-- Swiper Navigation Arrows -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
             </div>
         </div>
     </section>
@@ -506,89 +499,33 @@
                     el.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
                 });
             });
-
-            // 5. 3D Spinning Carousel Navigation
-            const items = document.querySelectorAll('.carousel-item');
-            const prevBtn = document.querySelector('.carousel-prev');
-            const nextBtn = document.querySelector('.carousel-next');
-
-            if (items.length > 0) {
-                let currentIndex = 0; // Start with the first item
-
-                function updateCarousel() {
-                    items.forEach((item, index) => {
-                        item.className = 'carousel-item'; // Reset
-                        let diff = index - currentIndex;
-                        if (diff < 0) diff += items.length;
-                        
-                        if (diff === 0) {
-                            item.classList.add('active');
-                        } else if (diff === 1) {
-                            item.classList.add('next');
-                        } else if (diff === items.length - 1) {
-                            item.classList.add('prev');
-                        } else {
-                            // Split remaining items to hide left or right gracefully
-                            if (diff <= items.length / 2) {
-                                item.classList.add('hidden-right');
-                            } else {
-                                item.classList.add('hidden-left');
-                            }
-                        }
-                    });
-                }
-
-                if (prevBtn) {
-                    prevBtn.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        currentIndex = (currentIndex - 1 + items.length) % items.length;
-                        updateCarousel();
-                    });
-                }
-
-                if (nextBtn) {
-                    nextBtn.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        currentIndex = (currentIndex + 1) % items.length;
-                        updateCarousel();
-                    });
-                }
-
-                // Click on visible side items to bring them forward
-                items.forEach((item, index) => {
-                    item.addEventListener('click', () => {
-                        if (item.classList.contains('prev') || item.classList.contains('next')) {
-                            currentIndex = index;
-                            updateCarousel();
-                        }
-                    });
-                });
-
-                // Mobile swipe support for the 3D wheel
-                let touchStartX = 0;
-                let touchEndX = 0;
-                const track = document.getElementById('app-carousel');
-                if (track) {
-                    track.addEventListener('touchstart', e => {
-                        touchStartX = e.changedTouches[0].screenX;
-                    }, {passive: true});
-                    track.addEventListener('touchend', e => {
-                        touchEndX = e.changedTouches[0].screenX;
-                        if (touchEndX < touchStartX - 50) {
-                            currentIndex = (currentIndex + 1) % items.length;
-                            updateCarousel();
-                        }
-                        if (touchEndX > touchStartX + 50) {
-                            currentIndex = (currentIndex - 1 + items.length) % items.length;
-                            updateCarousel();
-                        }
-                    }, {passive: true});
-                }
-
-                updateCarousel(); // Init state
-            }
         });
     </script>
+    
+    <!-- Swiper JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+      // Initialize Swiper Coverflow
+      const swiper = new Swiper(".mySwiper", {
+        effect: "coverflow",
+        grabCursor: true,
+        centeredSlides: true,
+        slidesPerView: "auto",
+        initialSlide: 1, // Start on the 2nd slide
+        coverflowEffect: {
+          rotate: 20, // Angle
+          stretch: 0,
+          depth: 200, // Z-depth distance
+          modifier: 1, // Multiplier
+          slideShadows: false, // Too dark normally
+        },
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+      });
+    </script>
+
     <script src="../assets/waitlist.js"></script>
 </body>
 
