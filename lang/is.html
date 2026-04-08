@@ -40,15 +40,6 @@
 </head>
 
 <body>
-    <!-- Theme: apply saved preference or system default before paint -->
-    <script>
-        (function() {
-            const saved = localStorage.getItem('vigdis-theme');
-            if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.body.classList.add('dark-mode');
-            }
-        })();
-    </script>
 
     <!-- Header -->
     <header class="header" id="header">
@@ -84,10 +75,7 @@
                         <a href="is.html" class="active">Íslenska</a>
                     </div>
                 </div>
-                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
-                    <span class="icon-moon">🌙</span>
-                    <span class="icon-sun">☀️</span>
-                </button>
+
                 <a href="#home" class="nav-cta">Skrá mig á biðlista</a>
             </div>
         </div>
@@ -121,34 +109,156 @@
             </div>
             <div class="container">
                 <div class="hero-content">
-                    <div class="hero-icon-container shadow-premium reveal">
-                        <img src="../152x152bb-80.png" alt="Vigdís App Icon" class="hero-logo">
+                    <div class="hero-pill reveal">
+                        <span class="hero-pill-dot"></span>
+                        Einfaldaðu daglega lífið
                     </div>
-                    <p class="acronym-badge reveal delay-100">EINFALDAÐU DAGLEGA LÍFIÐ</p>
-                    <h1 class="reveal delay-200">Sjónrænt skipulag fyrir daglega rútínu</h1>
-                    <p class="tagline reveal delay-300">Notendavænt og staðbundið sjónrænt dagskrárapp hannað af fagfólki og foreldrum 
-                        til þess að styðja einstaklinga og fjölskyldur við að fá skýra yfirsýn yfir athafnir daglegs lífs.</p>
+                    <h1 class="hero-headline reveal delay-100">Sjónrænt skipulag fyrir<br>daglega rútínu</h1>
+                    <p class="hero-subtitle reveal delay-200">Notendavænt og staðbundið sjónrænt dagskrárapp hannað af fagfólki og foreldrum til þess að styðja einstaklinga og fjölskyldur við að fá skýra yfirsýn yfir athafnir daglegs lífs.</p>
+                    <div class="hero-ctas reveal delay-300">
+                        <a href="#cta" class="hero-btn-primary">Skrá á biðlista ↗</a>
+                        <a href="#features" class="hero-btn-secondary">Hvernig það virkar</a>
+                    </div>
+                </div>
 
-                    <div class="audience-banner reveal delay-400">
-                        <p>Vigdis er verkfæri fyrir alla þá sem vilja aukinn fyrirsjáanleika. 
-                            Vigdis er ætlað til þess að koma til móts við ólíkar þarfir einstaklinga og nýtist þeim sem nota fjölbreytt þjónustusvið sem og alla aðra.</p></div>
-
-
-
+                <!-- Hero Phone -->
+                <div class="hero-phone-container reveal delay-400">
+                    <div class="hero-phone-frame">
+                        <img src="../assets/rawAppScreenshots/tasks.png" alt="Vigdís App - Dagleg rútína" loading="lazy">
+                    </div>
                 </div>
             </div>
     </div>
     </section>
     </div>
 
-    <!-- 04. Trust Banner (Authority) -->
-    <section class="trust-banner">
+    <!-- App Preview Section -->
+    <section class="app-preview" id="preview">
         <div class="container">
-            <div class="trust-content glass-card reveal">
-                <div class="trust-item">
-                    <span class="trust-icon">🔒</span>
-                    <p><strong>Öruggt og staðbundið.</strong> Gögn fjölskyldunnar yfirgefa aldrei tækið. Ekkert
-                        ský, engin rakning, engar auglýsingar.</p>
+            <div class="preview-header reveal">
+                <h2 class="scrub-text">Sjáðu appið í verki</h2>
+                <p class="preview-subtitle">Hannað til að vera leiðandi og róandi – allt á sama tíma.</p>
+            </div>
+
+            <!-- Staggered Phone Display -->
+            <div class="phone-showcase reveal delay-200">
+                <div class="phone-glow"></div>
+
+                <!-- Left phone (tilted) -->
+                <div class="phone-frame phone-side phone-left">
+                    <div class="phone-screen">
+                        <img src="../assets/rawAppScreenshots/subtasks.png" alt="Vigdís undirverkefni" loading="lazy">
+                    </div>
+                </div>
+
+                <!-- Center-left phone -->
+                <div class="phone-frame phone-hero">
+                    <div class="phone-screen">
+                        <img src="../assets/rawAppScreenshots/tasks.png" alt="Vigdís dagleg verkefni" loading="lazy">
+                    </div>
+                </div>
+
+                <!-- Center-right phone -->
+                <div class="phone-frame phone-hero">
+                    <div class="phone-screen">
+                        <img src="../assets/rawAppScreenshots/analytics.png" alt="Vigdís framvindugreining" loading="lazy">
+                    </div>
+                </div>
+
+                <!-- Right phone (tilted) -->
+                <div class="phone-frame phone-side phone-right">
+                    <div class="phone-screen">
+                        <img src="../assets/rawAppScreenshots/rewards.png" alt="Vigdís verðlaunakerfi" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Bento Grid -->
+    <section class="feature-bento" id="features">
+        <div class="container">
+            <div class="preview-header reveal">
+                <h2 class="scrub-text">Allt sem fjölskyldan þarfnast</h2>
+                <p class="preview-subtitle">Öflugir eiginleikar í rólegu, notendavænu viðmóti.</p>
+            </div>
+
+            <div class="bento-grid-premium">
+                <!-- Card 1: Visual Schedules (Large) -->
+                <div class="bento-item bento-large reveal">
+                    <div class="bento-item-text">
+                        <span class="bento-emoji">📋</span>
+                        <h3>Sjónrænt skipulag</h3>
+                        <p>Búðu til fallegar, skref-fyrir-skref daglegar rútínur með sérsniðnum myndum. Barnið sér nákvæmlega hvað tekur við næst.</p>
+                    </div>
+                    <div class="bento-item-media">
+                        <div class="bento-phone">
+                            <img src="../assets/rawAppScreenshots/tasks.png" alt="Sjónrænt skipulag" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Subtasks (Medium) -->
+                <div class="bento-item bento-medium reveal delay-100">
+                    <span class="bento-emoji">✅</span>
+                    <h3>Brjóta niður verkefni</h3>
+                    <p>Flókin verkefni eins og að "klæða sig" brotin niður í einföld skref — Sokkar, Buxur, Bolur.</p>
+                    <div class="bento-item-media bento-media-bottom">
+                        <div class="bento-phone">
+                            <img src="../assets/rawAppScreenshots/subtasks.png" alt="Brotin niður verkefni" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Privacy (Medium) -->
+                <div class="bento-item bento-medium bento-accent reveal delay-200">
+                    <span class="bento-emoji">🔒</span>
+                    <h3>100% Einkamál & Staðbundið</h3>
+                    <p>Engar skýjalausnir. Engin rakning. Gögn fjölskyldunnar yfirgefa aldrei tækið.</p>
+                    <div class="bento-privacy-visual">
+                        <div class="privacy-shield">
+                            <span>🛡️</span>
+                        </div>
+                        <p class="privacy-tagline">Engin gagnasöfnun.</p>
+                    </div>
+                </div>
+
+                <!-- Card 4: Analytics (Medium) -->
+                <div class="bento-item bento-medium reveal delay-100">
+                    <span class="bento-emoji">📊</span>
+                    <h3>Framvindugreining</h3>
+                    <p>Sjáðu hvaða rútínur þurfa aukinn stuðning og fagnaðu daglegum árangri með skýrri sjónrænni yfirsýn.</p>
+                    <div class="bento-item-media bento-media-bottom">
+                        <div class="bento-phone">
+                            <img src="../assets/rawAppScreenshots/analytics.png" alt="Framvindugreining" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5: Rewards (Medium) -->
+                <div class="bento-item bento-medium reveal delay-200">
+                    <span class="bento-emoji">🎁</span>
+                    <h3>Verðlaun & Hvatning</h3>
+                    <p>Fáðu stjörnur fyrir kláruð verkefni. Límmiðar, ferð í garðinn, bíókvöld — þú ræður.</p>
+                    <div class="bento-item-media bento-media-bottom">
+                        <div class="bento-phone">
+                            <img src="../assets/rawAppScreenshots/rewards.png" alt="Verðlaun" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 6: Multi-Language (Small) -->
+                <div class="bento-item bento-small reveal delay-100">
+                    <span class="bento-emoji">🌍</span>
+                    <h3>2 Tungumál</h3>
+                    <p>Fáanlegt á ensku og íslensku — og fleiri tungumál á leiðinni.</p>
+                </div>
+
+                <!-- Card 7: Designed by Parents (Small) -->
+                <div class="bento-item bento-small reveal delay-200">
+                    <span class="bento-emoji">👨‍👩‍👧‍👦</span>
+                    <h3>Hannað af foreldrum</h3>
+                    <p>Hannað af fagfólki og foreldrum sem þekkja daglegar áskoranir fjölskyldna.</p>
                 </div>
             </div>
         </div>
@@ -377,14 +487,6 @@
         });
     </script>
     <script src="../assets/waitlist.js"></script>
-    <!-- Theme Toggle Logic -->
-    <script>
-        document.getElementById('theme-toggle').addEventListener('click', function() {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            localStorage.setItem('vigdis-theme', isDark ? 'dark' : 'light');
-        });
-    </script>
 </body>
 
 </html>
