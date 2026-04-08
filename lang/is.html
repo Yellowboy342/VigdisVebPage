@@ -140,37 +140,57 @@
                 <p class="preview-subtitle">Hannað til að vera leiðandi og róandi – allt á sama tíma.</p>
             </div>
 
-            <!-- Staggered Phone Display -->
-            <div class="phone-showcase reveal delay-200">
-                <div class="phone-glow"></div>
+            <!-- Premium Scrollable Carousel -->
+            <div class="carousel-container reveal delay-200">
+                <button class="carousel-btn carousel-prev" aria-label="Fyrri">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
 
-                <!-- Left phone (tilted) -->
-                <div class="phone-frame phone-side phone-left">
-                    <div class="phone-screen">
-                        <img src="../assets/rawAppScreenshots/subtasks.png" alt="Vigdís undirverkefni" loading="lazy">
+                <div class="carousel-track" id="app-carousel">
+                    <!-- Carousel Item 1 -->
+                    <div class="carousel-item">
+                        <div class="phone-frame">
+                            <div class="phone-screen">
+                                <img src="../assets/rawAppScreenshots/tasks.png" alt="Vigdís dagleg verkefni" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Carousel Item 2 -->
+                    <div class="carousel-item">
+                        <div class="phone-frame">
+                            <div class="phone-screen">
+                                <img src="../assets/rawAppScreenshots/subtasks.png" alt="Vigdís undirverkefni" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Carousel Item 3 -->
+                    <div class="carousel-item">
+                        <div class="phone-frame">
+                            <div class="phone-screen">
+                                <img src="../assets/rawAppScreenshots/analytics.png" alt="Vigdís framvindugreining" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Carousel Item 4 -->
+                    <div class="carousel-item">
+                        <div class="phone-frame">
+                            <div class="phone-screen">
+                                <img src="../assets/rawAppScreenshots/rewards.png" alt="Vigdís verðlaunakerfi" loading="lazy">
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Center-left phone -->
-                <div class="phone-frame phone-hero">
-                    <div class="phone-screen">
-                        <img src="../assets/rawAppScreenshots/tasks.png" alt="Vigdís dagleg verkefni" loading="lazy">
-                    </div>
-                </div>
-
-                <!-- Center-right phone -->
-                <div class="phone-frame phone-hero">
-                    <div class="phone-screen">
-                        <img src="../assets/rawAppScreenshots/analytics.png" alt="Vigdís framvindugreining" loading="lazy">
-                    </div>
-                </div>
-
-                <!-- Right phone (tilted) -->
-                <div class="phone-frame phone-side phone-right">
-                    <div class="phone-screen">
-                        <img src="../assets/rawAppScreenshots/rewards.png" alt="Vigdís verðlaunakerfi" loading="lazy">
-                    </div>
-                </div>
+                <button class="carousel-btn carousel-next" aria-label="Næsta">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
             </div>
         </div>
     </section>
@@ -484,6 +504,23 @@
                     el.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
                 });
             });
+
+            // 5. Carousel Navigation
+            const track = document.getElementById('app-carousel');
+            const prevBtn = document.querySelector('.carousel-prev');
+            const nextBtn = document.querySelector('.carousel-next');
+
+            if (track && prevBtn && nextBtn) {
+                const scrollAmount = 312; // 280px width + 32px gap
+                
+                prevBtn.addEventListener('click', () => {
+                    track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                });
+                
+                nextBtn.addEventListener('click', () => {
+                    track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                });
+            }
         });
     </script>
     <script src="../assets/waitlist.js"></script>
