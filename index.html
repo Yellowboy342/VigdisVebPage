@@ -36,7 +36,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="styles.css?v=2.0">
+    <link rel="stylesheet" href="styles.css?v=2.6">
 
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -92,10 +92,6 @@
                     </button>
                     <div class="lang-dropdown">
                         <a href="index.html" class="active">English</a>
-                        <a href="lang/es.html">Español</a>
-                        <a href="lang/zh.html">中文</a>
-                        <a href="lang/hi.html">हिन्दी</a>
-                        <a href="lang/ar.html">العربية</a>
                         <a href="lang/is.html">Íslenska</a>
                     </div>
                 </div>
@@ -132,19 +128,20 @@
                 </svg>
             </div>
             <div class="container">
-                <div class="hero-content">
-                    <h1 class="hero-headline reveal delay-100">Visual Guide for<br>Daily Activities</h1>
-                    <p class="hero-subtitle reveal delay-200">A user-friendly, local-first visual schedule app designed by professionals and parents to support individuals and families in getting a clear overview of activities of daily living.</p>
-                    <div class="hero-ctas reveal delay-300">
-                        <a href="#cta" class="hero-btn-primary">Join Waitlist ↗</a>
-                        <a href="#features" class="hero-btn-secondary">How it works</a>
+                <div class="hero-layout">
+                    <div class="hero-content">
+                        <h1 class="hero-headline reveal delay-100">Visual Guide for<br>Daily Activities</h1>
+                        <p class="hero-subtitle reveal delay-200">A user-friendly, local-first visual schedule app designed by professionals and parents to support individuals and families in getting a clear overview of activities of daily living.</p>
+                        <div class="hero-ctas reveal delay-300">
+                            <a href="#cta" class="hero-btn-primary">Join Waitlist ↗</a>
+                            <a href="#features" class="hero-btn-secondary">How it works</a>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Hero Phone -->
-                <div class="hero-phone-container reveal delay-400">
-                    <div class="hero-phone-frame">
-                        <img src="assets/rawAppScreenshots/tasks.png" alt="Vigdís App - Daily Routines" loading="lazy">
+                    <div class="hero-phone-container reveal delay-400">
+                        <div class="hero-phone-frame">
+                            <img src="assets/rawAppScreenshots/tasks.png" alt="Vigdís App - Daily Routines" loading="lazy">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -155,11 +152,6 @@
     <!-- App Preview Section -->
     <section class="app-preview" id="preview">
         <div class="container">
-            <div class="preview-header reveal">
-                <h2 class="scrub-text">See the app in action</h2>
-                <p class="preview-subtitle">Designed to be intuitive, calming, and powerful — all at the same time.</p>
-            </div>
-
             <!-- Swiper 3D Coverflow Carousel -->
             <div class="swiper mySwiper reveal delay-200">
                 <div class="swiper-wrapper">
@@ -216,25 +208,41 @@
             </div>
 
             <div class="bento-grid-premium">
-                <!-- Card 1: Visual Schedules (Large, spans 2 cols) -->
-                <div class="bento-item bento-large reveal">
+                <div class="bento-item bento-large bento-tone-hero reveal">
                     <div class="bento-item-text">
-                        <span class="bento-emoji">📋</span>
-                        <h3>Visual Schedules</h3>
-                        <p>Create beautiful, step-by-step daily routines using custom images and icons. Your child sees exactly what comes next.</p>
+                        <span class="bento-kicker">Calm Routine Planning</span>
+                        <h3>Visual schedules that turn everyday routines into a predictable flow</h3>
+                        <p>Create structured daily plans with custom imagery and icons so each next step feels clear, familiar, and easier to follow.</p>
+                        <div class="bento-inline-metrics">
+                            <div class="bento-inline-metric">
+                                <strong>Clear next step</strong>
+                                <span>Every activity is presented in order with calm visual guidance.</span>
+                            </div>
+                            <div class="bento-inline-metric">
+                                <strong>Built for consistency</strong>
+                                <span>Flexible enough for mornings, school transitions, and evening routines.</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="bento-item-media">
-                        <div class="bento-phone">
-                            <img src="assets/rawAppScreenshots/tasks.png" alt="Visual Schedule" loading="lazy">
+                        <div class="bento-device-stage">
+                            <div class="bento-orbit" aria-hidden="true"></div>
+                            <div class="bento-phone bento-phone-large">
+                                <img src="assets/rawAppScreenshots/tasks.png" alt="Visual Schedule" loading="lazy">
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 2: Subtasks (Medium) -->
-                <div class="bento-item bento-medium reveal delay-100">
-                    <span class="bento-emoji">✅</span>
-                    <h3>Break It Down</h3>
-                    <p>Complex tasks like "Get Dressed" split into simple, checkable steps — Socks, Pants, Shirt.</p>
+                <div class="bento-item bento-medium bento-tone-soft reveal delay-100">
+                    <span class="bento-kicker">Flexible Breakdowns</span>
+                    <h3>Break larger routines into calm, achievable steps</h3>
+                    <p>Complex activities become smaller actions children can understand, complete, and check off independently.</p>
+                    <div class="bento-chip-row" aria-hidden="true">
+                        <span class="bento-chip">Socks</span>
+                        <span class="bento-chip">Pants</span>
+                        <span class="bento-chip">Shirt</span>
+                    </div>
                     <div class="bento-item-media bento-media-bottom">
                         <div class="bento-phone">
                             <img src="assets/rawAppScreenshots/subtasks.png" alt="Subtasks" loading="lazy">
@@ -242,24 +250,27 @@
                     </div>
                 </div>
 
-                <!-- Card 3: Privacy (Medium, no screenshot) -->
                 <div class="bento-item bento-medium bento-accent reveal delay-200">
-                    <span class="bento-emoji">🔒</span>
-                    <h3>100% Private & Local</h3>
-                    <p>No cloud accounts. No internet required. No tracking, no ads. Your family's data never leaves the device.</p>
+                    <span class="bento-kicker">Private By Default</span>
+                    <h3>100% local. No accounts, no ads, no tracking.</h3>
+                    <p>Your family&apos;s routines stay on-device, keeping setup simple while sensitive information stays exactly where it belongs.</p>
                     <div class="bento-privacy-visual">
-                        <div class="privacy-shield">
-                            <span>🛡️</span>
+                        <div class="privacy-seal">
+                            <span class="privacy-seal-ring" aria-hidden="true"></span>
+                            <strong>On-device only</strong>
                         </div>
-                        <p class="privacy-tagline">Zero data collection.</p>
+                        <div class="privacy-pills">
+                            <span class="privacy-pill">No cloud sync required</span>
+                            <span class="privacy-pill">Works offline</span>
+                            <span class="privacy-pill">Zero data collection</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Card 4: Analytics (Medium) -->
-                <div class="bento-item bento-medium reveal delay-100">
-                    <span class="bento-emoji">📊</span>
-                    <h3>Progress Analytics</h3>
-                    <p>See which routines need extra support and celebrate daily progress with clear, visual insights.</p>
+                <div class="bento-item bento-medium bento-tone-glow reveal delay-100">
+                    <span class="bento-kicker">Insightful Progress</span>
+                    <h3>Track routines and spot where extra support helps most</h3>
+                    <p>See momentum over time and make better decisions around reminders, pacing, and encouragement.</p>
                     <div class="bento-item-media bento-media-bottom">
                         <div class="bento-phone">
                             <img src="assets/rawAppScreenshots/analytics.png" alt="Analytics" loading="lazy">
@@ -267,11 +278,14 @@
                     </div>
                 </div>
 
-                <!-- Card 5: Rewards (Medium) -->
-                <div class="bento-item bento-medium reveal delay-200">
-                    <span class="bento-emoji">🎁</span>
-                    <h3>Rewards & Motivation</h3>
-                    <p>Earn stars for completed tasks and redeem them for real rewards. Stickers, trips to the park, movie nights — you decide.</p>
+                <div class="bento-item bento-medium bento-tone-rich reveal delay-200">
+                    <span class="bento-kicker">Positive Motivation</span>
+                    <h3>Rewards that make progress feel tangible and repeatable</h3>
+                    <p>Celebrate completed routines with stars, custom goals, and meaningful rewards that build momentum over time.</p>
+                    <div class="bento-reward-panel">
+                        <span>Small wins compound</span>
+                        <strong>Stars become real rewards</strong>
+                    </div>
                     <div class="bento-item-media bento-media-bottom">
                         <div class="bento-phone">
                             <img src="assets/rawAppScreenshots/rewards.png" alt="Rewards" loading="lazy">
@@ -279,18 +293,16 @@
                     </div>
                 </div>
 
-                <!-- Card 6: Multi-Language (Small) -->
-                <div class="bento-item bento-small reveal delay-100">
-                    <span class="bento-emoji">🌍</span>
-                    <h3>2 Languages</h3>
-                    <p>Available in English and Icelandic — with more languages coming soon.</p>
+                <div class="bento-item bento-small bento-tone-minimal reveal delay-100">
+                    <span class="bento-kicker">Accessible Language</span>
+                    <h3>Available in English and Icelandic</h3>
+                    <p>Clear localization helps families navigate routines with less friction and more confidence.</p>
                 </div>
 
-                <!-- Card 7: Designed by Parents (Small) -->
-                <div class="bento-item bento-small reveal delay-200">
-                    <span class="bento-emoji">👨‍👩‍👧‍👦</span>
-                    <h3>Built by Parents</h3>
-                    <p>Designed by real parents and professionals who understand the daily challenges of neurodivergent families.</p>
+                <div class="bento-item bento-small bento-tone-warm reveal delay-200">
+                    <span class="bento-kicker">Lived Experience</span>
+                    <h3>Built by parents and professionals who understand the daily reality</h3>
+                    <p>Designed from real home routines, not generic productivity assumptions.</p>
                 </div>
             </div>
         </div>
@@ -452,6 +464,7 @@
             const scrubTexts = document.querySelectorAll('.scrub-text');
 
             let ticking = false;
+            let lastScrollY = window.scrollY;
 
             function updateScrollEffects() {
                 const scrollY = window.scrollY;
@@ -459,6 +472,13 @@
 
                 // Update global scroll variable for Hero Parallax and Header Glass
                 document.documentElement.style.setProperty('--scroll-y', scrollY);
+
+                if (header) {
+                    const scrollingDown = scrollY > lastScrollY;
+                    const shouldHideHeader = scrollingDown && scrollY > 120;
+                    header.classList.toggle('header-hidden', shouldHideHeader);
+                    header.classList.toggle('header-scrolled', scrollY > 24);
+                }
 
                 // Update individual gallery image zoom based on their viewport position
                 galleryImages.forEach(item => {
@@ -478,6 +498,7 @@
                     text.style.setProperty('--scrub-progress', progress);
                 });
 
+                lastScrollY = scrollY;
                 ticking = false;
             }
 

@@ -36,7 +36,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="../styles.css?v=2.0">
+    <link rel="stylesheet" href="../styles.css?v=2.6">
 
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -71,10 +71,6 @@
                     </button>
                     <div class="lang-dropdown">
                         <a href="../index.html">English</a>
-                        <a href="es.html">Español</a>
-                        <a href="zh.html">中文</a>
-                        <a href="hi.html">हिन्दी</a>
-                        <a href="ar.html">العربية</a>
                         <a href="is.html" class="active">Íslenska</a>
                     </div>
                 </div>
@@ -111,23 +107,24 @@
                 </svg>
             </div>
             <div class="container">
-                <div class="hero-content">
-                    <div class="hero-pill reveal">
-                        <span class="hero-pill-dot"></span>
-                        Einfaldaðu daglega lífið
+                <div class="hero-layout">
+                    <div class="hero-content">
+                        <div class="hero-pill reveal">
+                            <span class="hero-pill-dot"></span>
+                            Einfaldaðu daglega lífið
+                        </div>
+                        <h1 class="hero-headline reveal delay-100">Sjónrænt skipulag fyrir<br>daglega rútínu</h1>
+                        <p class="hero-subtitle reveal delay-200">Notendavænt og staðbundið sjónrænt dagskrárapp, hannað af þroskaþjálfa með 10 ára reynslu af sjónrænum skipulags tólum. Vigdís styður einstaklinga og fjölskyldur við að fá skýra yfirsýn yfir athafnir daglegs lífs.</p>
+                        <div class="hero-ctas reveal delay-300">
+                            <a href="#cta" class="hero-btn-primary">Skrá á biðlista ↗</a>
+                            <a href="#features" class="hero-btn-secondary">Hvernig virkar Vigdís ? </a>
+                        </div>
                     </div>
-                    <h1 class="hero-headline reveal delay-100">Sjónrænt skipulag fyrir<br>daglega rútínu</h1>
-                    <p class="hero-subtitle reveal delay-200">Notendavænt og staðbundið sjónrænt dagskrárapp hannað af fagfólki og foreldrum til þess að styðja einstaklinga og fjölskyldur við að fá skýra yfirsýn yfir athafnir daglegs lífs.</p>
-                    <div class="hero-ctas reveal delay-300">
-                        <a href="#cta" class="hero-btn-primary">Skrá á biðlista ↗</a>
-                        <a href="#features" class="hero-btn-secondary">Hvernig það virkar</a>
-                    </div>
-                </div>
 
-                <!-- Hero Phone -->
-                <div class="hero-phone-container reveal delay-400">
-                    <div class="hero-phone-frame">
-                        <img src="../assets/rawAppScreenshots/tasks.png" alt="Vigdís App - Dagleg rútína" loading="lazy">
+                    <div class="hero-phone-container reveal delay-400">
+                        <div class="hero-phone-frame">
+                            <img src="../assets/rawAppScreenshots/tasks.png" alt="Vigdís App - Dagleg rútína" loading="lazy">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -138,11 +135,6 @@
     <!-- App Preview Section -->
     <section class="app-preview" id="preview">
         <div class="container">
-            <div class="preview-header reveal">
-                <h2 class="scrub-text">Sjáðu appið í verki</h2>
-                <p class="preview-subtitle">Hannað til að vera leiðandi og róandi – allt á sama tíma.</p>
-            </div>
-
             <!-- Swiper 3D Coverflow Carousel -->
             <div class="swiper mySwiper reveal delay-200">
                 <div class="swiper-wrapper">
@@ -193,31 +185,44 @@
     <!-- Feature Bento Grid -->
     <section class="feature-bento" id="features">
         <div class="container">
-            <div class="preview-header reveal">
-                <h2 class="scrub-text">Allt sem fjölskyldan þarfnast</h2>
-                <p class="preview-subtitle">Öflugir eiginleikar í rólegu, notendavænu viðmóti.</p>
-            </div>
+            
 
             <div class="bento-grid-premium">
-                <!-- Card 1: Visual Schedules (Large) -->
-                <div class="bento-item bento-large reveal">
+                <div class="bento-item bento-large bento-tone-hero reveal">
                     <div class="bento-item-text">
-                        <span class="bento-emoji">📋</span>
-                        <h3>Sjónrænt skipulag</h3>
-                        <p>Búðu til fallegar, skref-fyrir-skref daglegar rútínur með sérsniðnum myndum. Barnið sér nákvæmlega hvað tekur við næst.</p>
+                        <span class="bento-kicker">Rólegt skipulag</span>
+                        <h3>Sjónrænt skipulag sem breytir daglegum rútínum í fyrirsjáanlegt flæði</h3>
+                        <p>Búðu til skýrt daglegt skipulag með sérsniðnum myndum og táknum svo næsta skref sé alltaf auðvelt að skilja.</p>
+                        <div class="bento-inline-metrics">
+                            <div class="bento-inline-metric">
+                                <strong>Skýrt næsta skref</strong>
+                                <span>Hver athöfn birtist í réttri röð með rólegri sjónrænni leiðsögn.</span>
+                            </div>
+                            <div class="bento-inline-metric">
+                                <strong>Byggt fyrir stöðugleika</strong>
+                                <span>Sveigjanlegt fyrir morgna og kvöldrútínur.</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="bento-item-media">
-                        <div class="bento-phone">
-                            <img src="../assets/rawAppScreenshots/tasks.png" alt="Sjónrænt skipulag" loading="lazy">
+                        <div class="bento-device-stage">
+                            <div class="bento-orbit" aria-hidden="true"></div>
+                            <div class="bento-phone bento-phone-large">
+                                <img src="../assets/rawAppScreenshots/tasks.png" alt="Sjónrænt skipulag" loading="lazy">
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 2: Subtasks (Medium) -->
-                <div class="bento-item bento-medium reveal delay-100">
-                    <span class="bento-emoji">✅</span>
-                    <h3>Brjóta niður verkefni</h3>
-                    <p>Flókin verkefni eins og að "klæða sig" brotin niður í einföld skref — Sokkar, Buxur, Bolur.</p>
+                <div class="bento-item bento-medium bento-tone-soft reveal delay-100">
+                    <span class="bento-kicker">Sveigjanlegt</span>
+                    <h3>Brjóttu stærri rútínur niður í viðráðanleg skref</h3>
+                    <p>Flóknari verkefni verða að smærri verkefnum sem börn geta skilið, klárað og hakað við sjálf.</p>
+                    <div class="bento-chip-row" aria-hidden="true">
+                        <span class="bento-chip">Sokkar</span>
+                        <span class="bento-chip">Buxur</span>
+                        <span class="bento-chip">Bolur</span>
+                    </div>
                     <div class="bento-item-media bento-media-bottom">
                         <div class="bento-phone">
                             <img src="../assets/rawAppScreenshots/subtasks.png" alt="Brotin niður verkefni" loading="lazy">
@@ -225,24 +230,27 @@
                     </div>
                 </div>
 
-                <!-- Card 3: Privacy (Medium) -->
                 <div class="bento-item bento-medium bento-accent reveal delay-200">
-                    <span class="bento-emoji">🔒</span>
-                    <h3>100% staðbundið</h3>
-                    <p>Engar skýjalausnir. Engin rakning. Gögn fjölskyldunnar yfirgefa aldrei tækið.</p>
+                    <span class="bento-kicker">Persónuvernd í fyrirúmi</span>
+                    <h3>100% staðbundið. Engir aðgangar, engin rakning.</h3>
+                    <p>Rútínur fjölskyldunnar eru geymdar í tækinu sjálfu, sem einfaldar uppsetningu og heldur viðkvæmum upplýsingum þar sem þær eiga heima.</p>
                     <div class="bento-privacy-visual">
-                        <div class="privacy-shield">
-                            <span>🛡️</span>
+                        <div class="privacy-seal">
+                            <span class="privacy-seal-ring" aria-hidden="true"></span>
+                            <strong>Aðeins í tækinu</strong>
                         </div>
-                        <p class="privacy-tagline">Engin gagnasöfnun.</p>
+                        <div class="privacy-pills">
+                            <span class="privacy-pill">Engin skýjasamstilling</span>
+                            <span class="privacy-pill">Virkar án nettengingar</span>
+                            <span class="privacy-pill">Engin gagnasöfnun</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Card 4: Analytics (Medium) -->
-                <div class="bento-item bento-medium reveal delay-100">
-                    <span class="bento-emoji">📊</span>
-                    <h3>Framvindugreining</h3>
-                    <p>Sjáðu hvaða rútínur þurfa aukinn stuðning og fagnaðu daglegum árangri með skýrri sjónrænni yfirsýn.</p>
+                <div class="bento-item bento-medium bento-tone-glow reveal delay-100">
+                    <span class="bento-kicker">Skýr framvinda</span>
+                    <h3>Fylgstu með rútínum og sjáðu hvar þarf meiri stuðning</h3>
+                    <p>Sjáðu þróun yfir tíma og taktu betri ákvarðanir.</p>
                     <div class="bento-item-media bento-media-bottom">
                         <div class="bento-phone">
                             <img src="../assets/rawAppScreenshots/analytics.png" alt="Framvindugreining" loading="lazy">
@@ -250,11 +258,10 @@
                     </div>
                 </div>
 
-                <!-- Card 5: Rewards (Medium) -->
-                <div class="bento-item bento-medium reveal delay-200">
-                    <span class="bento-emoji">🎁</span>
-                    <h3>Verðlaun & Hvatning</h3>
-                    <p>Fáðu stjörnur fyrir kláruð verkefni. Límmiðar, ferð í garðinn, bíókvöld — þú ræður.</p>
+                <div class="bento-item bento-medium bento-tone-rich reveal delay-200">
+                    <span class="bento-kicker">Jákvæð hvatning</span>
+                    <h3>Verðlaun sem geta gert framfarir auðveldari</h3>
+                    <p>Fagnaðu litlu skrefunum með stjörnum, sérsniðnum markmiðum og verðlaunum sem byggja upp jákvætt viðhorf.</p>
                     <div class="bento-item-media bento-media-bottom">
                         <div class="bento-phone">
                             <img src="../assets/rawAppScreenshots/rewards.png" alt="Verðlaun" loading="lazy">
@@ -262,18 +269,16 @@
                     </div>
                 </div>
 
-                <!-- Card 6: Multi-Language (Small) -->
-                <div class="bento-item bento-small reveal delay-100">
-                    <span class="bento-emoji">🌍</span>
-                    <h3>2 Tungumál</h3>
-                    <p>Fáanlegt á ensku og íslensku — og fleiri tungumál á leiðinni.</p>
+                <div class="bento-item bento-small bento-tone-minimal reveal delay-100">
+                    <span class="bento-kicker">Móðurmálið í fyrirrúmi</span>
+                    <h3>Íslenska og enska í boði</h3>
+                    <p>Stuðningur á íslensku hjálpar fjölskyldum að fylgja rútínum með minna álagi og auknu öryggi.</p>
                 </div>
 
-                <!-- Card 7: Designed by Parents (Small) -->
-                <div class="bento-item bento-small reveal delay-200">
-                    <span class="bento-emoji">👨‍👩‍👧‍👦</span>
-                    <h3>Hannað af foreldrum</h3>
-                    <p>Hannað af fagfólki og foreldrum sem þekkja daglegar áskoranir fjölskyldna.</p>
+                <div class="bento-item bento-small bento-tone-warm reveal delay-200">
+                    <span class="bento-kicker">Faglegur bakgrunnur</span>
+                    <h3>Hannað af þroskaþjálfafræðingi</h3>
+                    <p>Byggt á yfir 10 ára starfsreynslu við gerð sjónrænna skipulaga og stuðning við börn með fjölbreytta þjónustuþörf.</p>
                 </div>
             </div>
         </div>
@@ -288,7 +293,7 @@
 
                 <div class="about-text">
                     <h2 class="scrub-text reveal">Byggt af þörf.<br>Hannað af ást.</h2>
-                    <p class="reveal delay-100 mt-20">Sem foreldrar og fagfólk sem vinnur með börnum með margþættar þjónustuþarfir þá gátum við ekki fundið sjónrænt skipulagsverkfæri sem hentaði okkur.
+                    <p class="reveal delay-100 mt-20">Sem foreldrar og fagfólk sem vinnur með börnum með margþættar þjónustuþarfir þá fundum við ekki sjónrænt skipulagsverkfæri sem hentaði okkur.
 Þannig varð Vigdís til. Engin flókin skráning, engar flóknar valmyndir. 
                     </p>
                     <p class="reveal delay-200 mt-20">Bara hreinn, staðbundinn sjónrænn fyrirsjáanleiki til að gera daglegt líf auðveldara fyrir fjölskyldur eins og okkar.</p>
@@ -434,6 +439,7 @@
             const scrubTexts = document.querySelectorAll('.scrub-text');
 
             let ticking = false;
+            let lastScrollY = window.scrollY;
 
             function updateScrollEffects() {
                 const scrollY = window.scrollY;
@@ -441,6 +447,13 @@
 
                 // Update global scroll variable for Hero Parallax and Header Glass
                 document.documentElement.style.setProperty('--scroll-y', scrollY);
+
+                if (header) {
+                    const scrollingDown = scrollY > lastScrollY;
+                    const shouldHideHeader = scrollingDown && scrollY > 120;
+                    header.classList.toggle('header-hidden', shouldHideHeader);
+                    header.classList.toggle('header-scrolled', scrollY > 24);
+                }
 
                 // Update individual gallery image zoom based on their viewport position
                 galleryImages.forEach(item => {
@@ -460,6 +473,7 @@
                     text.style.setProperty('--scrub-progress', progress);
                 });
 
+                lastScrollY = scrollY;
                 ticking = false;
             }
 
