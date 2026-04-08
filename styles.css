@@ -1858,6 +1858,16 @@ body.dark-mode .bento-phone {
   overflow: hidden; /* Prevent horizontal scrollbars if slides exceed container */
 }
 
+@media (max-width: 900px) {
+  .swiper {
+    width: calc(100% + 48px); /* Break out of 24px container padding */
+    margin-left: -24px;
+    margin-right: -24px;
+    padding-top: 20px;
+    padding-bottom: 40px;
+  }
+}
+
 .swiper-slide {
   background-position: center;
   background-size: cover;
