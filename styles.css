@@ -2347,9 +2347,12 @@ body.dark-mode .bento-phone {
 
 @media (max-width: 900px) {
   .swiper {
-    width: calc(100% + 48px); /* Break out of 24px container padding */
-    margin-left: -24px;
-    margin-right: -24px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
     padding-top: 20px;
     padding-bottom: 40px;
   }
@@ -2362,6 +2365,13 @@ body.dark-mode .bento-phone {
   max-width: 90vw; /* Keep it responsive on mobile if needed */
   filter: brightness(0.7) blur(1px); /* Slightly dim side slides */
   transition: filter 0.4s ease;
+}
+
+@media (max-width: 900px) {
+  .swiper-slide {
+    width: min(280px, 72vw) !important;
+    max-width: none;
+  }
 }
 
 .swiper-slide-active {
