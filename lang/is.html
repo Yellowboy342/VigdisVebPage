@@ -140,14 +140,8 @@
                 <p class="preview-subtitle">Hannað til að vera leiðandi og róandi – allt á sama tíma.</p>
             </div>
 
-            <!-- Premium Scrollable Carousel -->
+            <!-- Premium 3D Spinning Wheel Carousel -->
             <div class="carousel-container reveal delay-200">
-                <button class="carousel-btn carousel-prev" aria-label="Fyrri">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="15 18 9 12 15 6"></polyline>
-                    </svg>
-                </button>
-
                 <div class="carousel-track" id="app-carousel">
                     <!-- Carousel Item 1 -->
                     <div class="carousel-item">
@@ -186,11 +180,19 @@
                     </div>
                 </div>
 
-                <button class="carousel-btn carousel-next" aria-label="Næsta">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
-                </button>
+                <!-- Nav Buttons Overlay -->
+                <div class="carousel-nav-layer">
+                    <button class="carousel-btn carousel-prev" aria-label="Fyrri">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                    <button class="carousel-btn carousel-next" aria-label="Næsta">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     </section>
@@ -505,21 +507,85 @@
                 });
             });
 
-            // 5. Carousel Navigation
-            const track = document.getElementById('app-carousel');
+            // 5. 3D Spinning Carousel Navigation
+            const items = document.querySelectorAll('.carousel-item');
             const prevBtn = document.querySelector('.carousel-prev');
             const nextBtn = document.querySelector('.carousel-next');
 
-            if (track && prevBtn && nextBtn) {
-                const scrollAmount = 312; // 280px width + 32px gap
-                
-                prevBtn.addEventListener('click', () => {
-                    track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            if (items.length > 0) {
+                let currentIndex = 0; // Start with the first item
+
+                function updateCarousel() {
+                    items.forEach((item, index) => {
+                        item.className = 'carousel-item'; // Reset
+                        let diff = index - currentIndex;
+                        if (diff < 0) diff += items.length;
+                        
+                        if (diff === 0) {
+                            item.classList.add('active');
+                        } else if (diff === 1) {
+                            item.classList.add('next');
+                        } else if (diff === items.length - 1) {
+                            item.classList.add('prev');
+                        } else {
+                            // Split remaining items to hide left or right gracefully
+                            if (diff <= items.length / 2) {
+                                item.classList.add('hidden-right');
+                            } else {
+                                item.classList.add('hidden-left');
+                            }
+                        }
+                    });
+                }
+
+                if (prevBtn) {
+                    prevBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        currentIndex = (currentIndex - 1 + items.length) % items.length;
+                        updateCarousel();
+                    });
+                }
+
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        currentIndex = (currentIndex + 1) % items.length;
+                        updateCarousel();
+                    });
+                }
+
+                // Click on visible side items to bring them forward
+                items.forEach((item, index) => {
+                    item.addEventListener('click', () => {
+                        if (item.classList.contains('prev') || item.classList.contains('next')) {
+                            currentIndex = index;
+                            updateCarousel();
+                        }
+                    });
                 });
-                
-                nextBtn.addEventListener('click', () => {
-                    track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-                });
+
+                // Mobile swipe support for the 3D wheel
+                let touchStartX = 0;
+                let touchEndX = 0;
+                const track = document.getElementById('app-carousel');
+                if (track) {
+                    track.addEventListener('touchstart', e => {
+                        touchStartX = e.changedTouches[0].screenX;
+                    }, {passive: true});
+                    track.addEventListener('touchend', e => {
+                        touchEndX = e.changedTouches[0].screenX;
+                        if (touchEndX < touchStartX - 50) {
+                            currentIndex = (currentIndex + 1) % items.length;
+                            updateCarousel();
+                        }
+                        if (touchEndX > touchStartX + 50) {
+                            currentIndex = (currentIndex - 1 + items.length) % items.length;
+                            updateCarousel();
+                        }
+                    }, {passive: true});
+                }
+
+                updateCarousel(); // Init state
             }
         });
     </script>

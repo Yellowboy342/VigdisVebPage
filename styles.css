@@ -1846,73 +1846,79 @@ body.dark-mode .bento-phone {
   margin-top: 12px;
   max-width: 480px;
   margin-left: auto;
-  margin-right: auto;
-}
-
-/* Premium Scrollable Carousel */
+/* Premium 3D Spinning Wheel Carousel */
 .carousel-container {
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  gap: 16px;
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
 .carousel-track {
-  display: flex;
-  gap: 32px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding: 40px 20px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  scroll-behavior: smooth;
+  position: relative;
   width: 100%;
-}
-
-.carousel-track::-webkit-scrollbar {
-  display: none;
-}
-
-.carousel-item {
-  flex: 0 0 auto;
-  width: 280px;
-  scroll-snap-align: center;
-  transition: transform 0.4s ease;
-}
-
-.carousel-item:hover {
-  transform: translateY(-8px);
-}
-
-/* Nav Buttons */
-.carousel-btn {
-  background: var(--color-white);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 50%;
-  width: 56px;
-  height: 56px;
+  height: 600px; /* Fits modern phone aspect ratios */
+  perspective: 1200px;
+  transform-style: preserve-3d;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.carousel-item {
+  position: absolute;
+  width: 270px;
+  left: 50%;
+  top: 50%;
+  margin-top: -292px; /* Center offset: Half of 270*(19.5/9) ~585 */
+  margin-left: -135px;
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), 
+              opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+              filter 0.7s ease;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  filter: brightness(0.7) blur(2px);
+}
+
+/* 3D Wheel States */
+.carousel-item.active {
+  transform: translateZ(0) rotateY(0) translateX(0);
+  z-index: 5;
+  opacity: 1;
+  pointer-events: auto;
+  filter: brightness(1) blur(0px);
+}
+
+.carousel-item.prev {
+  transform: translateZ(-150px) rotateY(20deg) translateX(-75%);
+  z-index: 4;
+  opacity: 0.8;
+  pointer-events: auto;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-  color: var(--color-text-dark);
-  flex-shrink: 0;
-  z-index: 10;
 }
 
-.carousel-btn:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+.carousel-item.next {
+  transform: translateZ(-150px) rotateY(-20deg) translateX(75%);
+  z-index: 4;
+  opacity: 0.8;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
-.carousel-btn:active {
-  transform: scale(0.95);
+.carousel-item.hidden-left {
+  transform: translateZ(-300px) rotateY(35deg) translateX(-120%);
+  z-index: 2;
+  opacity: 0;
+}
+
+.carousel-item.hidden-right {
+  transform: translateZ(-300px) rotateY(-35deg) translateX(120%);
+  z-index: 2;
+  opacity: 0;
 }
 
 /* Base Phone Frame */
@@ -1925,7 +1931,29 @@ body.dark-mode .bento-phone {
     0 0 0 1px rgba(255, 255, 255, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   position: relative;
-  z-index: 1;
+  width: 100%;
+}
+
+/* Custom shadow that scales with the carousel item */
+.carousel-item.active .phone-frame {
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Nav Buttons */
+.carousel-nav-layer {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 10;
+  padding: 0 10px;
 }
 
 /* Screen */
