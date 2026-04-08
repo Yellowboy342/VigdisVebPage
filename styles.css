@@ -1855,12 +1855,14 @@ body.dark-mode .bento-phone {
   max-width: 1200px;
   padding-top: 50px;
   padding-bottom: 50px;
+  overflow: hidden; /* Prevent horizontal scrollbars if slides exceed container */
 }
 
 .swiper-slide {
   background-position: center;
   background-size: cover;
-  width: 270px;
+  width: 280px !important; /* Force strict sizing to prevent desktop stretching */
+  max-width: 90vw; /* Keep it responsive on mobile if needed */
   filter: brightness(0.7) blur(1px); /* Slightly dim side slides */
   transition: filter 0.4s ease;
 }
