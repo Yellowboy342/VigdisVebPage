@@ -1296,8 +1296,88 @@ section:not(.hero) {
   }
 
   /* Layout Constraints */
+  .hero-wrapper {
+    height: auto;
+    min-height: 100vh;
+  }
+
   .hero {
-    padding-top: 100px;
+    min-height: auto;
+    padding-top: 110px;
+    padding-bottom: 56px;
+    position: relative;
+    transform: none;
+    opacity: 1;
+  }
+
+  .hero > .container {
+    width: 100%;
+  }
+
+  .hero-layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .hero-content {
+    max-width: none;
+    text-align: center;
+  }
+
+  .hero-pill {
+    min-height: 38px;
+    padding: 0 14px;
+    margin: 0 auto 16px;
+    font-size: 0.82rem;
+  }
+
+  .hero-headline {
+    font-size: clamp(2.25rem, 11vw, 3.2rem);
+    max-width: none;
+    margin-bottom: 18px;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 34ch;
+    margin: 0 auto 24px;
+  }
+
+  .hero-ctas {
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .hero-btn-primary,
+  .hero-btn-secondary {
+    min-height: 48px;
+    padding: 0 22px;
+    font-size: 0.94rem;
+  }
+
+  .hero-phone-container {
+    justify-content: center;
+    min-height: auto;
+    padding-top: 4px;
+  }
+
+  .hero-phone-container::before {
+    inset: 12% 8% 6%;
+    border-radius: 30px;
+  }
+
+  .hero-phone-frame {
+    width: min(100%, 292px);
+    padding: 11px;
+    border-radius: 34px;
+    box-shadow:
+      0 22px 56px rgba(216, 112, 112, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  .hero-phone-frame img {
+    border-radius: 24px;
   }
 
   .hero-logo {
