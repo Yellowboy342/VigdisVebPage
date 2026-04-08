@@ -1874,20 +1874,20 @@ body.dark-mode .bento-phone {
 /* Swiper navigation arrow styling to match our premium look */
 .swiper-button-prev,
 .swiper-button-next {
-  color: var(--color-text-dark);
-  background: var(--color-white);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
+  color: #1a1a2e !important;
+  background: var(--color-white) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 50% !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+  transition: all 0.3s ease !important;
 }
 
 .swiper-button-prev:after,
 .swiper-button-next:after {
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 20px !important;
+  font-weight: 800 !important;
 }
 
 .swiper-button-prev:hover,
