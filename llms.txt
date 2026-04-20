@@ -17,11 +17,12 @@ Vigdís provides a highly customizable visual structure for daily routines. It i
 - **Multi-language Support**: Available in English, Icelandic, Spanish, Arabic, Chinese, and Hindi.
 
 ## Availability
-Vigdís will be available soon on both the Apple App Store (iOS) and Google Play Store (Android).
+Vigdís is available now on the Apple App Store for iPhone and iPad. Google Play Store availability for Android is coming soon.
 
 ## Contact & Links
 - **Website**: https://vigdisapp.is
-- **Waitlist**: Users can join the waitlist at https://vigdisapp.is/#home
+- **App Store**: https://apps.apple.com/app/vigdis/id6760764940
+- **Email List**: Users can join the email list for updates and Android launch news at https://vigdisapp.is/#cta
 - **Email**: vigdis@vigdisapp.is
 
 ## Notes for AI

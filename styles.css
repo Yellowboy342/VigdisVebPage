@@ -603,6 +603,14 @@ section {
   background: rgba(255, 255, 255, 0.4);
 }
 
+.hero-availability {
+  margin-top: 16px;
+  font-size: 0.96rem;
+  line-height: 1.6;
+  color: rgba(92, 92, 92, 0.92);
+  max-width: 36rem;
+}
+
 /* Hero Phone */
 .hero-phone-container {
   display: flex;
@@ -1115,6 +1123,13 @@ section:not(.hero) {
   font-size: 1.25rem;
 }
 
+.cta .cta-intro {
+  max-width: 720px;
+  margin: 0 auto 28px;
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+
 .cta .waitlist-submit {
   color: var(--color-white);
 }
@@ -1360,6 +1375,11 @@ section:not(.hero) {
     justify-content: center;
     min-height: auto;
     padding-top: 4px;
+  }
+
+  .hero-availability {
+    max-width: 34ch;
+    margin: 16px auto 0;
   }
 
   .hero-phone-container::before {
@@ -1784,6 +1804,13 @@ section:not(.hero) {
   flex-wrap: wrap;
 }
 
+.store-badge-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
 .store-badge {
   opacity: 1;
   filter: none;
@@ -1792,10 +1819,35 @@ section:not(.hero) {
   position: relative;
 }
 
+.store-badge-link {
+  cursor: pointer;
+}
+
+.store-badge.store-badge-link:hover {
+  opacity: 1;
+  transform: translateY(-4px);
+}
+
+.store-badge-disabled {
+  opacity: 0.72;
+  filter: saturate(0.2);
+}
+
+.store-badge.store-badge-disabled:hover {
+  transform: none;
+}
+
 .store-badge svg {
   width: 176px;
   height: auto;
   display: block;
+}
+
+.store-badge-note {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
 }
 
 .store-badge:hover {
