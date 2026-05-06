@@ -37,7 +37,7 @@
         <div class="container">
             <h1>Privacy Policy</h1>
             <p>VIGDIS – VISUAL GUIDE FOR DAILY ACTIVITIES</p>
-            <p><small>Last updated: 07MAR2026</small></p>
+            <p><small>Last updated: 06MAY2026</small></p>
         </div>
     </section>
 
@@ -45,49 +45,49 @@
         <div class="legal-wrapper">
             <div class="legal-body">
                 <h2>1. Controller Information</h2>
-                <p>This Privacy Policy applies to the Vigdis – Visual Guide for Daily Activities mobile application (“App”).</p>
+                <p>This Privacy Policy applies to the Vigdis – Visual Guide for Daily Activities mobile application (“App”) and to the website at vigdisapp.is. It does not cover third-party services that the App or website may link to; those services have their own privacy policies.</p>
                 <p>The App is operated by:<br>
                 <strong>Vigdís ehf.</strong><br>
                 Álfaskeið 57 221 hfj.<br>
                 Iceland<br>
                 Email: <a href="mailto:support@vigdisapp.is">support@vigdisapp.is</a><br>
                 VAT / ID No.: 6702260850</p>
-                <p>For the purposes of the General Data Protection Regulation (EU) 2016/679 (“GDPR”), the Company acts as data controller only to the extent personal data is processed by the Company.</p>
+                <p>For the purposes of the General Data Protection Regulation (EU) 2016/679 (“GDPR”), the Company acts as data controller in respect of the personal data described below. We have not appointed a Data Protection Officer; for questions, write to the email above.</p>
 
-                <h2>2. Nature of the App – Local Device Architecture</h2>
-                <p>The App is designed to operate primarily as a locally installed device application.</p>
-                <p>All user-generated content, including but not limited to:</p>
+                <h2>2. Architecture – Local-First with Optional Cloud Sync</h2>
+                <p>The App is designed as a local-first application. By default, all user-generated content is stored exclusively on the user’s device.</p>
+                <p>Local user-generated content includes, but is not limited to:</p>
                 <ul>
-                    <li>Images</li>
-                    <li>Photographs</li>
-                    <li>Schedules</li>
-                    <li>Notes</li>
-                    <li>Visual materials</li>
-                    <li>Activity data</li>
-                    <li>Family-related content</li>
+                    <li>Profiles representing children in your household and their associated names and avatars</li>
+                    <li>Tasks, subtasks, time periods, and schedules</li>
+                    <li>Rewards, redemptions, bonus points, and achievements</li>
+                    <li>Photographs you attach to profiles, tasks, or rewards</li>
+                    <li>Notes and visual materials</li>
+                    <li>Activity and completion history</li>
                 </ul>
-                <p>is stored exclusively on the user’s own device.</p>
-                <p>The Company:</p>
+                <p>Users with an active premium subscription may optionally enable <strong>Cloud Sync</strong> to back up and synchronize content across devices and to share selected profiles with other family members. Cloud Sync is opt-in: it is activated only when the user creates an account and signs in within the App.</p>
+                <p>When Cloud Sync is <strong>not</strong> enabled, the Company:</p>
                 <ul>
-                    <li>Does not operate centralized cloud storage</li>
+                    <li>Does not operate centralized cloud storage of user content</li>
                     <li>Does not have access to locally stored content</li>
                     <li>Does not monitor user content</li>
                     <li>Does not maintain backups of user-generated content</li>
                     <li>Cannot remotely access or retrieve locally stored data</li>
                 </ul>
-                <p>Users are solely responsible for device security and backups.</p>
+                <p>When Cloud Sync <strong>is</strong> enabled, user-generated content is uploaded to and synchronized through our cloud sync sub-processor (see Sections 3.3 and 6). Each owner’s data is technically segregated using row-level security and is accessible only to (a) that owner’s authenticated account and (b) any other accounts the owner has explicitly invited to access a specific profile (see Section 3.5 – Profile Sharing). The Company does not access or read this content beyond what is necessary to operate the service; personnel access is limited, logged, and audited.</p>
+                <p>Users are responsible for device security and, when not using Cloud Sync, for their own backups.</p>
 
                 <h2>3. Personal Data We Process</h2>
-                <p>Because of the App’s local-only design, the Company processes only limited personal data.</p>
-                
-                <h3>3.1 Subscriptions & Platform Billing</h3>
+                <p>The Company processes the following categories of personal data.</p>
+
+                <h3>3.1 Subscriptions &amp; Platform Billing</h3>
                 <p>If you purchase a subscription:</p>
                 <ul>
                     <li>Payments are processed exclusively by Apple App Store and/or Google Play</li>
                     <li>The Company does not collect or store payment card information</li>
                     <li>Subscription management is handled through your Apple or Google account</li>
                 </ul>
-                <p>We may receive limited confirmation data (e.g., subscription status) necessary to provide access to paid features.<br>
+                <p>We receive limited confirmation data (subscription status, transaction identifier issued by the platform) necessary to provide access to paid features. This data is brokered through our subscription state sub-processor (see Section 6).<br>
                 <strong>Legal basis:</strong> Article 6(1)(b) GDPR – performance of contract.</p>
 
                 <h3>3.2 Email Communications</h3>
@@ -103,10 +103,52 @@
                 Article 6(1)(c) GDPR – compliance with legal obligations (if applicable)</p>
                 <p>Email communications are not used for marketing unless you explicitly consent.</p>
 
-                <h2>4. Analytics & Crash Reporting</h2>
-                <p>At this time, we do not use third-party advertising trackers, behavioral analytics tools, or user profiling technologies within the App. We do not collect in-app usage analytics.</p>
-                <p>The App may generate technical diagnostic data handled by your device operating system and/or the platform provider (such as Apple or Google) under their own privacy policies. The Company does not access or control such platform-level diagnostic data.</p>
-                <p>If we introduce analytics or third-party crash reporting tools in the future, we will update this Privacy Policy before such tools are used, including details about the provider and categories of data processed.</p>
+                <h3>3.3 Cloud Sync Account &amp; Synced Content (optional)</h3>
+                <p>If you choose to enable Cloud Sync, the Company processes:</p>
+                <ul>
+                    <li>Your email address (used as your account identifier and for account recovery)</li>
+                    <li>An authentication password (stored only as a salted hash by our authentication sub-processor; the Company never receives your plaintext password)</li>
+                    <li>A randomly generated user identifier (UUID)</li>
+                    <li>The user-generated content you create within the App, including profiles, tasks, subtasks, time periods, rewards, redemptions, bonus points, completion history, and achievements</li>
+                    <li>Photographs and image data you upload to profiles, tasks, or rewards (avatar images, cover images, task photos, reward photos). These are stored as files in object storage operated by our cloud sync sub-processor and are referenced by an opaque path in your account record.</li>
+                    <li>Technical metadata required to operate the sync (timestamps, version counters, and a per-device identifier used to detect and resolve conflicting edits between your devices)</li>
+                </ul>
+                <p>This data is uploaded only after you successfully sign in. You may at any time:</p>
+                <ul>
+                    <li>Export a copy of your data within the App (Settings → Support → Export my data)</li>
+                    <li>Delete your cloud account and all associated synced content (Settings → Cloud Account → Delete Account)</li>
+                    <li>Sign out, after which no further data is uploaded; data already on the device remains under your local control</li>
+                </ul>
+                <p><strong>Legal basis:</strong> Article 6(1)(b) GDPR – performance of the contract under which we provide Cloud Sync.</p>
+
+                <h3>3.4 Crash and Performance Diagnostics</h3>
+                <p>The App uses Apple’s MetricKit framework to receive aggregated crash and performance reports generated by the device operating system. These reports do not contain content you create within the App and are anonymized by Apple before being made available to us. We use them solely to identify and fix stability and performance issues.</p>
+                <p><strong>Legal basis:</strong> Article 6(1)(f) GDPR – legitimate interest in maintaining App stability.</p>
+
+                <h3>3.5 Profile Sharing &amp; Invitations</h3>
+                <p>Cloud Sync includes an optional Profile Sharing feature. As the owner of a profile, you may invite another person — typically a co-parent, grandparent, or other family member — to access that profile from their own Vigdis account. To send an invitation, you provide:</p>
+                <ul>
+                    <li>The invitee’s email address (used to address the invitation and to match it to their Vigdis account when they sign in)</li>
+                    <li>The role you wish to grant them (for example, parent, editor, or follow-only viewer)</li>
+                </ul>
+                <p>The invitee’s email address is stored on our cloud sync sub-processor’s infrastructure as part of the pending invitation record. Invitations expire automatically after a defined period if not accepted, after which the email address is removed.</p>
+                <p>When an invitee accepts an invitation, an entry is created in our membership table linking their account to the relevant profile. From that moment until the share is revoked or the invitee leaves, that account can read (and, depending on role, edit) the synced content of that profile.</p>
+                <p>You may revoke a share at any time. When a share is revoked or an invitee leaves a profile:</p>
+                <ul>
+                    <li>The membership entry is deleted server-side, removing the invitee’s server-side access immediately.</li>
+                    <li>The App on the invitee’s devices removes locally cached copies of the affected profile’s content the next time it synchronizes.</li>
+                </ul>
+                <p>You are responsible for choosing which profiles to share, with whom, and at what role. Invited users gain access to the profile’s synced content as it then exists, and to subsequent changes for as long as their access remains.</p>
+                <p><strong>Legal basis:</strong> Article 6(1)(b) GDPR – performance of the Cloud Sync contract.</p>
+
+                <h3>3.6 Server-Side Logs</h3>
+                <p>Our cloud sync sub-processor maintains short-lived operational logs of requests it receives, which can include the IP address from which a request originates, request timestamps, the type of request, and the authenticated account identifier (where applicable). These logs are used solely to operate, secure, and debug the service (for example, to diagnose sync failures, detect abuse, and respond to security incidents). The Company does not use these logs to build a profile of you or your behavior.</p>
+                <p><strong>Legal basis:</strong> Article 6(1)(f) GDPR – legitimate interest in operating and securing the service.</p>
+
+                <h2>4. Analytics &amp; Behavioral Tracking</h2>
+                <p>We do not use third-party advertising trackers, behavioral analytics tools, or user profiling technologies within the App. We do not collect in-app usage analytics for marketing purposes. The App does not implement Apple’s App Tracking Transparency tracking, because it does not engage in cross-app or cross-site tracking.</p>
+                <p>The crash and performance diagnostics described in Section 3.4 and the operational logs described in Section 3.6 are used solely to maintain and secure the service and are not combined with personal data for profiling purposes.</p>
+                <p>If we introduce additional analytics or third-party tracking tools in the future, we will update this Privacy Policy before such tools are used, including details about the provider and categories of data processed.</p>
 
                 <h2>5. No Advertising or Data Selling</h2>
                 <p>The App:</p>
@@ -114,18 +156,32 @@
                     <li>Does not display third-party advertising</li>
                     <li>Does not operate offer walls</li>
                     <li>Does not sell personal data</li>
+                    <li>Does not share personal data with data brokers</li>
                     <li>Does not create behavioral profiles</li>
                 </ul>
 
-                <h2>6. International Data Transfers</h2>
-                <p>The Company is established in Iceland.</p>
-                <p>If you contact us by email or interact with platform providers (such as Apple or Google), personal data may be processed outside the European Economic Area (EEA), depending on the infrastructure used by those providers.</p>
-                <p>Where required under GDPR, we rely on lawful safeguards such as Standard Contractual Clauses (SCCs) or equivalent legal mechanisms for international data transfers.</p>
-                <p>Platform providers (Apple and Google) operate as independent data controllers under their own privacy policies.</p>
+                <h2>6. Sub-processors and International Data Transfers</h2>
+                <p>The Company is established in Iceland. To operate the App, we engage a small number of carefully selected sub-processors:</p>
+                <ul>
+                    <li><strong>Supabase</strong> – Cloud Sync infrastructure (database, authentication, real-time event delivery for cross-device sync, and file/object storage for uploaded images). Acts as a data processor under GDPR. The Company’s project is hosted on Supabase infrastructure within the European Union.</li>
+                    <li><strong>RevenueCat</strong> – Subscription state management. Receives a pseudonymous user identifier (a UUID generated by the App, which on its own does not identify you outside our service) together with Apple- or Google-issued transaction information. Operates from the United States; international transfers are governed by Standard Contractual Clauses.</li>
+                    <li><strong>Apple Inc.</strong> – Operates as an independent data controller in respect of payment processing, App Store delivery, push notification routing (where applicable), and operating-system-level diagnostic data, under its own privacy policy.</li>
+                    <li><strong>Google LLC</strong> – Where the App is distributed via Google Play, Google operates as an independent data controller in respect of payment processing and store delivery, under its own privacy policy.</li>
+                </ul>
+                <p>Where a sub-processor processes personal data outside the European Economic Area (EEA), we rely on lawful safeguards such as Standard Contractual Clauses (SCCs) or equivalent mechanisms.</p>
+                <p>You may request a current sub-processor list at any time via <a href="mailto:support@vigdisapp.is">support@vigdisapp.is</a>.</p>
 
                 <h2>7. Data Retention</h2>
-                <p>Because user content is stored locally, the Company does not retain such content.</p>
-                <p>Personal data processed by the Company (e.g., support emails, subscription confirmation data) is retained only as long as necessary to:</p>
+                <p>For users who do <strong>not</strong> enable Cloud Sync, no user content is retained by the Company.</p>
+                <p>For users who enable Cloud Sync:</p>
+                <ul>
+                    <li>Synced user content (including uploaded images) is retained for as long as your account remains active.</li>
+                    <li>If you delete your account from within the App (Settings → Cloud Account → Delete Account), your account record and all synced content you own are deleted from active systems within 30 days. Limited records may be retained beyond this period only where retention is required by law (for example, accounting records relating to subscription transactions).</li>
+                    <li>System backups containing your data are overwritten on a rolling basis and are not retained beyond 90 days.</li>
+                    <li>Pending profile invitations expire and are deleted automatically after a defined period (no longer than 30 days) if not accepted.</li>
+                    <li>Server-side operational logs (Section 3.6) are retained for a period not exceeding 30 days, after which they are rotated out.</li>
+                </ul>
+                <p>Personal data processed by the Company outside Cloud Sync (e.g., support emails, subscription confirmation data) is retained only as long as necessary to:</p>
                 <ul>
                     <li>Fulfill contractual obligations</li>
                     <li>Comply with legal obligations</li>
@@ -135,8 +191,8 @@
                 <p>Thereafter, data is securely deleted or anonymized where appropriate.</p>
 
                 <h2>8. Data Security</h2>
-                <p>We implement appropriate technical and organizational measures to protect personal data processed by the Company.<br>
-                However:</p>
+                <p>We implement appropriate technical and organizational measures to protect personal data processed by the Company, including encryption in transit (TLS) for all communication between the App and our cloud sync sub-processor, encryption at rest provided by the sub-processor, row-level access controls on synced data, hashed authentication credentials, and limited and logged personnel access to production systems.</p>
+                <p>However:</p>
                 <ul>
                     <li>No electronic transmission is completely secure</li>
                     <li>Device-level security is the user’s responsibility</li>
@@ -145,20 +201,28 @@
                 <p>The Company is not responsible for device theft, compromise, malfunction, or user negligence.</p>
 
                 <h2>9. Children’s Privacy</h2>
-                <p>The App is intended for use by parents or legal guardians.</p>
-                <p>The Company does not knowingly collect personal data directly from children.</p>
-                <p>All content relating to minors remains stored locally on the user’s device and is not accessible to the Company.</p>
-                <p>Parents and guardians are solely responsible for lawful handling of children’s personal data within the App.</p>
+                <p>The App is intended for use by parents or legal guardians and is offered to adults aged 18 or older. The Company does not knowingly collect personal data directly from children, and children do not create accounts in the App.</p>
+                <p>The App allows a parent or guardian to create one or more “profiles” representing the children in their household. These profiles may contain a child’s first name, an avatar image, schedules, tasks, photographs the parent or guardian attaches, and similar activity content. The App does not request, encourage, or store sensitive identifiers about children (such as government identifiers, school identifiers, precise location, or contact information).</p>
+                <p>When Cloud Sync is <strong>not</strong> enabled, all profile content relating to minors remains stored locally on the user’s device and is not accessible to the Company.</p>
+                <p>When Cloud Sync <strong>is</strong> enabled by the parent or guardian, this profile content is uploaded to the Company’s sub-processors as described in Sections 3.3 and 6, under the legal authority of the parent or guardian who created it. The data remains technically segregated to the owning parent or guardian’s account and any accounts they have explicitly invited via Profile Sharing.</p>
+                <p>The Company:</p>
+                <ul>
+                    <li>Does not use any data relating to children for advertising or behavioral profiling</li>
+                    <li>Does not share children’s data with advertising networks or data brokers</li>
+                    <li>Does not allow children’s profile content to be indexed, made public, or shared outside the App</li>
+                </ul>
+                <p>Parents and guardians are solely responsible for the lawful handling of children’s personal data within the App, including obtaining any required consent under applicable law (such as COPPA in the United States or equivalent provisions of Persónuverndarlög and the GDPR in the EEA). A parent or guardian may delete a child’s profile at any time within the App, which removes the associated content from synced storage as part of the standard deletion process described in Section 7.</p>
 
                 <h2>10. Your GDPR Rights</h2>
                 <p>If you are located in the EEA, UK, or Switzerland, you have the right to:</p>
                 <ul>
                     <li>Access your personal data</li>
                     <li>Request rectification</li>
-                    <li>Request erasure</li>
+                    <li>Request erasure (which, for synced content, is provided through the in-App Delete Account flow)</li>
                     <li>Restrict processing</li>
-                    <li>Object to processing</li>
-                    <li>Data portability (where applicable)</li>
+                    <li>Object to processing on grounds of legitimate interest</li>
+                    <li>Data portability — including a self-service export of your synced content from within the App</li>
+                    <li>Withdraw consent at any time, where processing is based on consent</li>
                     <li>Lodge a complaint with your local supervisory authority</li>
                 </ul>
                 <p>In Iceland, complaints may be submitted to:<br>
@@ -169,18 +233,29 @@
                 <h2>11. Legal Basis Summary (GDPR)</h2>
                 <p>We process personal data only where legally permitted, including:</p>
                 <ul>
-                    <li>Article 6(1)(b) – Contract performance</li>
-                    <li>Article 6(1)(c) – Legal obligation</li>
-                    <li>Article 6(1)(f) – Legitimate interests (support and app stability)</li>
-                    <li>Article 6(1)(a) – Consent (if applicable)</li>
+                    <li>Article 6(1)(b) – Contract performance (App functionality, Cloud Sync, Profile Sharing, support requests)</li>
+                    <li>Article 6(1)(c) – Legal obligation (e.g., accounting records relating to paid subscriptions)</li>
+                    <li>Article 6(1)(f) – Legitimate interests (App stability, service security, abuse prevention)</li>
+                    <li>Article 6(1)(a) – Consent (where specifically requested, for example future opt-in marketing)</li>
                 </ul>
 
-                <h2>12. Changes to This Policy</h2>
+                <h2>12. App Privacy Summary (Apple Nutrition Label Alignment)</h2>
+                <p>For users reviewing the App’s Apple App Privacy disclosure, the categories of personal data the App handles correspond to:</p>
+                <ul>
+                    <li><strong>Contact Info → Email Address</strong> – used for account creation, support, and profile-share invitations. Not linked to advertising. Not used for tracking.</li>
+                    <li><strong>User Content → Photos &amp; videos, Other user content</strong> – the photographs, names, schedules, and other content described in Section 3.3. Used to operate App functionality. Not linked to advertising. Not used for tracking.</li>
+                    <li><strong>Identifiers → User ID</strong> – the pseudonymous account UUID. Used to operate the service and to provision subscription state with our subscription sub-processor. Not used for tracking.</li>
+                    <li><strong>Diagnostics → Crash data, Performance data</strong> – as described in Section 3.4. Not linked to identity. Not used for tracking.</li>
+                    <li><strong>Purchases → Purchase history</strong> – limited subscription confirmation data, as described in Section 3.1.</li>
+                </ul>
+                <p>The App does not collect Browsing History, Search History, Health &amp; Fitness data, Financial Information, Precise Location, Coarse Location, Sensitive Info, or Contacts.</p>
+
+                <h2>13. Changes to This Policy</h2>
                 <p>We may update this Privacy Policy from time to time.</p>
                 <p>If changes are material, we may notify you through the App or by other appropriate means.<br>
                 Continued use of the App after updates constitutes acceptance of the revised Privacy Policy.</p>
 
-                <h2>13. Contact Information</h2>
+                <h2>14. Contact Information</h2>
                 <p>For questions regarding this Privacy Policy:<br>
                 <strong>Vigdís ehf.</strong><br>
                 Álfaskeið 57 221 hfj.<br>
