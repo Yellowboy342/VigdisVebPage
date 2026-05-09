@@ -2580,6 +2580,28 @@ body.dark-mode .bento-phone {
   margin: 0 auto;
 }
 
+/* Tiny "Ný / New" pill that sits inline next to a bento-kicker.
+   Used on the cloud-sync bento and the iPad showcase head — both
+   are this-release additions, so the pill flags them at a glance
+   without needing a second headline. Sized to nest cleanly inside
+   the kicker line. */
+.bento-kicker-new {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-primary-deep);
+  background: var(--color-primary-mist);
+  border: 1px solid rgba(232, 138, 138, 0.35);
+  border-radius: 999px;
+  vertical-align: middle;
+  line-height: 1.4;
+}
+
 .ipad-showcase__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
