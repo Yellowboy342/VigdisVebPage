@@ -2674,3 +2674,109 @@ body.dark-mode .bento-phone {
     margin-bottom: 36px;
   }
 }
+
+/* ==========================================================
+   Lóa — brand mascot intro pill in the hero.
+
+   Sits below the hero availability line as an inline-flex
+   pill: SVG on the left, "Meet Lóa" name on top of a short
+   speech-bubble line. She becomes the recurring face of
+   Vigdís — onboarding, app store, marketing — so giving her
+   a calm dedicated home in the hero is the introduction.
+
+   The SVG itself breathes + blinks via internal CSS, so
+   nothing needs to be wired up here beyond a friendly hover
+   lean.  Soft glass background matches the existing hero
+   surfaces; coral border picks up the brand accent.
+   ========================================================== */
+.hero-mascot {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 32px;
+  padding: 10px 20px 10px 10px;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(232, 138, 138, 0.22);
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  max-width: fit-content;
+  cursor: default;
+  transition:
+    transform 360ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    border-color 360ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    background 360ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 360ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  box-shadow: 0 6px 18px -12px rgba(232, 138, 138, 0.25);
+}
+
+.hero-mascot:hover,
+.hero-mascot:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(232, 138, 138, 0.42);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 14px 32px -16px rgba(232, 138, 138, 0.4);
+  outline: none;
+}
+
+/* When hovered, Lóa leans forward a touch — she "perks up"
+   when you say hello.  The image is replaced atomically by
+   the browser as one element, so a transform on the wrapper
+   img is the cleanest way to do it. */
+.hero-mascot__img {
+  width: 64px;
+  height: auto;
+  display: block;
+  flex-shrink: 0;
+  transition: transform 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.hero-mascot:hover .hero-mascot__img,
+.hero-mascot:focus-visible .hero-mascot__img {
+  transform: rotate(-4deg) translateX(-1px);
+}
+
+.hero-mascot__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.hero-mascot__name {
+  font-family: var(--font-main);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-primary-deep);
+}
+
+.hero-mascot__bubble {
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--color-text-dark);
+  font-style: italic;
+  /* Allow the bubble to wrap on narrow viewports so the pill
+     never forces horizontal overflow on the hero column. */
+  max-width: 32ch;
+}
+
+@media (max-width: 540px) {
+  .hero-mascot {
+    margin-top: 24px;
+    padding: 10px 16px 10px 8px;
+    gap: 12px;
+  }
+  .hero-mascot__img { width: 52px; }
+  .hero-mascot__bubble { font-size: 13px; max-width: 26ch; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-mascot,
+  .hero-mascot__img { transition: none; }
+  .hero-mascot:hover,
+  .hero-mascot:focus-visible { transform: none; }
+  .hero-mascot:hover .hero-mascot__img,
+  .hero-mascot:focus-visible .hero-mascot__img { transform: none; }
+}
