@@ -2780,3 +2780,209 @@ body.dark-mode .bento-phone {
   .hero-mascot:hover .hero-mascot__img,
   .hero-mascot:focus-visible .hero-mascot__img { transform: none; }
 }
+
+/* ==========================================================
+   Lóa, additional placements across the page.
+
+   1. .bento-loa --celebrating  — peeks from the corner of
+      the rewards bento. Her sparkles tell visitors that this
+      tile is the "small wins compound" tile before they read.
+   2. .cta-loa                  — anchors the closing CTA so
+      the bottom of the page has a small living detail.
+   3. .footer-loa               — sleeping pose, tucked into
+      the corner of the footer as a "see you tomorrow" beat.
+   4. .loa-intro                — dedicated section between
+      About Us and the gallery introducing Lóa as a character,
+      not just an illustration. Idle pose at large scale.
+
+   All decorative; aria-hidden on the imagery itself, with
+   meaningful text carried by surrounding copy.
+   ========================================================== */
+
+/* 1. Bento corner Lóa */
+.bento-item { position: relative; }
+
+.bento-loa {
+  position: absolute;
+  width: 84px;
+  height: auto;
+  pointer-events: none;
+  z-index: 2;
+  filter: drop-shadow(0 6px 12px rgba(232, 138, 138, 0.18));
+  transition: transform 360ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.bento-loa--celebrating {
+  top: 18px;
+  right: 14px;
+  transform: rotate(-8deg);
+}
+
+.bento-item:hover .bento-loa--celebrating {
+  transform: rotate(-2deg) translateY(-3px);
+}
+
+@media (max-width: 720px) {
+  .bento-loa { width: 64px; }
+  .bento-loa--celebrating { top: 12px; right: 10px; }
+}
+
+/* 2. Closing CTA — greeting Lóa */
+.cta { position: relative; overflow: hidden; }
+.cta .container { position: relative; }
+
+.cta-loa {
+  position: absolute;
+  top: -28px;
+  right: 32px;
+  width: 156px;
+  height: auto;
+  pointer-events: none;
+  z-index: 2;
+  filter: drop-shadow(0 16px 24px rgba(184, 91, 71, 0.18));
+}
+
+@media (max-width: 900px) {
+  .cta-loa {
+    width: 120px;
+    top: -16px;
+    right: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .cta-loa {
+    position: relative;
+    top: 0;
+    right: 0;
+    width: 96px;
+    margin: 0 auto 12px;
+    display: block;
+  }
+}
+
+/* 3. Footer — sleeping Lóa */
+.footer { position: relative; overflow: hidden; }
+
+.footer-loa {
+  position: absolute;
+  bottom: 12px;
+  right: 28px;
+  width: 96px;
+  height: auto;
+  pointer-events: none;
+  opacity: 0.92;
+  z-index: 1;
+}
+
+@media (max-width: 760px) {
+  .footer-loa {
+    width: 72px;
+    bottom: 8px;
+    right: 14px;
+  }
+}
+
+/* 4. "Hver er Lóa? / Meet Lóa" bio section */
+.loa-intro {
+  padding: 100px 0 110px;
+  position: relative;
+  background:
+    radial-gradient(900px 500px at 8% 20%, rgba(232, 138, 138, 0.10), transparent 60%),
+    radial-gradient(900px 500px at 100% 100%, rgba(248, 230, 227, 0.5), transparent 60%);
+}
+
+.loa-intro__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 64px;
+  align-items: center;
+}
+
+.loa-intro__figure {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.loa-intro__figure::before {
+  /* Soft coral halo behind the larger Lóa, anchoring her on
+     the left like the about-us photo card does on the right. */
+  content: "";
+  position: absolute;
+  inset: 8% 14% 8% 14%;
+  background: radial-gradient(closest-side, rgba(232, 138, 138, 0.18), transparent 70%);
+  filter: blur(12px);
+  z-index: 0;
+}
+
+.loa-intro__figure img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+}
+
+.loa-intro__text .bento-kicker {
+  display: inline-block;
+  margin-bottom: 14px;
+}
+
+.loa-intro__text h2 {
+  margin: 0 0 24px;
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.08;
+  color: var(--color-text-dark);
+  letter-spacing: -0.01em;
+}
+
+.loa-intro__text p {
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  font-size: 17px;
+  max-width: 56ch;
+  margin-bottom: 14px;
+}
+
+.loa-intro__quote {
+  position: relative;
+  margin-top: 32px;
+  padding: 18px 22px 18px 26px;
+  border-left: 3px solid var(--color-primary);
+  background: rgba(255, 255, 255, 0.55);
+  font-family: var(--font-main);
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--color-text-dark);
+  border-radius: 0 14px 14px 0;
+  box-shadow: 0 8px 22px -16px rgba(184, 91, 71, 0.18);
+  max-width: 48ch;
+}
+
+.loa-intro__quote cite {
+  display: block;
+  margin-top: 10px;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-primary-deep);
+}
+
+@media (max-width: 880px) {
+  .loa-intro {
+    padding: 72px 0 80px;
+  }
+  .loa-intro__grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    text-align: center;
+  }
+  .loa-intro__figure img { max-width: 240px; }
+  .loa-intro__text p,
+  .loa-intro__quote { margin-left: auto; margin-right: auto; }
+  .loa-intro__quote { text-align: left; }
+}

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Loa, celebrating pose. Head tilted up, both wings slightly out,
+  small coral sparkles. Used in the rewards bento.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 220" role="img" aria-labelledby="loa-celebrate-title">
+    <title id="loa-celebrate-title">Loa celebrating, head lifted in joy.</title>
+
+    <style>
+        .loa-figure  { transform-origin: 120px 200px; animation: loa-bounce 2.4s ease-in-out infinite; }
+        .loa-spark   { animation: loa-sparkle 2.6s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+        .loa-spark-2 { animation-delay: 0.6s; }
+        .loa-spark-3 { animation-delay: 1.2s; }
+        @keyframes loa-bounce {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-5px); }
+        }
+        @keyframes loa-sparkle {
+            0%, 100% { opacity: 0.25; transform: scale(0.7); }
+            50%      { opacity: 1;    transform: scale(1.1); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .loa-figure, .loa-spark { animation: none; }
+        }
+    </style>
+
+    <ellipse cx="125" cy="200" rx="58" ry="5" fill="#2C2C2C" opacity="0.10"/>
+
+    <!-- Coral sparkles around her head, layered behind the figure -->
+    <g fill="#E88A8A">
+        <path class="loa-spark"           d="M 30 50 L 33 58 L 41 60 L 33 62 L 30 70 L 27 62 L 19 60 L 27 58 Z"/>
+        <path class="loa-spark loa-spark-2" d="M 200 28 L 203 34 L 209 36 L 203 38 L 200 44 L 197 38 L 191 36 L 197 34 Z"/>
+        <path class="loa-spark loa-spark-3" d="M 220 100 L 223 106 L 229 108 L 223 110 L 220 116 L 217 110 L 211 108 L 217 106 Z"/>
+    </g>
+
+    <g class="loa-figure">
+
+        <g stroke="#B85B47" stroke-width="3.5" stroke-linecap="round" fill="none">
+            <line x1="108" y1="165" x2="108" y2="192"/>
+            <line x1="132" y1="165" x2="132" y2="192"/>
+            <line x1="100" y1="192" x2="116" y2="192"/>
+            <line x1="124" y1="192" x2="140" y2="192"/>
+        </g>
+
+        <ellipse cx="125" cy="125" rx="60" ry="48" fill="#C99240"/>
+        <ellipse cx="130" cy="100" rx="48" ry="14" fill="#E8B96B" opacity="0.55"/>
+
+        <g fill="#6E4317" opacity="0.55">
+            <circle cx="140" cy="92"  r="3"/>
+            <circle cx="158" cy="102" r="2.6"/>
+            <circle cx="155" cy="135" r="2.6"/>
+            <circle cx="143" cy="125" r="2.4"/>
+            <circle cx="135" cy="108" r="2.2"/>
+            <circle cx="148" cy="148" r="2.4"/>
+            <circle cx="172" cy="138" r="2.2"/>
+            <circle cx="125" cy="100" r="2.2"/>
+        </g>
+
+        <ellipse cx="105" cy="142" rx="42" ry="26" fill="#FBF6E9"/>
+        <path d="M 78 140 Q 105 138, 142 142" stroke="#E8B96B" stroke-width="0.8" fill="none" opacity="0.5"/>
+
+        <!-- Right wing extended out and up -->
+        <ellipse cx="172" cy="112" rx="20" ry="34" fill="#A87727" transform="rotate(28 172 112)"/>
+        <g stroke="#6E4317" stroke-width="1.4" fill="none" opacity="0.5" stroke-linecap="round">
+            <path d="M 168 88 Q 184 110, 184 132"/>
+            <path d="M 180 92 Q 192 112, 188 130"/>
+        </g>
+
+        <!-- Left wing peeking out beneath the head -->
+        <ellipse cx="92" cy="120" rx="13" ry="22" fill="#A87727" transform="rotate(-32 92 120)"/>
+
+        <path d="M 180 130 L 198 120 L 200 138 Z" fill="#A87727"/>
+
+        <!-- Head tilted up: moved left and a touch higher -->
+        <circle cx="76" cy="76" r="32" fill="#C99240"/>
+        <ellipse cx="76" cy="60" rx="22" ry="9" fill="#E8B96B" opacity="0.7"/>
+
+        <path d="M 48 86 Q 44 102, 60 110 Q 78 110, 90 100 Q 84 88, 64 86 Z" fill="#FBF6E9"/>
+        <path d="M 48 70 Q 76 62, 102 72 Q 92 84, 76 84 Q 54 84, 48 70 Z" fill="#2C2C2C"/>
+
+        <circle cx="80" cy="76"   r="5.5" fill="#FBF6E9"/>
+        <circle cx="80" cy="77"   r="4"   fill="#2C2C2C"/>
+        <circle cx="82" cy="74.5" r="1.3" fill="#FBF6E9"/>
+        <!-- Happy crinkle below the eye -->
+        <path d="M 73 86 Q 80 90, 87 86" stroke="#6E4317" stroke-width="1" fill="none" opacity="0.4" stroke-linecap="round"/>
+
+        <!-- Beak slightly open, pointing upward -->
+        <path d="M 48 84 L 28 78 L 48 90 Z" fill="#2C2C2C"/>
+
+        <g stroke="#7F9670" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.85">
+            <path d="M 92  196 Q 90  188, 88  184"/>
+            <path d="M 100 196 Q 102 188, 104 184"/>
+            <path d="M 148 196 Q 152 190, 156 186"/>
+        </g>
+    </g>
+</svg>
