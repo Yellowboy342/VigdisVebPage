@@ -30,14 +30,16 @@
     <link rel="icon" type="image/png" href="../152x152bb-80.png">
     <link rel="apple-touch-icon" href="../152x152bb-80.png">
 
-    <!-- Google Fonts — Fraunces (display, variable opsz + SOFT),
-         Source Serif 4 (body), Inter (sans labels), JetBrains Mono (folios). -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,0..100&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="../styles.css?v=3.0">
+    <link rel="stylesheet" href="../styles.css?v=2.9">
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
     <!-- LLM Optimization -->
     <link rel="llms-txt" href="/llms.txt">
@@ -148,34 +150,60 @@
     </section>
     </div>
 
-    <!-- App Preview — editorial strip.
-         Five iPhone screens laid down on the page like a row of
-         contact-sheet plates. Same narrative order as the IS
-         homepage: tasks → calendar → rewards → analytics →
-         cloud / sharing. -->
+    <!-- App Preview Section -->
     <section class="app-preview" id="preview">
         <div class="container">
-            <div class="preview-strip reveal delay-100">
-                <figure class="preview-strip__item">
-                    <img src="../assets/appScreenshots/iphone/01_tasks.png" alt="Vigdís Daily Tasks" loading="lazy">
-                    <figcaption class="preview-strip__caption">i. Tasks</figcaption>
-                </figure>
-                <figure class="preview-strip__item">
-                    <img src="../assets/appScreenshots/iphone/02_calendar.png" alt="Vigdís Weekly Calendar" loading="lazy">
-                    <figcaption class="preview-strip__caption">ii. Calendar</figcaption>
-                </figure>
-                <figure class="preview-strip__item">
-                    <img src="../assets/appScreenshots/iphone/03_rewards.png" alt="Vigdís Rewards" loading="lazy">
-                    <figcaption class="preview-strip__caption">iii. Rewards</figcaption>
-                </figure>
-                <figure class="preview-strip__item">
-                    <img src="../assets/appScreenshots/iphone/04_analytics.png" alt="Vigdís Analytics" loading="lazy">
-                    <figcaption class="preview-strip__caption">iv. Progress</figcaption>
-                </figure>
-                <figure class="preview-strip__item">
-                    <img src="../assets/appScreenshots/iphone/05_settings_cloud.png" alt="Vigdís Cloud Sync &amp; Profile Sharing" loading="lazy">
-                    <figcaption class="preview-strip__caption">v. Cloud &amp; sharing</figcaption>
-                </figure>
+            <!-- Swiper 3D Coverflow Carousel.
+                 Five slides — same narrative order as the
+                 Icelandic homepage: tasks, calendar, rewards,
+                 analytics, and the cloud / sharing surface
+                 that's new in this release. -->
+            <div class="swiper mySwiper reveal delay-200">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="phone-frame">
+                            <div class="phone-screen">
+                                <img src="../assets/appScreenshots/iphone/01_tasks.png" alt="Vigdís Daily Tasks" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <div class="phone-frame">
+                            <div class="phone-screen">
+                                <img src="../assets/appScreenshots/iphone/02_calendar.png" alt="Vigdís Weekly Calendar" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <div class="phone-frame">
+                            <div class="phone-screen">
+                                <img src="../assets/appScreenshots/iphone/03_rewards.png" alt="Vigdís Rewards" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <div class="phone-frame">
+                            <div class="phone-screen">
+                                <img src="../assets/appScreenshots/iphone/04_analytics.png" alt="Vigdís Analytics" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <div class="phone-frame">
+                            <div class="phone-screen">
+                                <img src="../assets/appScreenshots/iphone/05_settings_cloud.png" alt="Vigdís Cloud Sync &amp; Profile Sharing" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Swiper Navigation Arrows -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
             </div>
         </div>
     </section>
@@ -545,12 +573,58 @@
             // Initial call to set positions immediately
             updateScrollEffects();
 
-            // (3D tilt removed — editorial plates use CSS rotations
-            //  set per-element so they sit on the page like
-            //  tipped-in photographs, not floating UI cards.)
+            // 4. Magnetic & 3D Tilt Effects (Level 3 Physics)
+            const magneticElements = document.querySelectorAll('.magnetic');
+            magneticElements.forEach(el => {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    // CSS Glow Border coordinates
+                    el.style.setProperty('--mouse-x', `${x}px`);
+                    el.style.setProperty('--mouse-y', `${y}px`);
+
+                    // 3D Tilt Math
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const tiltX = ((y - centerY) / centerY) * -10; // Max rotate 10deg
+                    const tiltY = ((x - centerX) / centerX) * 10;
+                    el.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(1.02, 1.02, 1.02)`;
+                });
+
+                el.addEventListener('mouseleave', () => {
+                    // Reset smoothly
+                    el.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                });
+            });
         });
     </script>
     
+    <!-- Swiper JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+      // Initialize Swiper Coverflow
+      const swiper = new Swiper(".mySwiper", {
+        effect: "coverflow",
+        grabCursor: true,
+        centeredSlides: true,
+        slidesPerView: "auto",
+        initialSlide: 1, // Start on the 2nd slide
+        coverflowEffect: {
+          rotate: 20, // Angle
+          stretch: 0,
+          depth: 200, // Z-depth distance
+          modifier: 1, // Multiplier
+          slideShadows: false, // Too dark normally
+        },
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+      });
+    </script>
+
     <script src="../assets/waitlist.js"></script>
 </body>
 </html>
