@@ -36,7 +36,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="../styles.css?v=2.8">
+    <link rel="stylesheet" href="../styles.css?v=2.9">
 
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -141,7 +141,7 @@
 
                     <div class="hero-phone-container reveal delay-400">
                         <div class="hero-phone-frame">
-                            <img src="../assets/rawAppScreenshots/tasks.png" alt="Vigdís App - Daily Routines" loading="lazy">
+                            <img src="../assets/appScreenshots/iphone/01_tasks.png" alt="Vigdís App - Daily Routines" loading="lazy">
                         </div>
                     </div>
                 </div>
@@ -153,46 +153,54 @@
     <!-- App Preview Section -->
     <section class="app-preview" id="preview">
         <div class="container">
-            <!-- Swiper 3D Coverflow Carousel -->
+            <!-- Swiper 3D Coverflow Carousel.
+                 Five slides — same narrative order as the
+                 Icelandic homepage: tasks, calendar, rewards,
+                 analytics, and the cloud / sharing surface
+                 that's new in this release. -->
             <div class="swiper mySwiper reveal delay-200">
                 <div class="swiper-wrapper">
-                    <!-- Slide 1 -->
                     <div class="swiper-slide">
                         <div class="phone-frame">
                             <div class="phone-screen">
-                                <img src="../assets/rawAppScreenshots/subtasks.png" alt="Vigdís Subtask Breakdown" loading="lazy">
+                                <img src="../assets/appScreenshots/iphone/01_tasks.png" alt="Vigdís Daily Tasks" loading="lazy">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Slide 2 -->
                     <div class="swiper-slide">
                         <div class="phone-frame">
                             <div class="phone-screen">
-                                <img src="../assets/rawAppScreenshots/tasks.png" alt="Vigdís Daily Tasks View" loading="lazy">
+                                <img src="../assets/appScreenshots/iphone/02_calendar.png" alt="Vigdís Weekly Calendar" loading="lazy">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Slide 3 -->
                     <div class="swiper-slide">
                         <div class="phone-frame">
                             <div class="phone-screen">
-                                <img src="../assets/rawAppScreenshots/analytics.png" alt="Vigdís Analytics Dashboard" loading="lazy">
+                                <img src="../assets/appScreenshots/iphone/03_rewards.png" alt="Vigdís Rewards" loading="lazy">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Slide 4 -->
                     <div class="swiper-slide">
                         <div class="phone-frame">
                             <div class="phone-screen">
-                                <img src="../assets/rawAppScreenshots/rewards.png" alt="Vigdís Rewards System" loading="lazy">
+                                <img src="../assets/appScreenshots/iphone/04_analytics.png" alt="Vigdís Analytics" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <div class="phone-frame">
+                            <div class="phone-screen">
+                                <img src="../assets/appScreenshots/iphone/05_settings_cloud.png" alt="Vigdís Cloud Sync &amp; Profile Sharing" loading="lazy">
                             </div>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Swiper Navigation Arrows -->
                 <div class="swiper-button-prev"></div>
                 <div class="swiper-button-next"></div>
@@ -229,7 +237,7 @@
                         <div class="bento-device-stage">
                             <div class="bento-orbit" aria-hidden="true"></div>
                             <div class="bento-phone bento-phone-large">
-                                <img src="../assets/rawAppScreenshots/tasks.png" alt="Visual Schedule" loading="lazy">
+                                <img src="../assets/appScreenshots/iphone/01_tasks.png" alt="Visual Schedule" loading="lazy">
                             </div>
                         </div>
                     </div>
@@ -246,24 +254,40 @@
                     </div>
                     <div class="bento-item-media bento-media-bottom">
                         <div class="bento-phone">
-                            <img src="../assets/rawAppScreenshots/subtasks.png" alt="Subtasks" loading="lazy">
+                            <img src="../assets/appScreenshots/iphone/01_tasks.png" alt="Subtasks" loading="lazy">
                         </div>
                     </div>
                 </div>
 
                 <div class="bento-item bento-medium bento-accent reveal delay-200">
                     <span class="bento-kicker">Private By Default</span>
-                    <h3>100% local. No accounts, no ads, no tracking.</h3>
-                    <p>Your family&apos;s routines stay on-device, keeping setup simple while sensitive information stays exactly where it belongs.</p>
+                    <h3>Local by default. No accounts, no ads, no tracking.</h3>
+                    <p>Your family&apos;s routines stay on-device, keeping setup simple while sensitive information stays exactly where it belongs. Cloud sync is optional &mdash; turn it on when you need it.</p>
                     <div class="bento-privacy-visual">
                         <div class="privacy-seal">
                             <span class="privacy-seal-ring" aria-hidden="true"></span>
-                            <strong>On-device only</strong>
+                            <strong>On-device by default</strong>
                         </div>
                         <div class="privacy-pills">
-                            <span class="privacy-pill">No cloud sync required</span>
-                            <span class="privacy-pill">Works offline</span>
                             <span class="privacy-pill">Zero data collection</span>
+                            <span class="privacy-pill">Works offline</span>
+                            <span class="privacy-pill">No cross-app tracking</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cloud sync + profile sharing — new bento for
+                     this release. Frames cloud as opt-in, not
+                     the default; surfaces the QR code share +
+                     cross-device sync without retracting the
+                     privacy story above. -->
+                <div class="bento-item bento-medium bento-tone-soft reveal delay-300">
+                    <span class="bento-kicker">Together across devices</span>
+                    <h3>Same routine &mdash; two homes.</h3>
+                    <p>Scan a QR code to share a profile with a grandparent, a partner, or the other parent. Same tasks, same pictures, same stars &mdash; on two devices. Cloud sync is opt-in and can be turned off any time.</p>
+                    <div class="bento-item-media bento-media-bottom">
+                        <div class="bento-phone">
+                            <img src="../assets/appScreenshots/iphone/05_settings_cloud.png" alt="Vigdís &mdash; cloud sync &amp; profile sharing" loading="lazy">
                         </div>
                     </div>
                 </div>
@@ -274,7 +298,7 @@
                     <p>See momentum over time and make better decisions around reminders, pacing, and encouragement.</p>
                     <div class="bento-item-media bento-media-bottom">
                         <div class="bento-phone">
-                            <img src="../assets/rawAppScreenshots/analytics.png" alt="Analytics" loading="lazy">
+                            <img src="../assets/appScreenshots/iphone/04_analytics.png" alt="Analytics" loading="lazy">
                         </div>
                     </div>
                 </div>
@@ -289,7 +313,7 @@
                     </div>
                     <div class="bento-item-media bento-media-bottom">
                         <div class="bento-phone">
-                            <img src="../assets/rawAppScreenshots/rewards.png" alt="Rewards" loading="lazy">
+                            <img src="../assets/appScreenshots/iphone/03_rewards.png" alt="Rewards" loading="lazy">
                         </div>
                     </div>
                 </div>
@@ -304,6 +328,41 @@
                     <span class="bento-kicker">Lived Experience</span>
                     <h3>Built by parents and professionals who understand the daily reality</h3>
                     <p>Designed from real home routines, not generic productivity assumptions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- iPad showcase — added in this release.
+         Mirrors the IS homepage. Two iPad screens side-by-side
+         so the visitor sees the calendar + the day view on
+         the larger surface before About Us. -->
+    <section class="ipad-showcase" id="ipad">
+        <div class="container">
+            <div class="ipad-showcase__head reveal">
+                <span class="bento-kicker">Now on iPad</span>
+                <h2 class="scrub-text">Bigger screen, same routine.</h2>
+                <p class="ipad-showcase__lead">
+                    iPad gets the calendar at full width and the daily list at counter-top scale &mdash; the
+                    kind of view that works when everyone&apos;s heading out the door at the same time and no
+                    one wants to pull out a phone. Redesigned for iPad in this release.
+                </p>
+            </div>
+
+            <div class="ipad-showcase__grid">
+                <div class="ipad-showcase__card reveal delay-100">
+                    <img src="../assets/appScreenshots/ipad/02_calendar.png" alt="Vigdís on iPad &mdash; full-width calendar" loading="lazy">
+                    <div class="ipad-showcase__caption">
+                        <span class="ipad-showcase__caption-label">Calendar</span>
+                        <span class="ipad-showcase__caption-meta">iPad &middot; weekly view</span>
+                    </div>
+                </div>
+                <div class="ipad-showcase__card reveal delay-200">
+                    <img src="../assets/appScreenshots/ipad/01_tasks.png" alt="Vigdís on iPad &mdash; daily tasks" loading="lazy">
+                    <div class="ipad-showcase__caption">
+                        <span class="ipad-showcase__caption-label">Today&apos;s tasks</span>
+                        <span class="ipad-showcase__caption-meta">iPad &middot; daily list</span>
+                    </div>
                 </div>
             </div>
         </div>

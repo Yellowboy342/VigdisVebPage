@@ -36,7 +36,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="styles.css?v=2.8">
+    <link rel="stylesheet" href="styles.css?v=2.9">
 
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -144,7 +144,7 @@
 
                     <div class="hero-phone-container reveal delay-400">
                         <div class="hero-phone-frame">
-                            <img src="assets/rawAppScreenshots/tasks.png" alt="Vigdís App - Dagleg rútína" loading="lazy">
+                            <img src="assets/appScreenshots/iphone/01_tasks.png" alt="Vigdís App - Dagleg rútína" loading="lazy">
                         </div>
                     </div>
                 </div>
@@ -156,41 +156,51 @@
     <!-- App Preview Section -->
     <section class="app-preview" id="preview">
         <div class="container">
-            <!-- Swiper 3D Coverflow Carousel -->
+            <!-- Swiper 3D Coverflow Carousel.
+                 Five slides in narrative order — the day shape we
+                 walk a visitor through: tasks first, then the
+                 weekly calendar overview, rewards as a payoff,
+                 analytics for the parent's lens, and finally the
+                 cloud / sharing surface that's new in this
+                 release. -->
             <div class="swiper mySwiper reveal delay-200">
                 <div class="swiper-wrapper">
-                    <!-- Slide 1 -->
                     <div class="swiper-slide">
                         <div class="phone-frame">
                             <div class="phone-screen">
-                                <img src="assets/rawAppScreenshots/subtasks.png" alt="Vigdís undirverkefni" loading="lazy">
+                                <img src="assets/appScreenshots/iphone/01_tasks.png" alt="Vigdís dagleg verkefni" loading="lazy">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Slide 2 -->
                     <div class="swiper-slide">
                         <div class="phone-frame">
                             <div class="phone-screen">
-                                <img src="assets/rawAppScreenshots/tasks.png" alt="Vigdís dagleg verkefni" loading="lazy">
+                                <img src="assets/appScreenshots/iphone/02_calendar.png" alt="Vigdís dagatal og vikuyfirlit" loading="lazy">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Slide 3 -->
                     <div class="swiper-slide">
                         <div class="phone-frame">
                             <div class="phone-screen">
-                                <img src="assets/rawAppScreenshots/analytics.png" alt="Vigdís framvindugreining" loading="lazy">
+                                <img src="assets/appScreenshots/iphone/03_rewards.png" alt="Vigdís verðlaunakerfi" loading="lazy">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Slide 4 -->
                     <div class="swiper-slide">
                         <div class="phone-frame">
                             <div class="phone-screen">
-                                <img src="assets/rawAppScreenshots/rewards.png" alt="Vigdís verðlaunakerfi" loading="lazy">
+                                <img src="assets/appScreenshots/iphone/04_analytics.png" alt="Vigdís framvindugreining" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <div class="phone-frame">
+                            <div class="phone-screen">
+                                <img src="assets/appScreenshots/iphone/05_settings_cloud.png" alt="Vigdís skýjasamstilling og prófíldeiling" loading="lazy">
                             </div>
                         </div>
                     </div>
@@ -229,7 +239,7 @@
                         <div class="bento-device-stage">
                             <div class="bento-orbit" aria-hidden="true"></div>
                             <div class="bento-phone bento-phone-large">
-                                <img src="assets/rawAppScreenshots/tasks.png" alt="Sjónrænt skipulag" loading="lazy">
+                                <img src="assets/appScreenshots/iphone/01_tasks.png" alt="Sjónrænt skipulag" loading="lazy">
                             </div>
                         </div>
                     </div>
@@ -246,24 +256,40 @@
                     </div>
                     <div class="bento-item-media bento-media-bottom">
                         <div class="bento-phone">
-                            <img src="assets/rawAppScreenshots/subtasks.png" alt="Brotin niður verkefni" loading="lazy">
+                            <img src="assets/appScreenshots/iphone/01_tasks.png" alt="Brotin niður verkefni" loading="lazy">
                         </div>
                     </div>
                 </div>
 
                 <div class="bento-item bento-medium bento-accent reveal delay-200">
                     <span class="bento-kicker">Persónuvernd í fyrirúmi</span>
-                    <h3>100% staðbundið. Engir aðgangar, engin rakning.</h3>
-                    <p>Rútínur fjölskyldunnar eru geymdar í tækinu sjálfu, sem einfaldar uppsetningu og heldur viðkvæmum upplýsingum þar sem þær eiga heima.</p>
+                    <h3>Staðbundið sjálfgefið. Engir aðgangar, engin rakning.</h3>
+                    <p>Rútínur fjölskyldunnar eru geymdar í tækinu sjálfu, sem einfaldar uppsetningu og heldur viðkvæmum upplýsingum þar sem þær eiga heima. Skýjasamstilling er valfrjáls — þú kveikir á henni þegar þú þarft.</p>
                     <div class="bento-privacy-visual">
                         <div class="privacy-seal">
                             <span class="privacy-seal-ring" aria-hidden="true"></span>
-                            <strong>Aðeins í tækinu</strong>
+                            <strong>Sjálfgefið í tækinu</strong>
                         </div>
                         <div class="privacy-pills">
-                            <span class="privacy-pill">Engin skýjasamstilling</span>
-                            <span class="privacy-pill">Virkar án nettengingar</span>
                             <span class="privacy-pill">Engin gagnasöfnun</span>
+                            <span class="privacy-pill">Virkar án nettengingar</span>
+                            <span class="privacy-pill">Engin rakning yfir öpp</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cloud sync + profile sharing — new bento for
+                     this release. Frames cloud as an opt-in
+                     feature (not the default), surfaces the QR
+                     code share + cross-device sync without
+                     pretending sync was always there. -->
+                <div class="bento-item bento-medium bento-tone-soft reveal delay-300">
+                    <span class="bento-kicker">Saman á tveimur tækjum</span>
+                    <h3>Sömu rútínur — tvö heimili.</h3>
+                    <p>Skannaðu QR kóða og deildu prófíl með ömmu, sambýlismanni eða hinu foreldrinu. Sömu verkefni, sömu myndir, sömu stjörnur — á tveimur tækjum. Skýjasamstilling er valfrjáls og hægt er að slökkva á henni hvenær sem er.</p>
+                    <div class="bento-item-media bento-media-bottom">
+                        <div class="bento-phone">
+                            <img src="assets/appScreenshots/iphone/05_settings_cloud.png" alt="Vigdís — skýjasamstilling og prófíldeiling" loading="lazy">
                         </div>
                     </div>
                 </div>
@@ -274,7 +300,7 @@
                     <p>Sjáðu þróun yfir tíma og taktu betri ákvarðanir.</p>
                     <div class="bento-item-media bento-media-bottom">
                         <div class="bento-phone">
-                            <img src="assets/rawAppScreenshots/analytics.png" alt="Framvindugreining" loading="lazy">
+                            <img src="assets/appScreenshots/iphone/04_analytics.png" alt="Framvindugreining" loading="lazy">
                         </div>
                     </div>
                 </div>
@@ -285,7 +311,7 @@
                     <p>Fagnaðu litlu skrefunum með stjörnum, sérsniðnum markmiðum og verðlaunum sem byggja upp jákvætt viðhorf.</p>
                     <div class="bento-item-media bento-media-bottom">
                         <div class="bento-phone">
-                            <img src="assets/rawAppScreenshots/rewards.png" alt="Verðlaun" loading="lazy">
+                            <img src="assets/appScreenshots/iphone/03_rewards.png" alt="Verðlaun" loading="lazy">
                         </div>
                     </div>
                 </div>
@@ -306,6 +332,42 @@
     </section>
 
 
+
+    <!-- iPad showcase — added in this release.
+         iPad is the headline new platform; gets a dedicated
+         section so visitors who stop scrolling at the bento
+         grid still see it before About Us. Two iPad screens
+         side-by-side, full-bleed feel inside the container. -->
+    <section class="ipad-showcase" id="ipad">
+        <div class="container">
+            <div class="ipad-showcase__head reveal">
+                <span class="bento-kicker">Líka á iPad</span>
+                <h2 class="scrub-text">Stærri skjár, sömu rútínur.</h2>
+                <p class="ipad-showcase__lead">
+                    iPadinn fær dagatalið í fullri breidd og verkefnalistinn fer á eldhúsbekkinn — útsýni
+                    sem virkar þegar allir eru að fara út um dyrnar í einu og enginn vill draga upp símann.
+                    Endurhannað fyrir iPad í þessari útgáfu.
+                </p>
+            </div>
+
+            <div class="ipad-showcase__grid">
+                <div class="ipad-showcase__card reveal delay-100">
+                    <img src="assets/appScreenshots/ipad/02_calendar.png" alt="Vigdís á iPad — dagatal í fullri breidd" loading="lazy">
+                    <div class="ipad-showcase__caption">
+                        <span class="ipad-showcase__caption-label">Dagatal</span>
+                        <span class="ipad-showcase__caption-meta">iPad · vikuyfirlit</span>
+                    </div>
+                </div>
+                <div class="ipad-showcase__card reveal delay-200">
+                    <img src="assets/appScreenshots/ipad/01_tasks.png" alt="Vigdís á iPad — verkefnalisti dagsins" loading="lazy">
+                    <div class="ipad-showcase__caption">
+                        <span class="ipad-showcase__caption-label">Dagskrá</span>
+                        <span class="ipad-showcase__caption-meta">iPad · dagleg verkefni</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- 05. About Us (Empathy & Origin) -->
     <section class="about-us" id="about">
