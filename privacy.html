@@ -37,7 +37,7 @@
         <div class="container">
             <h1>Privacy Policy</h1>
             <p>VIGDIS – VISUAL GUIDE FOR DAILY ACTIVITIES</p>
-            <p><small>Last updated: 06MAY2026</small></p>
+            <p><small>Last updated: 12 May 2026</small></p>
         </div>
     </section>
 
@@ -48,7 +48,7 @@
                 <p>This Privacy Policy applies to the Vigdis – Visual Guide for Daily Activities mobile application (“App”) and to the website at vigdisapp.is. It does not cover third-party services that the App or website may link to; those services have their own privacy policies.</p>
                 <p>The App is operated by:<br>
                 <strong>Vigdís ehf.</strong><br>
-                Álfaskeið 57 221 hfj.<br>
+                Álfaskeið 57, 221 Hafnarfjörður<br>
                 Iceland<br>
                 Email: <a href="mailto:support@vigdisapp.is">support@vigdisapp.is</a><br>
                 VAT / ID No.: 6702260850</p>
@@ -107,16 +107,22 @@
                 <p>If you choose to enable Cloud Sync, the Company processes:</p>
                 <ul>
                     <li>Your email address (used as your account identifier and for account recovery)</li>
-                    <li>An authentication password (stored only as a salted hash by our authentication sub-processor; the Company never receives your plaintext password)</li>
+                    <li>Authentication credentials, in a form determined by the sign-in method you choose (see “Sign-in methods” below)</li>
                     <li>A randomly generated user identifier (UUID)</li>
                     <li>The user-generated content you create within the App, including profiles, tasks, subtasks, time periods, rewards, redemptions, bonus points, completion history, and achievements</li>
                     <li>Photographs and image data you upload to profiles, tasks, or rewards (avatar images, cover images, task photos, reward photos). These are stored as files in object storage operated by our cloud sync sub-processor and are referenced by an opaque path in your account record.</li>
                     <li>Technical metadata required to operate the sync (timestamps, version counters, and a per-device identifier used to detect and resolve conflicting edits between your devices)</li>
                 </ul>
+                <p><strong>Sign-in methods.</strong> Cloud Sync supports three sign-in methods, each with different data handling:</p>
+                <ul>
+                    <li><strong>Email and password.</strong> Your password is stored only as a salted hash by our authentication sub-processor; the Company never receives your plaintext password.</li>
+                    <li><strong>Sign in with Apple.</strong> Apple verifies your identity and returns either your real Apple ID email address or, if you choose to hide it, a private relay address (typically ending in <code>@privaterelay.appleid.com</code>) that forwards mail to your real address. We use whichever address Apple provides as your account identifier. We do not receive your Apple ID password.</li>
+                    <li><strong>Sign in with Google.</strong> Google verifies your identity via OAuth and returns your verified email address and a pseudonymous Google identifier. We use the email address as your account identifier. We do not receive your Google password.</li>
+                </ul>
                 <p>This data is uploaded only after you successfully sign in. You may at any time:</p>
                 <ul>
                     <li>Export a copy of your data within the App (Settings → Support → Export my data)</li>
-                    <li>Delete your cloud account and all associated synced content (Settings → Cloud Account → Delete Account)</li>
+                    <li>Delete your cloud account and all associated synced content from your account settings within the App</li>
                     <li>Sign out, after which no further data is uploaded; data already on the device remains under your local control</li>
                 </ul>
                 <p><strong>Legal basis:</strong> Article 6(1)(b) GDPR – performance of the contract under which we provide Cloud Sync.</p>
@@ -129,9 +135,10 @@
                 <p>Cloud Sync includes an optional Profile Sharing feature. As the owner of a profile, you may invite another person — typically a co-parent, grandparent, or other family member — to access that profile from their own Vigdis account. To send an invitation, you provide:</p>
                 <ul>
                     <li>The invitee’s email address (used to address the invitation and to match it to their Vigdis account when they sign in)</li>
-                    <li>The role you wish to grant them (for example, parent, editor, or follow-only viewer)</li>
+                    <li>The role you wish to grant them (Admin, Editor, or Viewer)</li>
                 </ul>
                 <p>The invitee’s email address is stored on our cloud sync sub-processor’s infrastructure as part of the pending invitation record. Invitations expire automatically after a defined period if not accepted, after which the email address is removed.</p>
+                <p>When you send a profile-share invitation, the email address associated with your Cloud Sync account is shared with the invitee so they can recognize who is inviting them. Reciprocally, if you receive an invitation, you will see the email address of the person who invited you. By using the Profile Sharing feature, you accept this mutual disclosure of email addresses between inviter and invitee.</p>
                 <p>When an invitee accepts an invitation, an entry is created in our membership table linking their account to the relevant profile. From that moment until the share is revoked or the invitee leaves, that account can read (and, depending on role, edit) the synced content of that profile.</p>
                 <p>You may revoke a share at any time. When a share is revoked or an invitee leaves a profile:</p>
                 <ul>
@@ -145,9 +152,22 @@
                 <p>Our cloud sync sub-processor maintains short-lived operational logs of requests it receives, which can include the IP address from which a request originates, request timestamps, the type of request, and the authenticated account identifier (where applicable). These logs are used solely to operate, secure, and debug the service (for example, to diagnose sync failures, detect abuse, and respond to security incidents). The Company does not use these logs to build a profile of you or your behavior.</p>
                 <p><strong>Legal basis:</strong> Article 6(1)(f) GDPR – legitimate interest in operating and securing the service.</p>
 
+                <h3>3.7 Anonymous Product Telemetry</h3>
+                <p>To understand which features of the App are actually used and to prioritize improvements, the App may send anonymous product-telemetry events (for example, “app launched”, “task completed”, “paywall viewed”). Each event consists of:</p>
+                <ul>
+                    <li>The event name (a fixed, predefined identifier — never free text that you type)</li>
+                    <li>A randomly generated device identifier (UUID), created on first launch and stored on the device, used only to distinguish events from the same install</li>
+                    <li>A timestamp</li>
+                    <li>A small set of typed, non-identifying properties relevant to the event (for example, a feature category or a yes/no flag)</li>
+                </ul>
+                <p>If you have signed in to Cloud Sync, events are additionally tagged with your pseudonymous account UUID so that we can distinguish “one user did this ten times” from “ten users each did this once”. This account-linking step happens only after sign-in and only while you remain opted in.</p>
+                <p>The App never includes the content you create — task names, profile names, photographs, notes, or any free-text input — in telemetry. Events are sent over TLS to our cloud sync sub-processor and stored append-only; we cannot use them to read back any user-generated content.</p>
+                <p>You may opt out at any time at <strong>Settings → Legal → Help improve Vigdís</strong>. When you opt out, future events stop being sent and any events queued on the device are discarded before they leave the device.</p>
+                <p><strong>Legal basis:</strong> Article 6(1)(f) GDPR – legitimate interest in maintaining and improving the App, with an opt-out provided as a balancing measure.</p>
+
                 <h2>4. Analytics &amp; Behavioral Tracking</h2>
-                <p>We do not use third-party advertising trackers, behavioral analytics tools, or user profiling technologies within the App. We do not collect in-app usage analytics for marketing purposes. The App does not implement Apple’s App Tracking Transparency tracking, because it does not engage in cross-app or cross-site tracking.</p>
-                <p>The crash and performance diagnostics described in Section 3.4 and the operational logs described in Section 3.6 are used solely to maintain and secure the service and are not combined with personal data for profiling purposes.</p>
+                <p>We do not use third-party advertising trackers, behavioral analytics tools, or user profiling technologies within the App. We do not collect in-app usage analytics for marketing, advertising, or behavioral-profiling purposes. The only product-related telemetry we collect is the anonymous feature-usage data described in Section 3.7, used solely to prioritize improvements to the App. The App does not implement Apple’s App Tracking Transparency tracking, because it does not engage in cross-app or cross-site tracking.</p>
+                <p>The crash and performance diagnostics described in Section 3.4, the operational logs described in Section 3.6, and the anonymous product telemetry described in Section 3.7 are used solely to maintain, secure, and improve the service and are not combined with personal data for profiling purposes.</p>
                 <p>If we introduce additional analytics or third-party tracking tools in the future, we will update this Privacy Policy before such tools are used, including details about the provider and categories of data processed.</p>
 
                 <h2>5. No Advertising or Data Selling</h2>
@@ -164,8 +184,8 @@
                 <p>The Company is established in Iceland. To operate the App, we engage a small number of carefully selected sub-processors:</p>
                 <ul>
                     <li><strong>Supabase</strong> – Cloud Sync infrastructure (database, authentication, real-time event delivery for cross-device sync, and file/object storage for uploaded images). Acts as a data processor under GDPR. The Company’s project is hosted on Supabase infrastructure within the European Union.</li>
-                    <li><strong>Apple Inc.</strong> – Operates as an independent data controller in respect of payment processing, App Store delivery, push notification routing (where applicable), and operating-system-level diagnostic data, under its own privacy policy.</li>
-                    <li><strong>Google LLC</strong> – Where the App is distributed via Google Play, Google operates as an independent data controller in respect of payment processing and store delivery, under its own privacy policy.</li>
+                    <li><strong>Apple Inc.</strong> – Operates as an independent data controller in respect of payment processing, App Store delivery, the Sign in with Apple identity service (where you choose to use it), push-notification routing (where applicable), and operating-system-level diagnostic data, under its own privacy policy.</li>
+                    <li><strong>Google LLC</strong> – Operates as an independent data controller in respect of (a) the Sign in with Google identity service (where you choose to use it) and (b) payment processing and store delivery on devices where the App is distributed via Google Play, under its own privacy policy.</li>
                 </ul>
                 <p>Where a sub-processor processes personal data outside the European Economic Area (EEA), we rely on lawful safeguards such as Standard Contractual Clauses (SCCs) or equivalent mechanisms.</p>
                 <p>You may request a current sub-processor list at any time via <a href="mailto:support@vigdisapp.is">support@vigdisapp.is</a>.</p>
@@ -175,7 +195,7 @@
                 <p>For users who enable Cloud Sync:</p>
                 <ul>
                     <li>Synced user content (including uploaded images) is retained for as long as your account remains active.</li>
-                    <li>If you delete your account from within the App (Settings → Cloud Account → Delete Account), your account record and all synced content you own are deleted from active systems within 30 days. Limited records may be retained beyond this period only where retention is required by law (for example, accounting records relating to subscription transactions).</li>
+                    <li>If you delete your account from within the App (available from your account settings in Settings), your account record and all synced content you own are deleted from active systems within 30 days. Limited records may be retained beyond this period only where retention is required by law (for example, accounting records relating to subscription transactions).</li>
                     <li>System backups containing your data are overwritten on a rolling basis and are not retained beyond 90 days.</li>
                     <li>Pending profile invitations expire and are deleted automatically after a defined period (no longer than 30 days) if not accepted.</li>
                     <li>Server-side operational logs (Section 3.6) are retained for a period not exceeding 30 days, after which they are rotated out.</li>
@@ -190,7 +210,7 @@
                 <p>Thereafter, data is securely deleted or anonymized where appropriate.</p>
 
                 <h2>8. Data Security</h2>
-                <p>We implement appropriate technical and organizational measures to protect personal data processed by the Company, including encryption in transit (TLS) for all communication between the App and our cloud sync sub-processor, encryption at rest provided by the sub-processor, row-level access controls on synced data, hashed authentication credentials, and limited and logged personnel access to production systems.</p>
+                <p>We implement appropriate technical and organizational measures to protect personal data processed by the Company, including encryption in transit (TLS) for all communication between the App and our cloud sync sub-processor, encryption at rest provided by the sub-processor, row-level access controls on synced data, hashed authentication credentials for email/password sign-ins (identity-provider sign-ins with Apple or Google do not result in any password being stored on our infrastructure), and limited and logged personnel access to production systems.</p>
                 <p>However:</p>
                 <ul>
                     <li>No electronic transmission is completely secure</li>
@@ -245,9 +265,11 @@
                     <li><strong>User Content → Photos &amp; videos, Other user content</strong> – the photographs, names, schedules, and other content described in Section 3.3. Used to operate App functionality. Not linked to advertising. Not used for tracking.</li>
                     <li><strong>Identifiers → User ID</strong> – the pseudonymous account UUID. Used to operate the service and to provision subscription state with our subscription sub-processor. Not used for tracking.</li>
                     <li><strong>Diagnostics → Crash data, Performance data</strong> – as described in Section 3.4. Not linked to identity. Not used for tracking.</li>
+                    <li><strong>Usage Data → Product Interaction</strong> – the anonymous feature-usage telemetry described in Section 3.7. Tagged with a pseudonymous device identifier (and, when you are signed in to Cloud Sync, with your pseudonymous account UUID). Not used for tracking. Opt-out is available in <strong>Settings → Legal → Help improve Vigdís</strong>.</li>
                     <li><strong>Purchases → Purchase history</strong> – limited subscription confirmation data, as described in Section 3.1.</li>
                 </ul>
                 <p>The App does not collect Browsing History, Search History, Health &amp; Fitness data, Financial Information, Precise Location, Coarse Location, Sensitive Info, or Contacts.</p>
+                <p><strong>Device permissions.</strong> The App may request access to your Camera (to take photographs for profiles, tasks, or rewards and to scan QR codes for profile-share invitations) and to your Photo Library (to select existing photographs to attach). These permissions are requested by the operating system at the moment of use, may be revoked at any time in iOS Settings, and the live camera preview is processed only on your device and is never transmitted to the Company. The App may also request permission to send local notifications (daily reminders, streak warnings, reward and achievement alerts, timer-end notifications, and incoming-invite notifications); these notifications are scheduled and delivered entirely on your device and the App does not use Apple’s remote push-notification service to send notifications from a server.</p>
 
                 <h2>13. Changes to This Policy</h2>
                 <p>We may update this Privacy Policy from time to time.</p>
@@ -257,7 +279,7 @@
                 <h2>14. Contact Information</h2>
                 <p>For questions regarding this Privacy Policy:<br>
                 <strong>Vigdís ehf.</strong><br>
-                Álfaskeið 57 221 hfj.<br>
+                Álfaskeið 57, 221 Hafnarfjörður<br>
                 Iceland<br>
                 <a href="mailto:support@vigdisapp.is">support@vigdisapp.is</a></p>
             </div>
@@ -267,7 +289,7 @@
     <footer class="footer" id="footer">
         <div class="container">
             <img src="152x152bb-80.png" alt="Vigdís Logo" class="footer-logo">
-            <p class="acronym-footer">Vigdís: <strong>VI</strong>sual <strong>G</strong>uide for <strong>D</strong>aily Act<strong>I</strong>tivitie<strong>S</strong></p>
+            <p class="acronym-footer">Vigdís: <strong>VI</strong>sual <strong>G</strong>uide for <strong>D</strong>aily Act<strong>I</strong>vitie<strong>S</strong></p>
             <div class="footer-links" style="margin: 20px 0;">
                 <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a>
             </div>
