@@ -37,7 +37,7 @@
         <div class="container">
             <h1>Privacy Policy</h1>
             <p>VIGDIS – VISUAL GUIDE FOR DAILY ACTIVITIES</p>
-            <p><small>Last updated: 12 May 2026</small></p>
+            <p><small>Last updated: 12 May 2026 (rev. 2)</small></p>
         </div>
     </section>
 
@@ -107,15 +107,14 @@
                 <p>If you choose to enable Cloud Sync, the Company processes:</p>
                 <ul>
                     <li>Your email address (used as your account identifier and for account recovery)</li>
-                    <li>Authentication credentials, in a form determined by the sign-in method you choose (see “Sign-in methods” below)</li>
+                    <li>An identity token from your chosen sign-in provider (Apple or Google) — see “Sign-in methods” below</li>
                     <li>A randomly generated user identifier (UUID)</li>
                     <li>The user-generated content you create within the App, including profiles, tasks, subtasks, time periods, rewards, redemptions, bonus points, completion history, and achievements</li>
                     <li>Photographs and image data you upload to profiles, tasks, or rewards (avatar images, cover images, task photos, reward photos). These are stored as files in object storage operated by our cloud sync sub-processor and are referenced by an opaque path in your account record.</li>
                     <li>Technical metadata required to operate the sync (timestamps, version counters, and a per-device identifier used to detect and resolve conflicting edits between your devices)</li>
                 </ul>
-                <p><strong>Sign-in methods.</strong> Cloud Sync supports three sign-in methods, each with different data handling:</p>
+                <p><strong>Sign-in methods.</strong> Cloud Sync supports two sign-in methods, each with different data handling. No password is ever stored on the Company’s infrastructure — both methods rely on identity tokens issued by the platform provider.</p>
                 <ul>
-                    <li><strong>Email and password.</strong> Your password is stored only as a salted hash by our authentication sub-processor; the Company never receives your plaintext password.</li>
                     <li><strong>Sign in with Apple.</strong> Apple verifies your identity and returns either your real Apple ID email address or, if you choose to hide it, a private relay address (typically ending in <code>@privaterelay.appleid.com</code>) that forwards mail to your real address. We use whichever address Apple provides as your account identifier. We do not receive your Apple ID password.</li>
                     <li><strong>Sign in with Google.</strong> Google verifies your identity via OAuth and returns your verified email address and a pseudonymous Google identifier. We use the email address as your account identifier. We do not receive your Google password.</li>
                 </ul>
@@ -210,7 +209,7 @@
                 <p>Thereafter, data is securely deleted or anonymized where appropriate.</p>
 
                 <h2>8. Data Security</h2>
-                <p>We implement appropriate technical and organizational measures to protect personal data processed by the Company, including encryption in transit (TLS) for all communication between the App and our cloud sync sub-processor, encryption at rest provided by the sub-processor, row-level access controls on synced data, hashed authentication credentials for email/password sign-ins (identity-provider sign-ins with Apple or Google do not result in any password being stored on our infrastructure), and limited and logged personnel access to production systems.</p>
+                <p>We implement appropriate technical and organizational measures to protect personal data processed by the Company, including encryption in transit (TLS) for all communication between the App and our cloud sync sub-processor, encryption at rest provided by the sub-processor, row-level access controls on synced data, identity-provider authentication via Apple and Google (no password is ever stored on our infrastructure), and limited and logged personnel access to production systems.</p>
                 <p>However:</p>
                 <ul>
                     <li>No electronic transmission is completely secure</li>

@@ -90,7 +90,7 @@
         <div class="container">
             <h1>Persónuverndarstefna</h1>
             <p>VIGDIS – SJÓNRÆNN DAGLEGUR STUÐNINGUR OG DAGSKRÁRAPP</p>
-            <p><small>Síðast uppfært: 12. maí 2026</small></p>
+            <p><small>Síðast uppfært: 12. maí 2026 (útg. 2)</small></p>
         </div>
     </section>
 
@@ -168,15 +168,14 @@
                 <p>Ef þú velur að virkja skýjasamstillingu vinnur Félagið eftirfarandi upplýsingar:</p>
                 <ul>
                     <li>Netfang þitt (notað sem auðkenni aðgangs og til endurheimtar)</li>
-                    <li>Auðkenningarupplýsingar, í því formi sem ræðst af þeirri innskráningarleið sem þú velur (sjá „Innskráningarleiðir“ hér að neðan)</li>
+                    <li>Auðkennistoken frá innskráningarþjónustu sem þú velur (Apple eða Google) — sjá „Innskráningarleiðir“ hér að neðan</li>
                     <li>Tilviljanakennt notandaauðkenni (UUID)</li>
                     <li>Notendainnihald sem þú býrð til í appinu, þ.m.t. snið, verkefni, undirverkefni, tímabil, verðlaun, innlausnir, bónusstig, framkvæmdarsögu og áfanga</li>
                     <li>Ljósmyndir og myndgögn sem þú hleður upp í snið, verkefni eða verðlaun (prófílmyndir, forsíðumyndir, verkefnamyndir, verðlaunamyndir). Þessi efni eru vistuð sem skrár í hlutgeymslu (object storage) sem rekin er af skýjasamstillingar­undirvinnsluaðila okkar og eru tilgreind með ógagnsæjum tilvísunarslóða í aðgangsskránni þinni.</li>
                     <li>Tæknileg lýsigögn sem nauðsynleg eru fyrir samstillingu (tímastimplar, útgáfutalningar og tækjaauðkenni á tæki sem notað er til að greina og leysa misvísandi breytingar á milli tækja þinna)</li>
                 </ul>
-                <p><strong>Innskráningarleiðir.</strong> Skýjasamstilling styður þrjár innskráningarleiðir, sem hver hefur ólíka meðferð gagna:</p>
+                <p><strong>Innskráningarleiðir.</strong> Skýjasamstilling styður tvær innskráningarleiðir, sem hver hefur ólíka meðferð gagna. Lykilorð eru aldrei geymd á innviðum Félagsins — báðar leiðir byggja á auðkennistokenum sem útgefin eru af viðkomandi þjónustuveitanda.</p>
                 <ul>
-                    <li><strong>Netfang og lykilorð.</strong> Lykilorðið þitt er aðeins geymt sem saltað kjötkássu (hash) hjá auðkenningarundirvinnsluaðila okkar; Félagið fær aldrei aðgang að lykilorðinu á læsilegu formi.</li>
                     <li><strong>Sign in with Apple.</strong> Apple staðfestir auðkenni þitt og skilar annaðhvort raunverulegu netfangi þíns Apple-aðgangs eða, ef þú velur að dylja það, einkadreifingarnetfangi (yfirleitt á forminu <code>@privaterelay.appleid.com</code>) sem áframsendir póst á raunverulega netfangið þitt. Við notum það netfang sem Apple skilar sem auðkenni aðgangs þíns. Við fáum ekki lykilorðið að Apple-aðganginum þínum.</li>
                     <li><strong>Sign in with Google.</strong> Google staðfestir auðkenni þitt með OAuth og skilar staðfestu netfangi og dulnefndu Google-auðkenni. Við notum netfangið sem auðkenni aðgangs þíns. Við fáum ekki lykilorðið að Google-aðganginum þínum.</li>
                 </ul>
@@ -271,7 +270,7 @@
                 <p>Að þeim tíma liðnum eru gögn eydd eða gerð ópersónugreinanleg eftir því sem við á.</p>
 
                 <h2>8. Öryggi</h2>
-                <p>Félagið beitir viðeigandi tæknilegum og skipulagslegum öryggisráðstöfunum til að vernda persónuupplýsingar sem það vinnur, þ.m.t. dulkóðun í flutningi (TLS) fyrir öll samskipti milli appsins og skýjasamstillingar­undirvinnsluaðila okkar, dulkóðun í geymslu sem undirvinnsluaðilinn veitir, raðstigsstýrðum aðgangi að samstilltu efni, vistun auðkenningarlykla aðeins sem hash-gilda við innskráningu með netfangi og lykilorði (innskráning með Sign in with Apple eða Sign in with Google leiðir ekki til þess að lykilorð sé vistað hjá okkur), og takmarkaðan og skráðan starfsmannaaðgang að framleiðslukerfum.<br>
+                <p>Félagið beitir viðeigandi tæknilegum og skipulagslegum öryggisráðstöfunum til að vernda persónuupplýsingar sem það vinnur, þ.m.t. dulkóðun í flutningi (TLS) fyrir öll samskipti milli appsins og skýjasamstillingar­undirvinnsluaðila okkar, dulkóðun í geymslu sem undirvinnsluaðilinn veitir, raðstigsstýrðum aðgangi að samstilltu efni, auðkenningu í gegnum Sign in with Apple og Sign in with Google (lykilorð er aldrei vistað á innviðum okkar), og takmarkaðan og skráðan starfsmannaaðgang að framleiðslukerfum.<br>
                     Hins vegar:</p>
                 <ul>
                     <li>Engin rafræn gagnaflutningur er fullkomlega öruggur</li>
