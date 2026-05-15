@@ -2539,3 +2539,450 @@ body.dark-mode .bento-phone {
     padding: 60px 0 40px;
   }
 }
+
+/* ============================================================
+   iPad showcase — added in the cloud-sync release.
+   Sits between the bento grid and About Us.  Uses the same
+   container + reveal system as the rest of the page; no new
+   tokens, no new fonts.  Two iPad screenshots side-by-side
+   on desktop, stacked on mobile.
+   ============================================================ */
+
+.ipad-showcase {
+  padding: 80px 0 100px;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%,
+      var(--color-primary-mist) 0%,
+      transparent 65%),
+    var(--color-background);
+}
+
+.ipad-showcase__head {
+  max-width: 720px;
+  margin: 0 auto 56px;
+  text-align: center;
+}
+
+.ipad-showcase__head .bento-kicker {
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+.ipad-showcase__head h2 {
+  margin: 0 0 16px;
+}
+
+.ipad-showcase__lead {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  max-width: 56ch;
+  margin: 0 auto;
+}
+
+/* Tiny "Ný / New" pill that sits inline next to a bento-kicker.
+   Used on the cloud-sync bento and the iPad showcase head — both
+   are this-release additions, so the pill flags them at a glance
+   without needing a second headline. Sized to nest cleanly inside
+   the kicker line. */
+.bento-kicker-new {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-primary-deep);
+  background: var(--color-primary-mist);
+  border: 1px solid rgba(232, 138, 138, 0.35);
+  border-radius: 999px;
+  vertical-align: middle;
+  line-height: 1.4;
+}
+
+.ipad-showcase__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: stretch;
+}
+
+.ipad-showcase__card {
+  background: #fff;
+  border-radius: 22px;
+  padding: 18px;
+  box-shadow:
+    0 1px 0 rgba(232, 138, 138, 0.06),
+    0 24px 48px -28px rgba(44, 44, 44, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border: 1px solid rgba(232, 138, 138, 0.10);
+  transition: transform 380ms cubic-bezier(0.2, 0.7, 0.2, 1),
+              box-shadow 380ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.ipad-showcase__card:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 1px 0 rgba(232, 138, 138, 0.10),
+    0 32px 64px -28px rgba(44, 44, 44, 0.22);
+}
+
+.ipad-showcase__card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 14px;
+  background: var(--color-primary-soft);
+}
+
+.ipad-showcase__caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 6px;
+}
+
+.ipad-showcase__caption-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  letter-spacing: 0.01em;
+}
+
+.ipad-showcase__caption-meta {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 900px) {
+  .ipad-showcase {
+    padding: 60px 0 72px;
+  }
+  .ipad-showcase__grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .ipad-showcase__head {
+    margin-bottom: 36px;
+  }
+}
+
+/* ==========================================================
+   Lóa — brand mascot intro pill in the hero.
+
+   Sits below the hero availability line as an inline-flex
+   pill: SVG on the left, "Meet Lóa" name on top of a short
+   speech-bubble line. She becomes the recurring face of
+   Vigdís — onboarding, app store, marketing — so giving her
+   a calm dedicated home in the hero is the introduction.
+
+   The SVG itself breathes + blinks via internal CSS, so
+   nothing needs to be wired up here beyond a friendly hover
+   lean.  Soft glass background matches the existing hero
+   surfaces; coral border picks up the brand accent.
+   ========================================================== */
+.hero-mascot {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 32px;
+  padding: 10px 20px 10px 10px;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(232, 138, 138, 0.22);
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  max-width: fit-content;
+  cursor: default;
+  transition:
+    transform 360ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    border-color 360ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    background 360ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 360ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  box-shadow: 0 6px 18px -12px rgba(232, 138, 138, 0.25);
+}
+
+.hero-mascot:hover,
+.hero-mascot:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(232, 138, 138, 0.42);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 14px 32px -16px rgba(232, 138, 138, 0.4);
+  outline: none;
+}
+
+/* When hovered, Lóa leans forward a touch — she "perks up"
+   when you say hello.  The image is replaced atomically by
+   the browser as one element, so a transform on the wrapper
+   img is the cleanest way to do it. */
+.hero-mascot__img {
+  width: 64px;
+  height: auto;
+  display: block;
+  flex-shrink: 0;
+  transition: transform 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.hero-mascot:hover .hero-mascot__img,
+.hero-mascot:focus-visible .hero-mascot__img {
+  transform: rotate(-4deg) translateX(-1px);
+}
+
+.hero-mascot__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.hero-mascot__name {
+  font-family: var(--font-main);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-primary-deep);
+}
+
+.hero-mascot__bubble {
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--color-text-dark);
+  font-style: italic;
+  /* Allow the bubble to wrap on narrow viewports so the pill
+     never forces horizontal overflow on the hero column. */
+  max-width: 32ch;
+}
+
+@media (max-width: 540px) {
+  .hero-mascot {
+    margin-top: 24px;
+    padding: 10px 16px 10px 8px;
+    gap: 12px;
+  }
+  .hero-mascot__img { width: 52px; }
+  .hero-mascot__bubble { font-size: 13px; max-width: 26ch; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-mascot,
+  .hero-mascot__img { transition: none; }
+  .hero-mascot:hover,
+  .hero-mascot:focus-visible { transform: none; }
+  .hero-mascot:hover .hero-mascot__img,
+  .hero-mascot:focus-visible .hero-mascot__img { transform: none; }
+}
+
+/* ==========================================================
+   Lóa, additional placements across the page.
+
+   1. .bento-loa --celebrating  — peeks from the corner of
+      the rewards bento. Her sparkles tell visitors that this
+      tile is the "small wins compound" tile before they read.
+   2. .cta-loa                  — anchors the closing CTA so
+      the bottom of the page has a small living detail.
+   3. .footer-loa               — sleeping pose, tucked into
+      the corner of the footer as a "see you tomorrow" beat.
+   4. .loa-intro                — dedicated section between
+      About Us and the gallery introducing Lóa as a character,
+      not just an illustration. Idle pose at large scale.
+
+   All decorative; aria-hidden on the imagery itself, with
+   meaningful text carried by surrounding copy.
+   ========================================================== */
+
+/* 1. Bento corner Lóa */
+.bento-item { position: relative; }
+
+.bento-loa {
+  position: absolute;
+  width: 84px;
+  height: auto;
+  pointer-events: none;
+  z-index: 2;
+  filter: drop-shadow(0 6px 12px rgba(232, 138, 138, 0.18));
+  transition: transform 360ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.bento-loa--celebrating {
+  top: 18px;
+  right: 14px;
+  transform: rotate(-8deg);
+}
+
+.bento-item:hover .bento-loa--celebrating {
+  transform: rotate(-2deg) translateY(-3px);
+}
+
+@media (max-width: 720px) {
+  .bento-loa { width: 64px; }
+  .bento-loa--celebrating { top: 12px; right: 10px; }
+}
+
+/* 2. Closing CTA — greeting Lóa */
+.cta { position: relative; overflow: hidden; }
+.cta .container { position: relative; }
+
+.cta-loa {
+  position: absolute;
+  top: -28px;
+  right: 32px;
+  width: 156px;
+  height: auto;
+  pointer-events: none;
+  z-index: 2;
+  filter: drop-shadow(0 16px 24px rgba(184, 91, 71, 0.18));
+}
+
+@media (max-width: 900px) {
+  .cta-loa {
+    width: 120px;
+    top: -16px;
+    right: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .cta-loa {
+    position: relative;
+    top: 0;
+    right: 0;
+    width: 96px;
+    margin: 0 auto 12px;
+    display: block;
+  }
+}
+
+/* 3. Footer — sleeping Lóa */
+.footer { position: relative; overflow: hidden; }
+
+.footer-loa {
+  position: absolute;
+  bottom: 12px;
+  right: 28px;
+  width: 96px;
+  height: auto;
+  pointer-events: none;
+  opacity: 0.92;
+  z-index: 1;
+}
+
+@media (max-width: 760px) {
+  .footer-loa {
+    width: 72px;
+    bottom: 8px;
+    right: 14px;
+  }
+}
+
+/* 4. "Hver er Lóa? / Meet Lóa" bio section */
+.loa-intro {
+  padding: 100px 0 110px;
+  position: relative;
+  background:
+    radial-gradient(900px 500px at 8% 20%, rgba(232, 138, 138, 0.10), transparent 60%),
+    radial-gradient(900px 500px at 100% 100%, rgba(248, 230, 227, 0.5), transparent 60%);
+}
+
+.loa-intro__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 64px;
+  align-items: center;
+}
+
+.loa-intro__figure {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.loa-intro__figure::before {
+  /* Soft coral halo behind the larger Lóa, anchoring her on
+     the left like the about-us photo card does on the right. */
+  content: "";
+  position: absolute;
+  inset: 8% 14% 8% 14%;
+  background: radial-gradient(closest-side, rgba(232, 138, 138, 0.18), transparent 70%);
+  filter: blur(12px);
+  z-index: 0;
+}
+
+.loa-intro__figure img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+}
+
+.loa-intro__text .bento-kicker {
+  display: inline-block;
+  margin-bottom: 14px;
+}
+
+.loa-intro__text h2 {
+  margin: 0 0 24px;
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.08;
+  color: var(--color-text-dark);
+  letter-spacing: -0.01em;
+}
+
+.loa-intro__text p {
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  font-size: 17px;
+  max-width: 56ch;
+  margin-bottom: 14px;
+}
+
+.loa-intro__quote {
+  position: relative;
+  margin-top: 32px;
+  padding: 18px 22px 18px 26px;
+  border-left: 3px solid var(--color-primary);
+  background: rgba(255, 255, 255, 0.55);
+  font-family: var(--font-main);
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--color-text-dark);
+  border-radius: 0 14px 14px 0;
+  box-shadow: 0 8px 22px -16px rgba(184, 91, 71, 0.18);
+  max-width: 48ch;
+}
+
+.loa-intro__quote cite {
+  display: block;
+  margin-top: 10px;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-primary-deep);
+}
+
+@media (max-width: 880px) {
+  .loa-intro {
+    padding: 72px 0 80px;
+  }
+  .loa-intro__grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    text-align: center;
+  }
+  .loa-intro__figure img { max-width: 240px; }
+  .loa-intro__text p,
+  .loa-intro__quote { margin-left: auto; margin-right: auto; }
+  .loa-intro__quote { text-align: left; }
+}
