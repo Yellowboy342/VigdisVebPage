@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Loa, head-only crop.
+
+  Square 120x120 canvas with the head filling the centre,
+  designed to be clipped to a circle at any size.  Used as
+  the default profile avatar in the iOS app when a profile
+  has no custom photo, and available on the marketing site
+  for any future "tiny Loa head" surface (favicon variant,
+  social share).
+
+  At very small sizes (32pt avatar) Loa is still recognisable
+  via her three signature features:
+    * Black bandit-mask eye-stripe across the face.
+    * Dark eye inside the white face patch.
+    * Warm gold head against a soft paper-rose halo.
+  Everything else (body, legs, grass) is removed so the face
+  stays the focal element under heavy clipping.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="loa-head-title">
+    <title id="loa-head-title">Loa, the Vigdis mascot.</title>
+
+    <!-- Soft paper-rose halo, matches the brand palette and
+         gives the crop a gentle background even when the
+         host surface is plain white. -->
+    <circle cx="60" cy="60" r="60" fill="#F8E9E5"/>
+
+    <!-- Head, slightly larger than the body version since this
+         is the dominant element of the crop. -->
+    <circle cx="62" cy="58" r="40" fill="#C99240"/>
+
+    <!-- Top-of-head highlight, lighter gold. -->
+    <ellipse cx="62" cy="40" rx="26" ry="10" fill="#E8B96B" opacity="0.7"/>
+
+    <!-- White face / throat patch (sits under the mask). -->
+    <path d="M 32 68 Q 28 88, 46 94 Q 64 94, 76 84 Q 70 70, 52 68 Z"
+          fill="#FBF6E9"/>
+
+    <!-- Black bandit-mask, the lóa's defining feature.  Kept
+         heavy here because it's the silhouette readers spot
+         first at avatar scale. -->
+    <path d="M 32 50 Q 62 42, 88 54 Q 78 66, 62 66 Q 40 66, 32 50 Z"
+          fill="#2C2C2C"/>
+
+    <!-- Eye: white sclera, dark pupil, tiny catchlight. -->
+    <circle cx="64" cy="56"   r="7"   fill="#FBF6E9"/>
+    <circle cx="64" cy="57"   r="5"   fill="#2C2C2C"/>
+    <circle cx="66" cy="54.5" r="1.7" fill="#FBF6E9"/>
+
+    <!-- Beak, short and pointed. -->
+    <path d="M 32 64 L 14 66 L 32 72 Z" fill="#2C2C2C"/>
+</svg>
