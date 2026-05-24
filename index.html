@@ -36,7 +36,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="styles.css?v=3.4">
+    <link rel="stylesheet" href="styles.css?v=3.6">
 
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -140,10 +140,9 @@
                             <a href="#cta" class="hero-btn-secondary">Fá uppfærslur í tölvupósti</a>
                         </div>
 
-                        <!-- Social proof: full App Store review in a hero glass
-                             card. Generic, privacy-safe attribution. -->
+                        <!-- Social proof: App Store review (no star rating).
+                             A second testimonial may join here later. -->
                         <figure class="hero-testimonial reveal delay-400">
-                            <div class="hero-testimonial__stars" role="img" aria-label="5 af 5 stjörnum">★★★★★</div>
                             <blockquote class="hero-testimonial__quote">Þetta app er að bjarga geðheilsunni á þessu heimili! Dóttir mín, sem hefur aldrei sofið vel, sefur nú alla nóttina í sínu eigin rúmi. Hún vaknar, býr um rúmið sitt, fær sér að borða, klæðir sig og burstar tennurnar án þess að við þurfum að segja neitt.</blockquote>
                             <figcaption class="hero-testimonial__author">— Foreldri · App Store</figcaption>
                         </figure>
@@ -422,19 +421,20 @@
         </div>
     </section>
 
-    <!-- 06. Social Proof (Testimonials & Gallery) -->
+    <!-- 06. Social Proof — a parent's message beside a lifestyle photo. -->
     <section class="proof" id="proof">
         <div class="container">
             <div class="section-header text-center">
-                <h2 class="scrub-text">Sjáðu hvernig Vigdís virkar</h2>
+                <h2 class="scrub-text">Hvað segja foreldrar?</h2>
             </div>
 
-            <div class="gallery-grid mt-40">
-                <div class="gallery-item shadow-premium reveal delay-100 magnetic">
-                    <img src="assets/DSC004543.jpeg" alt="Person using Vigdís app in a cafe" loading="lazy">
-                </div>
-                <div class="gallery-item shadow-premium reveal delay-200 magnetic">
-                    <img src="assets/IphoneOgIpad.png" alt="Vigdís app on iPhone and iPad" loading="lazy">
+            <div class="proof-grid mt-40">
+                <figure class="testimonial-card reveal delay-100">
+                    <blockquote class="quote">Heyrðu, já — ég er búin að ná í appið og setja það upp og ég er að elska þetta. Þetta er að hjálpa okkur alveg helling. Þau eru öll með svo mismunandi þarfir, og að hafa þetta svona sjónrænt fyrir þau, þar sem þau geta hakað við sjálf, er algjör game changer. Nei sko, þetta hefur gert lífið svo miklu auðveldara fyrir okkur. Bara TAKK fyrir að búa þetta til og leyfa mér að prófa.</blockquote>
+                    <figcaption class="author">— Foreldri</figcaption>
+                </figure>
+                <div class="proof-photo reveal delay-200 magnetic">
+                    <img src="assets/DSC004543.jpeg" alt="Foreldri notar Vigdís með barni" loading="lazy">
                 </div>
             </div>
         </div>
@@ -513,7 +513,7 @@
                     <img src="152x152bb-80.png" alt="Vigdís Logo" class="footer-logo">
                     <p class="footer-tagline">Sjónrænt skipulag fyrir friðsælli dagstakt.</p>
                     <p class="acronym-footer">Vigdís: <strong>VI</strong>sual <strong>G</strong>uide for
-                        <strong>D</strong>aily Act<strong>I</strong>tivitie<strong>S</strong>
+                        <strong>D</strong>aily Act<strong>I</strong>vitie<strong>S</strong>
                     </p>
                 </div>
 

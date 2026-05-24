@@ -11,6 +11,7 @@
   --color-primary-mist: #F8E6E3;
   --color-primary-soft: #FDF1EE;
   --color-primary-deep: #B55D5D;
+  --color-coral-strong: #A2494A; /* AA-compliant coral (~5.9:1 on white) for small labels */
   --color-header-bg: rgba(255, 250, 248, 0.9);
   --color-header-bg-soft: rgba(248, 230, 227, 0.92);
   --color-header-text: rgba(44, 44, 44, 0.92);
@@ -519,7 +520,7 @@ section {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.62);
   border: 1px solid rgba(216, 112, 112, 0.14);
-  color: var(--color-primary-deep);
+  color: var(--color-coral-strong);
   font-size: 0.92rem;
   font-weight: 700;
   box-shadow: 0 14px 28px rgba(216, 112, 112, 0.08);
@@ -624,13 +625,6 @@ section {
   box-shadow: 0 14px 34px -22px rgba(216, 112, 112, 0.4);
 }
 
-.hero-testimonial__stars {
-  color: #FFB800;
-  font-size: 1rem;
-  letter-spacing: 3px;
-  margin-bottom: 10px;
-}
-
 .hero-testimonial__quote {
   margin: 0 0 12px;
   font-size: 1rem;
@@ -642,7 +636,7 @@ section {
 .hero-testimonial__author {
   font-weight: 700;
   font-size: 0.88rem;
-  color: var(--color-primary-deep);
+  color: var(--color-coral-strong);
 }
 
 @media (max-width: 768px) {
@@ -748,7 +742,7 @@ section {
   /* Fills text with solid color from Left to Right based on JS variable */
   background: linear-gradient(to right,
       var(--color-text-dark) calc(var(--scrub-progress, 0) * 100%),
-      rgba(0, 0, 0, 0.15) calc(var(--scrub-progress, 0) * 100%));
+      var(--color-text-muted) calc(var(--scrub-progress, 0) * 100%));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1111,8 +1105,60 @@ section:not(.hero) {
 
 .author {
   font-weight: 600;
-  color: var(--color-primary-dark);
+  color: var(--color-coral-strong);
   font-size: 1rem;
+}
+
+/* Proof section: a parent's message beside one lifestyle photo. */
+.proof-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: stretch;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.proof-grid .testimonial-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--color-primary-soft);
+  border: 1px solid var(--color-primary-mist);
+  box-shadow: var(--shadow-soft);
+}
+
+.proof-grid .quote {
+  margin: 0 0 16px;
+  font-size: 1.1rem;
+}
+
+.proof-photo {
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-premium);
+  min-height: 280px;
+}
+
+.proof-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .proof-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .proof-grid .testimonial-card {
+    padding: 28px 24px;
+  }
+  .proof-photo {
+    min-height: 240px;
+  }
 }
 
 /* Gallery Grid (Refined) */
@@ -1327,7 +1373,7 @@ section:not(.hero) {
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-primary-deep);
+  color: var(--color-coral-strong);
   font-weight: 600;
 }
 
@@ -2192,7 +2238,7 @@ section:not(.hero) {
   font-weight: 800;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--color-primary-dark);
+  color: var(--color-coral-strong);
 }
 
 .bento-kicker::before {
@@ -3032,6 +3078,32 @@ body.dark-mode .bento-phone {
   .hero-mascot:focus-visible { transform: none; }
   .hero-mascot:hover .hero-mascot__img,
   .hero-mascot:focus-visible .hero-mascot__img { transform: none; }
+}
+
+/* Respect reduced-motion across the whole page: neutralize the reveal
+   animations, the JS scroll-scrub heading fill, blob drift, card tilt,
+   and long transitions for visitors who ask for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Headings: skip the JS-driven wipe and show solid, full-contrast text. */
+  .scrub-text {
+    background: none;
+    -webkit-text-fill-color: var(--color-text-dark);
+    color: var(--color-text-dark);
+  }
 }
 
 /* ==========================================================
