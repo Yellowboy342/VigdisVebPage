@@ -151,22 +151,23 @@
                 <p>Our cloud sync sub-processor maintains short-lived operational logs of requests it receives, which can include the IP address from which a request originates, request timestamps, the type of request, and the authenticated account identifier (where applicable). These logs are used solely to operate, secure, and debug the service (for example, to diagnose sync failures, detect abuse, and respond to security incidents). The Company does not use these logs to build a profile of you or your behavior.</p>
                 <p><strong>Legal basis:</strong> Article 6(1)(f) GDPR – legitimate interest in operating and securing the service.</p>
 
-                <h3>3.7 Anonymous Product Telemetry</h3>
-                <p>To understand which features of the App are actually used and to prioritize improvements, the App may send anonymous product-telemetry events (for example, “app launched”, “task completed”, “paywall viewed”). Each event consists of:</p>
+                <h3>3.7 Product Telemetry</h3>
+                <p>To understand which features of the App are used and to prioritize improvements, the App may send limited product-telemetry events (for example, “app launched”, “task completed”, “paywall viewed”). Each event consists of:</p>
                 <ul>
                     <li>The event name (a fixed, predefined identifier — never free text that you type)</li>
-                    <li>A randomly generated device identifier (UUID), created on first launch and stored on the device, used only to distinguish events from the same install</li>
+                    <li>A device identifier, generated on first launch and stored on the device, used to distinguish events from the same install</li>
                     <li>A timestamp</li>
                     <li>A small set of typed, non-identifying properties relevant to the event (for example, a feature category or a yes/no flag)</li>
+                    <li>Basic technical context (app version, operating-system version, device model, locale)</li>
                 </ul>
-                <p>If you have signed in to Cloud Sync, events are additionally tagged with your pseudonymous account UUID so that we can distinguish “one user did this ten times” from “ten users each did this once”. This account-linking step happens only after sign-in and only while you remain opted in.</p>
-                <p>The App never includes the content you create — task names, profile names, photographs, notes, or any free-text input — in telemetry. Events are sent over TLS to our cloud sync sub-processor and stored append-only; we cannot use them to read back any user-generated content.</p>
+                <p>If you are signed in to Cloud Sync, events are additionally tagged with your account identifier. This means individual events can in principle be associated with your account while you remain opted in.</p>
+                <p>The App does not include the content you create — task names, profile names, photographs, notes, or any free-text input — in telemetry events. Events are sent over TLS to our cloud sync sub-processor and stored append-only.</p>
                 <p>You may opt out at any time at <strong>Settings → Legal → Help improve Vigdís</strong>. When you opt out, future events stop being sent and any events queued on the device are discarded before they leave the device.</p>
                 <p><strong>Legal basis:</strong> Article 6(1)(f) GDPR – legitimate interest in maintaining and improving the App, with an opt-out provided as a balancing measure.</p>
 
                 <h2>4. Analytics &amp; Behavioral Tracking</h2>
-                <p>We do not use third-party advertising trackers, behavioral analytics tools, or user profiling technologies within the App. We do not collect in-app usage analytics for marketing, advertising, or behavioral-profiling purposes. The only product-related telemetry we collect is the anonymous feature-usage data described in Section 3.7, used solely to prioritize improvements to the App. The App does not implement Apple’s App Tracking Transparency tracking, because it does not engage in cross-app or cross-site tracking.</p>
-                <p>The crash and performance diagnostics described in Section 3.4, the operational logs described in Section 3.6, and the anonymous product telemetry described in Section 3.7 are used solely to maintain, secure, and improve the service and are not combined with personal data for profiling purposes.</p>
+                <p>We do not use third-party advertising trackers, behavioral analytics tools, or user profiling technologies within the App. We do not collect in-app usage analytics for marketing, advertising, or behavioral-profiling purposes. The only product-related telemetry we collect is the limited feature-usage data described in Section 3.7, used solely to prioritize improvements to the App. The App does not implement Apple’s App Tracking Transparency tracking, because it does not engage in cross-app or cross-site tracking.</p>
+                <p>The crash and performance diagnostics described in Section 3.4, the operational logs described in Section 3.6, and the product telemetry described in Section 3.7 are used solely to maintain, secure, and improve the service and are not combined with personal data for profiling purposes.</p>
                 <p>If we introduce additional analytics or third-party tracking tools in the future, we will update this Privacy Policy before such tools are used, including details about the provider and categories of data processed.</p>
 
                 <h2>5. No Advertising or Data Selling</h2>
@@ -262,9 +263,9 @@
                 <ul>
                     <li><strong>Contact Info → Email Address</strong> – used for account creation, support, and profile-share invitations. Not linked to advertising. Not used for tracking.</li>
                     <li><strong>User Content → Photos &amp; videos, Other user content</strong> – the photographs, names, schedules, and other content described in Section 3.3. Used to operate App functionality. Not linked to advertising. Not used for tracking.</li>
-                    <li><strong>Identifiers → User ID</strong> – the pseudonymous account UUID. Used to operate the service and to provision subscription state with our subscription sub-processor. Not used for tracking.</li>
+                    <li><strong>Identifiers → User ID</strong> – the account identifier issued when you sign in to Cloud Sync. Used to operate the service and to provision subscription state with our subscription sub-processor. Not used for advertising or cross-app tracking.</li>
                     <li><strong>Diagnostics → Crash data, Performance data</strong> – as described in Section 3.4. Not linked to identity. Not used for tracking.</li>
-                    <li><strong>Usage Data → Product Interaction</strong> – the anonymous feature-usage telemetry described in Section 3.7. Tagged with a pseudonymous device identifier (and, when you are signed in to Cloud Sync, with your pseudonymous account UUID). Not used for tracking. Opt-out is available in <strong>Settings → Legal → Help improve Vigdís</strong>.</li>
+                    <li><strong>Usage Data → Product Interaction</strong> – the limited feature-usage telemetry described in Section 3.7. Tagged with a device identifier (and, when you are signed in to Cloud Sync, with your account identifier). Not used for advertising or cross-app tracking. Opt-out is available in <strong>Settings → Legal → Help improve Vigdís</strong>.</li>
                     <li><strong>Purchases → Purchase history</strong> – limited subscription confirmation data, as described in Section 3.1.</li>
                 </ul>
                 <p>The App does not collect Browsing History, Search History, Health &amp; Fitness data, Financial Information, Precise Location, Coarse Location, Sensitive Info, or Contacts.</p>

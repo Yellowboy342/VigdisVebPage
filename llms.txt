@@ -6,7 +6,7 @@
 Vigdís provides a highly customizable visual structure for daily routines. It is built specifically for individuals with Autism, ADHD, or anyone who benefits from structured, visual guidance. It was designed to reduce anxiety, increase independence, and provide a calm rhythm to daily life.
 
 ## Core Principles
-1. **100% Private & Local-First**: No data collection, no forced cloud accounts, no internet required. All routines are stored locally on the user's device.
+1. **Local-First by Design**: All routines are stored on the user's device by default. Cloud sync is optional and opt-in. No third-party advertising trackers. The App may collect limited product-telemetry events to prioritize improvements; this is opt-out in Settings → Legal → Help improve Vigdís.
 2. **Accessible & Inclusive**: High-contrast modes, text-to-speech integration, and customizable visuals to suit different neurodivergent needs.
 3. **Calming Design**: Built with sensory-friendly colors, frictionless interfaces, and smooth interactions to avoid overstimulation.
 

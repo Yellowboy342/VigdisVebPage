@@ -212,22 +212,23 @@
                 <p>Skýjasamstillingar­undirvinnsluaðili okkar heldur skammtíma rekstrarskráningum (logs) yfir þær fyrirspurnir sem hann tekur á móti. Þessar skráningar geta innihaldið IP-tölu sem fyrirspurn berst frá, tímastimpla, tegund fyrirspurnar og auðkenni innskráðs aðgangs (þegar við á). Skráningarnar eru eingöngu notaðar til að reka, tryggja öryggi og leysa villur í þjónustunni (t.d. til að greina samstillingavillur, koma auga á misnotkun og bregðast við öryggisatvikum). Félagið notar þessar skráningar ekki til að byggja upp persónusnið um þig eða hegðun þína.</p>
                 <p><strong>Lagagrundvöllur:</strong> 6. gr. 1. mgr. f-liðar GDPR – lögmætir hagsmunir af því að reka og verja þjónustuna.</p>
 
-                <h3>3.7 Nafnlaus virkni- og notkunarmæling</h3>
-                <p>Til að skilja hvaða eiginleikar appsins eru í raun notaðir og forgangsraða úrbótum kann appið að senda nafnlausa virkni- og notkunarviðburði (t.d. „app launched“, „task completed“, „paywall viewed“). Hver viðburður samanstendur af eftirfarandi þáttum:</p>
+                <h3>3.7 Virkni- og notkunarmæling</h3>
+                <p>Til að skilja hvaða eiginleikar appsins eru notaðir og forgangsraða úrbótum kann appið að senda takmarkaða virkni- og notkunarviðburði (t.d. „app launched“, „task completed“, „paywall viewed“). Hver viðburður samanstendur af eftirfarandi þáttum:</p>
                 <ul>
                     <li>Heiti viðburðar (fast, fyrirfram skilgreint auðkenni — aldrei frjáls texti sem þú slærð inn)</li>
-                    <li>Tilviljanakenndu tækjaauðkenni (UUID) sem er búið til við fyrstu ræsingu og geymt á tækinu, eingöngu notað til að aðgreina viðburði frá sömu uppsetningu</li>
+                    <li>Tækjaauðkenni sem er búið til við fyrstu ræsingu og geymt á tækinu, notað til að aðgreina viðburði frá sömu uppsetningu</li>
                     <li>Tímastimpli</li>
                     <li>Litlu mengi ópersónugreinanlegra eiginleika sem snerta viðburðinn (t.d. eiginleikaflokki eða já/nei merki)</li>
+                    <li>Grunntæknilegt samhengi (útgáfa appsins, útgáfa stýrikerfis, gerð tækis, tungumálastilling)</li>
                 </ul>
-                <p>Ef þú hefur skráð þig inn í skýjasamstillingu eru viðburðirnir auk þess merktir með dulnefnda aðgangs-UUID-inu þínu svo við getum aðgreint „einn notandi gerði þetta tíu sinnum“ frá „tíu notendur gerðu þetta einu sinni hver“. Þessi tenging við aðgang á sér aðeins stað eftir innskráningu og á meðan þú hefur ekki slökkt á mælingunni.</p>
-                <p>Appið tekur aldrei með í virknimælingunni efni sem þú býrð til — heiti verkefna, nöfn sniða, ljósmyndir, athugasemdir eða annan frjálsan texta. Viðburðir eru sendir með TLS-dulkóðun til skýjasamstillingar­undirvinnsluaðila okkar og geymdir á þann hátt að einungis er hægt að bæta við þeim (append-only); við getum ekki lesið neitt notendainnihald úr þeim.</p>
+                <p>Ef þú ert skráð/ur inn í skýjasamstillingu eru viðburðirnir auk þess merktir með aðgangsauðkenninu þínu. Það þýðir að einstakir viðburðir geta í grundvallaratriðum verið tengdir við aðganginn þinn á meðan þú hefur ekki slökkt á mælingunni.</p>
+                <p>Appið tekur ekki með í virknimælingunni efni sem þú býrð til — heiti verkefna, nöfn sniða, ljósmyndir, athugasemdir eða annan frjálsan texta. Viðburðir eru sendir með TLS-dulkóðun til skýjasamstillingar­undirvinnsluaðila okkar og geymdir á þann hátt að einungis er hægt að bæta við þeim (append-only).</p>
                 <p>Þú getur slökkt á þessari mælingu hvenær sem er á <strong>Stillingar → Lögfræðilegt → Hjálpa að bæta Vigdís</strong>. Þegar þú slekkur á henni stöðvast framtíðar-viðburðir og allir staðbundnir viðburðir í bið eru fjarlægðir áður en þeir eru sendir.</p>
                 <p><strong>Lagagrundvöllur:</strong> 6. gr. 1. mgr. f-liðar GDPR – lögmætir hagsmunir af viðhaldi og þróun appsins, með afþökkunarheimild sem jafnvægisaðgerð.</p>
 
                 <h2>4. Greining og hegðunarmæling</h2>
-                <p>Við notum ekki þriðju aðila auglýsingarekja, hegðunargreiningu eða notendaprófíleringu innan appsins. Við söfnum ekki notkunargögnum í markaðs-, auglýsinga- eða hegðunarprófíleringartilgangi. Einu virkni- og notkunargögnin sem við söfnum eru nafnlaus mæling á eiginleikum sem lýst er í kafla 3.7, eingöngu notuð til að forgangsraða úrbótum á appinu. Appið beitir ekki App Tracking Transparency-rakningu Apple, þar sem það stundar ekki rakningu á milli forrita eða vefsvæða.</p>
-                <p>Bilana- og frammistöðugreiningarnar sem lýst er í kafla 3.4, rekstrarskráningarnar sem lýst er í kafla 3.6, og nafnlausa virkni- og notkunarmælingin sem lýst er í kafla 3.7 eru eingöngu notaðar til að viðhalda, verja og bæta þjónustuna og eru ekki samtengdar við persónuupplýsingar í prófíleringartilgangi.</p>
+                <p>Við notum ekki þriðju aðila auglýsingarekja, hegðunargreiningu eða notendaprófíleringu innan appsins. Við söfnum ekki notkunargögnum í markaðs-, auglýsinga- eða hegðunarprófíleringartilgangi. Einu virkni- og notkunargögnin sem við söfnum eru takmörkuð mæling á eiginleikum sem lýst er í kafla 3.7, eingöngu notuð til að forgangsraða úrbótum á appinu. Appið beitir ekki App Tracking Transparency-rakningu Apple, þar sem það stundar ekki rakningu á milli forrita eða vefsvæða.</p>
+                <p>Bilana- og frammistöðugreiningarnar sem lýst er í kafla 3.4, rekstrarskráningarnar sem lýst er í kafla 3.6, og virkni- og notkunarmælingin sem lýst er í kafla 3.7 eru eingöngu notaðar til að viðhalda, verja og bæta þjónustuna og eru ekki samtengdar við persónuupplýsingar í prófíleringartilgangi.</p>
                 <p>Ef frekari greiningar- eða rekjunarkerfi þriðja aðila verða innleidd síðar verður þessi stefna uppfærð áður en slík vinnsla hefst, þ.m.t. upplýsingar um þjónustuveitanda og flokka gagna sem unnin eru.</p>
 
                 <h2>5. Engar auglýsingar eða sala gagna</h2>
@@ -330,9 +331,9 @@
                 <ul>
                     <li><strong>Tengiliðaupplýsingar → Netfang</strong> – notað til stofnunar aðgangs, þjónustu og sniðdeilingarboða. Ekki tengt auglýsingum. Ekki notað til rakningar.</li>
                     <li><strong>Notendainnihald → Myndir og myndskeið, Annað notendainnihald</strong> – ljósmyndir, nöfn, dagsskipulög og annað efni sem lýst er í kafla 3.3. Notað til reksturs appsins. Ekki tengt auglýsingum. Ekki notað til rakningar.</li>
-                    <li><strong>Auðkenni → Notandaauðkenni</strong> – dulnefnt aðgangs-UUID. Notað til reksturs þjónustunnar og til samskipta um áskriftarstöðu við undirvinnsluaðila okkar. Ekki notað til rakningar.</li>
+                    <li><strong>Auðkenni → Notandaauðkenni</strong> – aðgangsauðkenni sem er gefið út þegar þú skráir þig inn í skýjasamstillingu. Notað til reksturs þjónustunnar og til samskipta um áskriftarstöðu við undirvinnsluaðila okkar. Ekki notað til auglýsinga eða rakningar þvert á forrit.</li>
                     <li><strong>Greiningargögn → Bilanagögn, Frammistöðugögn</strong> – eins og lýst er í kafla 3.4. Ekki tengt persónuauðkenni. Ekki notað til rakningar.</li>
-                    <li><strong>Notkunargögn → Vinnsla með eiginleikum</strong> – nafnlaus virkni- og notkunarmæling sem lýst er í kafla 3.7. Merkt með dulnefndu tækjaauðkenni (og, þegar þú ert skráð/ur inn í skýjasamstillingu, með dulnefnda aðgangs-UUID-inu þínu). Ekki notað til rakningar. Hægt er að slökkva á henni á <strong>Stillingar → Lögfræðilegt → Hjálpa að bæta Vigdís</strong>.</li>
+                    <li><strong>Notkunargögn → Vinnsla með eiginleikum</strong> – takmörkuð virkni- og notkunarmæling sem lýst er í kafla 3.7. Merkt með tækjaauðkenni (og, þegar þú ert skráð/ur inn í skýjasamstillingu, með aðgangsauðkenninu þínu). Ekki notað til auglýsinga eða rakningar þvert á forrit. Hægt er að slökkva á henni á <strong>Stillingar → Lögfræðilegt → Hjálpa að bæta Vigdís</strong>.</li>
                     <li><strong>Kaup → Kaupasaga</strong> – takmarkaðar staðfestingarupplýsingar um áskrift, eins og lýst er í kafla 3.1.</li>
                 </ul>
                 <p>Appið safnar ekki vafra-, leitar-, heilsu-, fjárhags-, nákvæmum staðsetningar-, lauslegum staðsetningar-, viðkvæmum eða tengiliðatengdum upplýsingum.</p>
