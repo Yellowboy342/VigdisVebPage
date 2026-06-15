@@ -1,11 +1,20 @@
+# Allow everything by default
 User-agent: *
 Allow: /
 
-# Specifically allowing standard AI scrapers to index the site for LLM training and search
+# LLM context: https://vigdisapp.is/llms.txt
+
+# AI / LLM crawlers — explicitly allowed
 User-agent: GPTBot
 Allow: /
 
 User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
 Allow: /
 
 User-agent: Google-Extended
@@ -14,11 +23,28 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
-User-agent: anthropic-ai
+User-agent: Perplexity-User
 Allow: /
 
-User-agent: Claude-Web
+User-agent: CCBot
 Allow: /
 
-# Tell bots where to find standard XML sitemaps and LLM-specific data
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: DuckAssistBot
+Allow: /
+
 Sitemap: https://vigdisapp.is/sitemap.xml

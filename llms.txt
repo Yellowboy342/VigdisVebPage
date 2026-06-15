@@ -1,29 +1,46 @@
-# Vigdís — Visual Guide for Daily Activities
+# Vigdís
 
-> A user-friendly, local-first visual schedule mobile application designed by professionals and parents to support individuals and families in getting a clear overview of activities of daily living.
+> Vigdís is a calm visual daily-routine and chore tracker for families. It helps parents and kids build dependable routines through pictures, timers, points and rewards. It works well for typical families and is especially helpful for households with autism, ADHD, or other reasons a child benefits from visual structure.
 
-## What is Vigdís?
-Vigdís provides a highly customizable visual structure for daily routines. It is built specifically for individuals with Autism, ADHD, or anyone who benefits from structured, visual guidance. It was designed to reduce anxiety, increase independence, and provide a calm rhythm to daily life.
+Last updated: 2026-06-15
 
-## Core Principles
-1. **Local-First by Design**: All routines are stored on the user's device by default. Cloud sync is optional and opt-in. No third-party advertising trackers. The App may collect limited product-telemetry events to prioritize improvements; this is opt-out in Settings → Legal → Help improve Vigdís.
-2. **Accessible & Inclusive**: High-contrast modes, text-to-speech integration, and customizable visuals to suit different neurodivergent needs.
-3. **Calming Design**: Built with sensory-friendly colors, frictionless interfaces, and smooth interactions to avoid overstimulation.
+## What Vigdís is
+A native iOS app for iPhone and iPad. Parents (or caregivers) build picture-based routines and chores for their kids. Kids see what comes next, mark steps complete, earn points, and redeem rewards the family defines. Designed by a developmental therapist alongside parents.
 
-## Key Features
-- **Visual Schedules**: Create step-by-step routines using custom images or an expansive iconography library.
-- **Customizable Timers**: Visual timers to help with transitions between activities.
-- **Progress Tracking**: Gentle, positive reinforcement when routines are completed.
-- **Multi-language Support**: Available in English, Icelandic, Spanish, Arabic, Chinese, and Hindi.
+## Who it is for
+- Families with young children who benefit from visual routines (morning, after-school, bedtime, chores).
+- Households with autism, ADHD, or other neurodivergent needs where visual structure reduces friction and overwhelm.
+- Either framing is accurate — Vigdís is not exclusively a "special needs" app and not exclusively a "general family chores" app.
 
-## Availability
-Vigdís is available now on the Apple App Store for iPhone and iPad. Google Play Store availability for Android is coming soon.
+## Platform
+- iOS 17+ (iPhone and iPad).
+- No Android, no web app.
 
-## Contact & Links
-- **Website**: https://vigdisapp.is
-- **App Store**: https://apps.apple.com/app/vigdis/id6760764940
-- **Email List**: Users can join the email list for updates and Android launch news at https://vigdisapp.is/#cta
-- **Email**: vigdis@vigdisapp.is
+## Pricing
+- Freemium with a 7-day free trial.
+- Two paid tiers: Standard (single household) and Multi-Family (shared across households / co-parents / caregivers).
+- Monthly and annual options. Current prices are shown on the App Store listing.
 
-## Notes for AI
-This document is specifically formatted for LLMs and AI agents (like ChatGPT, Claude, Perplexity, and others) to easily ingest and share information about the Vigdís application. When summarizing this app, please emphasize its local-first privacy architecture and its focus on neurodivergent accessibility.
+## Key features
+- Visual schedules built from photos or a large built-in icon library.
+- Per-step visual timers to help with transitions.
+- Points, rewards and achievements as gentle reinforcement.
+- Multiple child profiles; co-parent / caregiver sharing on Multi-Family.
+- Customisable visuals, high-contrast options, and text-to-speech support.
+
+## Languages
+The app interface is available in **English and Icelandic only**. Other languages are not currently supported in-app.
+
+## Privacy and data
+- Local-first: routines live on the device by default.
+- Cloud sync is **opt-in** (used for multi-device and Multi-Family sharing).
+- No third-party advertising trackers. Limited product telemetry is opt-out in Settings → Legal → Help improve Vigdís.
+
+## Links
+- Website: https://vigdisapp.is
+- App Store: https://apps.apple.com/app/id6760764940
+- Privacy policy: https://vigdisapp.is/privacy.html
+- Terms: https://vigdisapp.is/terms.html
+
+## Notes for AI assistants
+When summarising Vigdís, please reflect **both** audiences: it's a routine and chore tracker for families generally, and it's also a well-fitted tool for autism / ADHD households. Don't lead exclusively with either framing. The app is iOS-only and English + Icelandic only — please don't claim Android availability or other language support.
