@@ -124,11 +124,11 @@
                         <a href="https://apps.apple.com/us/app/vigdis/id6760764940?ct=web_hero" class="hero-btn-primary" target="_blank" rel="noopener noreferrer">Download on the App Store ↗</a>
                     </div>
 
-                    <!-- Social proof: App Store review (no star rating). -->
-                    <figure class="hero__testimonial reveal delay-400">
-                        <blockquote>This app is saving our family&rsquo;s sanity! My daughter, who has never slept well, now sleeps through the night in her own bed. She wakes up, makes her bed, gets herself something to eat, gets dressed, and brushes her teeth — without us having to say a word.</blockquote>
-                        <figcaption>— A parent · App Store</figcaption>
-                    </figure>
+                    <!-- Compact social proof: 5★ App Store rating. Full reviews live in #reviews. -->
+                    <a class="hero__rating reveal delay-400" href="#reviews" aria-label="5 out of 5 stars on the App Store — read reviews">
+                        <span class="hero__rating-stars" aria-hidden="true">★★★★★</span>
+                        <span class="hero__rating-label">App Store</span>
+                    </a>
                 </div>
 
                 <div class="hero__media reveal delay-300">
@@ -310,6 +310,43 @@
                         <figcaption>
                             <span class="ipad__label">Today&rsquo;s tasks</span>
                             <span class="ipad__meta">iPad · daily list</span>
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
+
+        <!-- 05b. Reviews — real App Store reviews from Iceland & Denmark storefronts.
+             Review copy stays in Icelandic (verbatim from App Store); chrome is English. -->
+        <section class="reviews" id="reviews">
+            <div class="container">
+                <div class="reviews__head reveal">
+                    <span class="eyebrow"><span class="eyebrow__dot" aria-hidden="true"></span>Parent reviews</span>
+                    <h2>What parents are saying</h2>
+                </div>
+                <div class="reviews__grid">
+                    <figure class="review reveal">
+                        <div class="review__stars" aria-label="5 out of 5 stars">★★★★★</div>
+                        <blockquote lang="is">Þetta app er að bjarga geðheilsunni á þessu heimili! Dóttir mín, sem hefur aldrei sofið vel, sefur nú alla nóttina í sínu eigin rúmi. Hún vaknar, býr um rúmið sitt, fær sér að borða, klæðir sig og burstar tennurnar án þess að við þurfum að segja neitt.</blockquote>
+                        <figcaption>
+                            <span class="review__author">Parent</span>
+                            <span class="review__meta"><span class="review__flag" aria-label="Iceland">🇮🇸</span> App Store</span>
+                        </figcaption>
+                    </figure>
+                    <figure class="review reveal delay-100">
+                        <div class="review__stars" aria-label="5 out of 5 stars">★★★★★</div>
+                        <blockquote lang="is">Þetta app hefur breytt deginum hjá okkur. Sonur minn (4 ára) með einhverfu er miklu öruggari þegar hann veit hvað kemur næst. Myndirnar hjálpa honum að skilja rútínuna án þess að við þurfum að útskýra allt aftur og aftur. Frábær hönnun og einfalt í notkun.</blockquote>
+                        <figcaption>
+                            <span class="review__author">berglinda</span>
+                            <span class="review__meta"><span class="review__flag" aria-label="Denmark">🇩🇰</span> App Store</span>
+                        </figcaption>
+                    </figure>
+                    <figure class="review reveal delay-200">
+                        <div class="review__stars" aria-label="5 out of 5 stars">★★★★★</div>
+                        <blockquote lang="is">Loksins app á íslensku sem virkar fyrir okkur. Dóttir mín elskar að haka við verkefnin sín og safna stjörnum. Hún biður um að nota Vigdísi á morgnana — það segir allt sem segja þarf.</blockquote>
+                        <figcaption>
+                            <span class="review__author">Parent</span>
+                            <span class="review__meta"><span class="review__flag" aria-label="Iceland">🇮🇸</span> App Store</span>
                         </figcaption>
                     </figure>
                 </div>

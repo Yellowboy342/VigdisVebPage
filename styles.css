@@ -448,26 +448,39 @@ section {
   gap: var(--space-sm);
 }
 
-.hero__testimonial {
-  margin-top: var(--space-xl);
-  padding-left: var(--space-md);
-  border-left: 2px solid var(--color-primary);
-  max-width: 34rem;
-}
-
-.hero__testimonial blockquote {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 1.05rem;
-  line-height: 1.55;
+/* Compact 5-star "App Store" proof badge under the hero CTA. Links to #reviews. */
+.hero__rating {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-lg);
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-soft);
+  border: 1px solid var(--color-rule);
+  text-decoration: none;
   color: var(--color-text-dark);
+  transition: transform 0.25s var(--ease-out), background 0.25s var(--ease-out);
 }
 
-.hero__testimonial figcaption {
-  margin-top: var(--space-xs);
-  font-size: 0.85rem;
-  font-weight: 700;
+.hero__rating:hover {
+  transform: translateY(-1px);
+  background: var(--color-primary-mist);
+}
+
+.hero__rating-stars {
   color: var(--color-coral-strong);
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.hero__rating-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
 }
 
 .hero__media {
@@ -1236,10 +1249,9 @@ section {
   .hero__copy { max-width: none; }
   .hero__inner .eyebrow,
   .hero__ctas { justify-content: center; }
-  .hero__testimonial {
+  .hero__rating {
     margin-left: auto;
     margin-right: auto;
-    text-align: left;
   }
   .hero__media { order: -1; }
 
@@ -1491,4 +1503,94 @@ section {
   .how-to__num { margin: 0; }
   .faq-item > summary { padding: var(--space-sm) var(--space-md); font-size: 1rem; }
   .faq-item__body { padding: 0 var(--space-md) var(--space-sm); }
+}
+
+/* ===== Reviews — three App Store testimonial cards (IS + DK storefronts) ===== */
+.reviews {
+  background: var(--color-white);
+}
+
+.reviews__head {
+  max-width: 680px;
+  margin: 0 auto var(--space-2xl);
+  text-align: center;
+}
+
+.reviews__head .eyebrow { justify-content: center; }
+
+.reviews__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-lg);
+  align-items: stretch;
+}
+
+.review {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  background: var(--color-background);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
+}
+
+.review:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card);
+}
+
+.review__stars {
+  color: var(--color-coral-strong);
+  font-size: 1.05rem;
+  letter-spacing: 0.12em;
+  line-height: 1;
+}
+
+.review blockquote {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: var(--color-text-dark);
+  flex: 1;
+}
+
+.review figcaption {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-xs);
+  padding-top: var(--space-xs);
+  border-top: 1px solid var(--color-rule-soft);
+}
+
+.review__author {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--color-text-dark);
+}
+
+.review__meta {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.review__flag {
+  font-size: 1rem;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+@media (max-width: 980px) {
+  .reviews__grid { grid-template-columns: 1fr; gap: var(--space-md); }
+  .review { padding: var(--space-md); }
 }
