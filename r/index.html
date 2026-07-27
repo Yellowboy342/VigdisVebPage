@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- iOS Safari native install banner (carries the deep-link path so an
+         install from here can still resolve the referral). -->
+    <meta name="apple-itunes-app" content="app-id=6760764940">
+
+    <!-- This is a redemption bounce page, not an indexable destination. -->
+    <meta name="robots" content="noindex, nofollow">
+
+    <title>You've been invited to Vigdís</title>
+
+    <meta name="description"
+        content="You've been invited to Vigdís — claim a free month of Family premium. Download the app and enter your invite code.">
+
+    <!-- Open Graph so the invite link previews nicely when shared. -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="You've been invited to Vigdís">
+    <meta property="og:description" content="Claim a free month of Vigdís Family premium — visual routines, chores & rewards for the whole family.">
+    <meta property="og:image" content="https://vigdisapp.is/assets/og-card.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/152x152bb-80.png">
+    <link rel="apple-touch-icon" href="/152x152bb-80.png">
+
+    <!-- Google Fonts: Fraunces (display) + Inter (body/UI) — matches the site. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Brand tokens — lifted verbatim from /styles.css :root so this
+           page is self-contained (no full-site CSS needed for one card). */
+        :root {
+            --color-primary: #E88A8A;
+            --color-primary-mist: #F8E6E3;
+            --color-primary-soft: #FDF1EE;
+            --color-primary-deep: #B55D5D;
+            --color-coral-strong: #A2494A;
+            --color-background: #FFFAF8;
+            --color-text-dark: #2C2C2C;
+            --color-text-muted: #666666;
+            --color-white: #FFFFFF;
+            --color-rule: rgba(216, 112, 112, 0.16);
+
+            --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+            --space-2xs: 8px;
+            --space-xs: 12px;
+            --space-sm: 16px;
+            --space-md: 24px;
+            --space-lg: 32px;
+            --space-xl: 48px;
+
+            --radius-md: 18px;
+            --radius-lg: 26px;
+            --radius-pill: 999px;
+            --shadow-soft: 0 18px 44px -28px rgba(160, 80, 80, 0.45);
+            --shadow-card: 0 24px 60px -34px rgba(120, 60, 60, 0.4);
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { overflow-x: clip; }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--color-background);
+            color: var(--color-text-dark);
+            line-height: 1.6;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-lg) var(--space-sm);
+            /* Soft coral bloom, consistent with the site's warm cream feel. */
+            background-image:
+                radial-gradient(60% 55% at 50% 0%, var(--color-primary-soft) 0%, transparent 70%);
+        }
+
+        .invite {
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+        }
+
+        .invite__logo {
+            width: 68px;
+            height: 68px;
+            border-radius: 18px;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: var(--space-md);
+        }
+
+        .invite__eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2xs);
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--color-coral-strong);
+            margin-bottom: var(--space-sm);
+        }
+
+        .invite__eyebrow-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: var(--color-primary);
+        }
+
+        .invite__headline {
+            font-family: var(--font-display);
+            font-weight: 500;
+            font-size: clamp(2rem, 1.4rem + 2.6vw, 2.9rem);
+            line-height: 1.08;
+            letter-spacing: -0.01em;
+            margin-bottom: var(--space-sm);
+        }
+
+        .invite__sub {
+            font-size: 1.06rem;
+            color: var(--color-text-muted);
+            max-width: 40ch;
+            margin: 0 auto var(--space-lg);
+        }
+
+        /* The code chip — the payload, shown prominently. */
+        .invite__code-wrap {
+            margin: 0 auto var(--space-lg);
+        }
+
+        .invite__code-label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-2xs);
+        }
+
+        .invite__code {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            background: var(--color-white);
+            border: 1px solid var(--color-rule);
+            border-radius: var(--radius-pill);
+            padding: var(--space-xs) var(--space-md);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .invite__code-value {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 1.9rem;
+            letter-spacing: 0.14em;
+            color: var(--color-primary-deep);
+            /* base32 codes are unambiguous already, but tabular keeps it steady */
+            font-variant-numeric: tabular-nums;
+        }
+
+        .invite__copy-btn {
+            font-family: var(--font-main);
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--color-coral-strong);
+            background: var(--color-primary-mist);
+            border: none;
+            border-radius: var(--radius-pill);
+            padding: 6px 14px;
+            cursor: pointer;
+            transition: background 0.2s var(--ease-out), transform 0.1s var(--ease-out);
+        }
+        .invite__copy-btn:hover { background: var(--color-primary-soft); }
+        .invite__copy-btn:active { transform: translateY(1px); }
+        .invite__copy-btn:focus-visible {
+            outline: 2px solid var(--color-coral-strong);
+            outline-offset: 2px;
+        }
+
+        /* Store buttons — reuse the site's store-card component pattern. */
+        .invite__stores {
+            display: grid;
+            gap: var(--space-sm);
+        }
+
+        .store-card {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            text-align: left;
+            text-decoration: none;
+            background: var(--color-white);
+            border: 1px solid var(--color-rule);
+            border-radius: var(--radius-md);
+            padding: var(--space-sm) var(--space-md);
+            box-shadow: var(--shadow-soft);
+            color: var(--color-text-dark);
+            transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+        }
+        a.store-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-card);
+        }
+        a.store-card:focus-visible {
+            outline: 2px solid var(--color-coral-strong);
+            outline-offset: 3px;
+        }
+        .store-card--disabled {
+            opacity: 0.66;
+            cursor: default;
+        }
+
+        .store-card__icon {
+            flex: 0 0 auto;
+            width: 34px; height: 34px;
+            display: grid;
+            place-items: center;
+            color: var(--color-primary-deep);
+        }
+        .store-card__icon svg { width: 100%; height: 100%; }
+
+        .store-card__text {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.25;
+        }
+        .store-card__eyebrow {
+            font-size: 0.74rem;
+            color: var(--color-text-muted);
+        }
+        .store-card__name {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        .store-card__status {
+            flex: 0 0 auto;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--color-coral-strong);
+        }
+        .store-card__status--pending { color: var(--color-text-muted); }
+
+        .invite__hint {
+            margin-top: var(--space-lg);
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            max-width: 42ch;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .invite__foot {
+            margin-top: var(--space-xl);
+            font-size: 0.82rem;
+        }
+        .invite__foot a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+        }
+        .invite__foot a:hover { color: var(--color-coral-strong); }
+
+        /* When no valid code is present, we still show a clean install page. */
+        .no-code .invite__code-wrap { display: none; }
+    </style>
+</head>
+
+<body>
+    <main class="invite" id="invite">
+        <img class="invite__logo" src="/152x152bb-80.png" alt="Vigdís" width="68" height="68">
+
+        <span class="invite__eyebrow">
+            <span class="invite__eyebrow-dot" aria-hidden="true"></span>
+            You've been invited
+        </span>
+
+        <h1 class="invite__headline">A free month of Vigdís Family premium</h1>
+        <p class="invite__sub">Vigdís turns daily routines, chores and rewards into a calm, visual flow for the whole family. Your invite unlocks a free month.</p>
+
+        <div class="invite__code-wrap" id="code-wrap">
+            <span class="invite__code-label">Your invite code</span>
+            <span class="invite__code">
+                <span class="invite__code-value" id="code-value">--------</span>
+                <button type="button" class="invite__copy-btn" id="copy-btn" aria-live="polite">Copy</button>
+            </span>
+        </div>
+
+        <div class="invite__stores">
+            <!-- App Store — live. The referral code rides along as a campaign
+                 token for attribution; the code itself is entered in-app after
+                 install (Settings → Referral). -->
+            <a class="store-card" id="appstore-btn"
+               href="https://apps.apple.com/is/app/vigdis/id6760764940?ct=web_referral"
+               target="_blank" rel="noopener noreferrer"
+               aria-label="Download Vigdís on the Apple App Store">
+                <span class="store-card__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.08zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+                    </svg>
+                </span>
+                <span class="store-card__text">
+                    <span class="store-card__eyebrow">Download on the</span>
+                    <span class="store-card__name">App Store</span>
+                </span>
+                <span class="store-card__status">Get it <span aria-hidden="true">↗</span></span>
+            </a>
+
+            <!-- Google Play — not live yet (Android is "coming soon" per the
+                 main site). Keep as a disabled/pending card so the page reads
+                 honestly. Flip to an <a href="…"> when the listing exists. -->
+            <div class="store-card store-card--disabled" aria-label="Google Play coming soon">
+                <span class="store-card__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3 20.5V3.5c0-.6.3-1.1.8-1.4l12.3 9.9-12.3 9.9c-.5-.3-.8-.8-.8-1.4zM17.6 13.3l2.5 2c.5.4.5 1.2 0 1.6l-2.7 2.2-2.8-2.3 3-3.5zM5.6 2.4l11.1 8.9-3 2.4L5.6 2.4z"/>
+                    </svg>
+                </span>
+                <span class="store-card__text">
+                    <span class="store-card__eyebrow">Coming to</span>
+                    <span class="store-card__name">Google Play</span>
+                </span>
+                <span class="store-card__status store-card__status--pending">Android — Soon</span>
+            </div>
+        </div>
+
+        <p class="invite__hint" id="hint">Already have Vigdís? Open the app, go to Settings → Referral, and enter the code above.</p>
+
+        <p class="invite__foot"><a href="/">← vigdisapp.is</a></p>
+    </main>
+
+    <script>
+        (function () {
+            // --- 1. Extract the referral code ---------------------------------
+            // Accept two shapes so any share link works:
+            //   a) query param   /r/?code=ABCD2345  (and /r?code=ABCD2345)
+            //   b) path segment  /r/ABCD2345
+            // Codes are 8 chars from the server's unambiguous base32 alphabet
+            // (ABCDEFGHJKMNPQRSTUVWXYZ23456789 — no 0/O/1/I/L). We validate to
+            // that shape so junk in the URL never produces a broken deep link.
+            var BASE32 = /^[ABCDEFGHJKMNPQRSTUVWXYZ23456789]{8}$/;
+
+            function normalize(raw) {
+                if (!raw) return null;
+                var c = decodeURIComponent(raw).trim().toUpperCase();
+                return BASE32.test(c) ? c : null;
+            }
+
+            function extractCode() {
+                // query param first
+                var q = new URLSearchParams(window.location.search).get('code');
+                var fromQuery = normalize(q);
+                if (fromQuery) return fromQuery;
+
+                // then the trailing path segment after /r/
+                var parts = window.location.pathname.split('/').filter(Boolean); // e.g. ['r','ABCD2345']
+                if (parts.length >= 2 && parts[parts.length - 2].toLowerCase() === 'r') {
+                    return normalize(parts[parts.length - 1]);
+                }
+                return null;
+            }
+
+            var code = extractCode();
+            var invite = document.getElementById('invite');
+            var codeValue = document.getElementById('code-value');
+            var copyBtn = document.getElementById('copy-btn');
+            var appstoreBtn = document.getElementById('appstore-btn');
+            var hint = document.getElementById('hint');
+
+            if (code) {
+                codeValue.textContent = code;
+
+                // Carry the code on the App Store link as a campaign token so
+                // installs from this page are attributable in App Store Connect.
+                try {
+                    var url = new URL(appstoreBtn.href);
+                    url.searchParams.set('ct', 'web_referral_' + code);
+                    appstoreBtn.href = url.toString();
+                } catch (e) { /* leave default href */ }
+
+                // --- 2. Attempt to open the app (installed users) -------------
+                // If Vigdís is installed, the custom scheme bounces straight
+                // into the app's referral redeem, pre-filled. If not installed,
+                // nothing happens and the branded fallback below stays visible.
+                // (On iOS the universal link /r/* is claimed by the AASA and the
+                // OS opens the app before this page ever loads; this scheme
+                // attempt is the belt-and-suspenders path for web hits.)
+                var scheme = 'vigdis://referral?code=' + code;
+                var t = setTimeout(function () { /* stayed on page → not installed */ }, 1200);
+                // Use a hidden iframe on older WebKit, location on the rest.
+                try {
+                    window.location.href = scheme;
+                } catch (e) {
+                    clearTimeout(t);
+                }
+            } else {
+                // No valid code — hide the code chip, keep the install page.
+                invite.classList.add('no-code');
+                hint.textContent = 'Get Vigdís below, then enter your invite code in the app under Settings → Referral.';
+            }
+
+            // --- 3. Copy-to-clipboard on the code chip ------------------------
+            if (copyBtn) {
+                copyBtn.addEventListener('click', function () {
+                    var text = codeValue.textContent;
+                    var done = function () {
+                        var prev = copyBtn.textContent;
+                        copyBtn.textContent = 'Copied';
+                        setTimeout(function () { copyBtn.textContent = prev; }, 1600);
+                    };
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(text).then(done).catch(done);
+                    } else {
+                        done();
+                    }
+                });
+            }
+        })();
+    </script>
+</body>
+
+</html>
