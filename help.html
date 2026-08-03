@@ -56,6 +56,103 @@
         /* Help section sits flush below the page-header strip */
         .help { padding-top: var(--space-xl); background: transparent; }
     </style>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Do I need a subscription to use Vigdís?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. Vigdís is free for one profile on a single device — you can build a daily routine, give rewards, and track progress without paying anything. A subscription unlocks more profiles, automatic cloud sync, and sharing across devices. Current pricing is shown in the app."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What's the difference between Standard and Multi-Family?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Standard fits one home: two profiles on a single device, everything stored locally. Multi-Family adds cloud sync, sharing with another parent or grandparent, and up to six profiles under the same subscription."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How do points and rewards work?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Each task awards points when your child checks it off. Points show up on the Rewards tab and can be spent on rewards you set yourself — screen time, a small toy, a trip to a favourite place. You control both what earns points and what each reward costs."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How do I add a task or routine?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "On the Tasks tab tap +, pick a time period (morning, after school, evening, or all day), give it a name and a picture, and — if you want — add subtasks (e.g. socks → pants → shirt). Recurrence is optional: daily, specific weekdays, or one-off."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What ages is Vigdís for?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Vigdís is designed for children roughly aged three to twelve, always alongside an adult. Parents or carers set up the routines and rewards; the child checks off each step. It's especially useful for children with autism, ADHD, or other support needs, but works for any family building daily habits."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What is Protected Mode and the parent PIN?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "When Protected Mode (child mode) is on, everything that matters — settings, rewards, sharing, deletions — sits behind a four-digit PIN. Your child can still check off tasks and earn points, but can't edit or delete anything. You set the PIN in Settings → Protected Mode."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Can multiple kids share one device?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes. Each child gets their own profile with their own tasks, points and rewards. Switch between them by tapping the profile avatar at the top of the screen."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Does Vigdís work offline?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes — Vigdís is designed to work offline. Everything is stored on the device itself and sync happens automatically once you're back online (if cloud sync is turned on)."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Can I use my own photos on tasks?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes. You can attach a photo from your library or take a new one for each task — the actual objects and rooms your child knows make a routine much easier to follow. With cloud sync on, those photos are mirrored across devices."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What happens when my child finishes the day?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Vigdís celebrates with Lóa, small animations, daily streaks, and achievements that gradually unlock. The whole tone is quiet, positive encouragement — no guilt-trip notifications when a day doesn't go to plan."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Does Vigdís collect any data about my family?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Vigdís is designed local-first: routines, photos and tasks live on your device by default. If you turn on optional cloud sync, your routines are synced through our cloud service so other devices can see them. We may also collect a small amount of usage data to help us understand which features are used and what to improve. You can turn this off any time in Settings → Legal → Help improve Vigdís. Full details are in our Privacy Policy."
+                }
+            }
+        ]
+    }
+    </script>
 </head>
 
 <body>
@@ -256,22 +353,11 @@
                             </figure>
                             <div class="how-to__copy">
                                 <h4>Open Profile Settings and find the Sharing card</h4>
-                                <p>Tap the profile avatar (or More &rarr; profile) to open settings. Scroll down until you reach the <strong>Sharing</strong> card.</p>
+                                <p>Tap the profile avatar (or More &rarr; profile) to open settings. Scroll down until you reach the <strong>Sharing</strong> card, then tap <strong>Send Invite</strong>.</p>
                             </div>
                         </li>
                         <li class="how-to__step">
                             <div class="how-to__num">2</div>
-                            <figure class="help-shot">
-                                <img src="assets/help/share_2_choose_profile.webp" alt="Share step 1 of 3 — choose profile" loading="lazy" onerror="this.parentElement.classList.add('help-shot--missing')">
-                                <span class="help-shot__placeholder" aria-hidden="true">Step 1 of 3<small>Choose profile</small></span>
-                            </figure>
-                            <div class="how-to__copy">
-                                <h4>Tap &ldquo;Send Invite&rdquo;</h4>
-                                <p>You&rsquo;ll get a three-step flow. First you confirm which profile you&rsquo;re sharing (if you only have one, it&rsquo;s selected automatically).</p>
-                            </div>
-                        </li>
-                        <li class="how-to__step">
-                            <div class="how-to__num">3</div>
                             <figure class="help-shot">
                                 <img src="assets/help/share_3_access.webp" alt="Share step 2 of 3 — access level" loading="lazy" onerror="this.parentElement.classList.add('help-shot--missing')">
                                 <span class="help-shot__placeholder" aria-hidden="true">Step 2 of 3<small>Access level</small></span>
@@ -282,7 +368,7 @@
                             </div>
                         </li>
                         <li class="how-to__step">
-                            <div class="how-to__num">4</div>
+                            <div class="how-to__num">3</div>
                             <figure class="help-shot">
                                 <img src="assets/help/share_4_qr.webp" alt="Share step 3 of 3 — QR code" loading="lazy" onerror="this.parentElement.classList.add('help-shot--missing')">
                                 <span class="help-shot__placeholder" aria-hidden="true">Step 3 of 3<small>QR code</small></span>
@@ -293,9 +379,9 @@
                             </div>
                         </li>
                         <li class="how-to__step">
-                            <div class="how-to__num">5</div>
+                            <div class="how-to__num">4</div>
                             <figure class="help-shot">
-                                <img src="assets/help/share_5_invite_banner.webp" alt="Incoming Invite banner" loading="lazy" onerror="this.parentElement.classList.add('help-shot--missing')">
+                                <img src="assets/help/share_5_invite_banner.webp" alt="You've been invited — review access and accept" loading="lazy" onerror="this.parentElement.classList.add('help-shot--missing')">
                                 <span class="help-shot__placeholder" aria-hidden="true">Incoming Invite<small>Notification banner</small></span>
                             </figure>
                             <div class="how-to__copy">
