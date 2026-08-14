@@ -53,9 +53,21 @@ function isCompletedOn(task, key) {
     return (task.completion_history || []).some((ts) => dayKey(ts) === key);
 }
 
-function isScheduledToday(task) {
+/* The day being looked at. Everything below reads this rather than
+   "now", so the dashboard can review any date — the whole point of a
+   setup-and-review surface, as opposed to the app, which is for doing
+   today. Set to today on load. */
+let viewKey = todayKey();
+const viewDate = () => new Date(viewKey + 'T12:00:00Z');
+const isViewingToday = () => viewKey === todayKey();
+/* Completions are stamped at midday UTC when back-dating, so a stored
+   timestamp cannot slide into an adjacent day for users either side of
+   UTC. Today keeps a real "now" so ordering within today stays honest. */
+const stampForView = () => (isViewingToday() ? new Date().toISOString() : viewKey + 'T12:00:00Z');
+
+function isScheduledOn(task, date) {
     const rec = task.recurrence_days;
-    if (Array.isArray(rec) && rec.length > 0) return rec.includes(appWeekday());
+    if (Array.isArray(rec) && rec.length > 0) return rec.includes(appWeekday(date));
     return true; // one-off tasks stay visible until done
 }
 
@@ -306,7 +318,32 @@ function renderGreeting() {
     const part = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
     const name = activeProfile()?.name;
     $('#greeting-line').textContent = name ? `${part}, ${name}` : part;
-    $('#greeting-date').textContent = fmtDate(new Date());
+
+    const host = $('#greeting-date');
+    // Naming the day explicitly matters once you can leave today: a bare
+    // date gives no clue you are no longer looking at the live view.
+    const label = isViewingToday() ? `Today · ${fmtDate(viewDate())}` : fmtDate(viewDate());
+    host.innerHTML = `
+        <span class="dayline">
+            <button class="dayline__nav" type="button" id="day-prev" aria-label="Previous day">‹</button>
+            <span class="dayline__label">${esc(label)}</span>
+            <button class="dayline__nav" type="button" id="day-next" aria-label="Next day"${isViewingToday() ? ' disabled' : ''}>›</button>
+            ${isViewingToday() ? '' : '<button class="dayline__today" type="button" id="day-today">Back to today</button>'}
+        </span>`;
+    $('#day-prev').addEventListener('click', () => shiftDay(-1));
+    $('#day-next').addEventListener('click', () => shiftDay(1));
+    $('#day-today')?.addEventListener('click', () => { viewKey = todayKey(); renderAll(); });
+}
+
+/* Never past today. Completing a future task would bank points for work
+   nobody has done yet — the iOS app blocks the same move. */
+function shiftDay(delta) {
+    const d = viewDate();
+    d.setUTCDate(d.getUTCDate() + delta);
+    const next = dayKey(d);
+    if (next > todayKey()) return;
+    viewKey = next;
+    renderAll();
 }
 
 function renderProfiles() {
@@ -332,12 +369,12 @@ function renderStats() {
     const balance = pointsBalance();
     const streak = streakDays(counts);
 
-    const scheduled = state.data.tasks.filter(isScheduledToday);
-    const doneToday = scheduled.filter((t) => isCompletedOn(t, todayKey())).length;
+    const scheduled = state.data.tasks.filter((t) => isScheduledOn(t, viewDate()));
+    const doneToday = scheduled.filter((t) => isCompletedOn(t, viewKey)).length;
 
     const days = [];
     for (let i = 6; i >= 0; i--) {
-        const d = new Date();
+        const d = viewDate();
         d.setUTCDate(d.getUTCDate() - i);
         days.push({ label: WEEKDAY_SHORT[new Date(dayKey(d) + 'T12:00:00Z').getUTCDay()], n: counts.get(dayKey(d)) || 0 });
     }
@@ -375,7 +412,7 @@ function renderStats() {
 }
 
 function taskRowHtml(task) {
-    const done = isCompletedOn(task, todayKey());
+    const done = isCompletedOn(task, viewKey);
     const period = state.data.timePeriods.find((p) => p.id === task.time_period_id);
     const tint = period ? safeColor(period.color) + '22' : null;
 
@@ -422,7 +459,7 @@ function taskRowHtml(task) {
 
 function renderTasks() {
     const host = $('#task-groups');
-    const visible = state.data.tasks.filter((t) => state.filter === 'all' || isScheduledToday(t));
+    const visible = state.data.tasks.filter((t) => state.filter === 'all' || isScheduledOn(t, viewDate()));
 
     if (!visible.length) {
         host.innerHTML = `
@@ -526,6 +563,9 @@ function renderActivity() {
 }
 
 function renderAll() {
+    fillPeriodSelect($('#quick-add-period'), $('#quick-add-period')?.value || '');
+    if (!$('[data-pane="calendar"]')?.hidden) renderCalendar();
+    if (!$('[data-pane="stats"]')?.hidden) renderReport();
     renderGreeting();
     renderProfiles();
     renderStats();
@@ -539,13 +579,13 @@ function renderAll() {
 async function toggleTask(taskId) {
     const task = state.data.tasks.find((t) => t.id === taskId);
     if (!task) return;
-    const wasDone = isCompletedOn(task, todayKey());
+    const wasDone = isCompletedOn(task, viewKey);
     const previous = task.completion_history || [];
 
     // Optimistic: flip locally first, roll back if the server disagrees.
-    const now = new Date().toISOString();
+    const now = stampForView();
     task.completion_history = wasDone
-        ? previous.filter((ts) => dayKey(ts) !== todayKey())
+        ? previous.filter((ts) => dayKey(ts) !== viewKey)
         : [...previous, now];
     renderStats();
     renderTasks();
@@ -586,6 +626,7 @@ async function quickAddTask(title) {
         icon: '📝',
         tags: [],
         sort_order: sortMax + 1,
+        time_period_id: $('#quick-add-period')?.value || null,
     };
     if (DEMO) {
         state.data.tasks.push({ ...row, completion_history: [] });
@@ -604,6 +645,84 @@ async function quickAddTask(title) {
     return true;
 }
 
+/* Fills any <select> with the profile's time periods. "No period" is a
+   real option, not a placeholder — the iOS app tolerates period-less
+   tasks and renders them in a loose group, so the web must be able to
+   express that too rather than silently forcing a period. */
+function fillPeriodSelect(el, selectedId) {
+    if (!el) return;
+    const opts = ['<option value="">No time period</option>'];
+    for (const p of state.data.timePeriods) {
+        opts.push(`<option value="${esc(p.id)}"${p.id === selectedId ? ' selected' : ''}>${esc(p.name || 'Period')}</option>`);
+    }
+    el.innerHTML = opts.join('');
+}
+
+/* Photo chosen in the modal but not yet uploaded. Held until Save so
+   cancelling cannot leave an orphaned object in storage, and so a photo
+   swap costs one upload rather than one per preview. */
+let pendingPhoto = null;
+let pendingPhotoRemoval = false;
+
+/* Match the iOS client's contract exactly (CloudImageStorageService):
+   640px longest edge, JPEG quality 0.68, 320 KB ceiling, written to
+   tasks/<uuid>/image.jpg. If the web wrote a different shape the two
+   clients would disagree about the same task's picture. */
+const IMG_MAX_DIM = 640, IMG_QUALITY = 0.68, IMG_BYTE_LIMIT = 320 * 1024;
+
+async function compressImage(file) {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, IMG_MAX_DIM / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close?.();
+
+    // Step the quality down until it fits, rather than rejecting a photo
+    // a parent just took on a modern phone — those are routinely over the
+    // limit at first pass.
+    let quality = IMG_QUALITY;
+    for (let i = 0; i < 5; i++) {
+        const blob = await new Promise((r) => canvas.toBlob(r, 'image/jpeg', quality));
+        if (!blob) return null;
+        if (blob.size <= IMG_BYTE_LIMIT || quality <= 0.3) return blob;
+        quality -= 0.12;
+    }
+    return null;
+}
+
+async function uploadTaskPhoto(taskId, file) {
+    const blob = await compressImage(file);
+    if (!blob) { toast('Couldn’t process that image.'); return null; }
+    const path = `tasks/${String(taskId).toLowerCase()}/image.jpg`;
+    const { error } = await sb.storage.from(IMAGE_BUCKET).upload(path, blob, {
+        contentType: 'image/jpeg',
+        cacheControl: '86400',
+        upsert: true,
+    });
+    if (error) { toast(`Couldn’t upload photo: ${error.message}`); return null; }
+    urlCache.delete(path); // force a fresh signed URL for the replacement
+    return path;
+}
+
+function renderPhotoField(task) {
+    const preview = $('#task-photo-preview');
+    const removeBtn = $('#btn-photo-remove');
+    const path = pendingPhotoRemoval ? null : (task?.image_path || null);
+    if (pendingPhoto) {
+        preview.innerHTML = `<img alt="" src="${URL.createObjectURL(pendingPhoto)}">`;
+        removeBtn.hidden = false;
+    } else if (path) {
+        preview.innerHTML = `<img data-storage-path="${esc(path)}" alt="" hidden>`;
+        hydrateImages(preview);
+        removeBtn.hidden = false;
+    } else {
+        preview.innerHTML = '<span class="photo-field__empty">No photo</span>';
+        removeBtn.hidden = true;
+    }
+}
+
 function openTaskModal(taskId) {
     const task = state.data.tasks.find((t) => t.id === taskId);
     if (!task) return;
@@ -613,6 +732,11 @@ function openTaskModal(taskId) {
     $('#task-icon').value = /^[a-z0-9.]+$/i.test(task.icon || '') ? '' : (task.icon || '');
     $('#task-due').value = task.due_date ? dayKey(task.due_date) : '';
     $('#task-notes').value = task.notes || '';
+    fillPeriodSelect($('#task-period'), task.time_period_id || '');
+    pendingPhoto = null;
+    pendingPhotoRemoval = false;
+    $('#task-photo').value = '';
+    renderPhotoField(task);
     $('#modal-task').showModal();
 }
 
@@ -624,9 +748,21 @@ async function saveTaskEdits() {
         points: Math.max(0, parseInt($('#task-points').value, 10) || 0),
         notes: $('#task-notes').value.trim() || null,
         due_date: $('#task-due').value ? new Date($('#task-due').value + 'T12:00:00').toISOString() : null,
+        time_period_id: $('#task-period').value || null,
     };
     const icon = $('#task-icon').value.trim();
     if (icon) patch.icon = icon;
+
+    // Photo resolves before the row update so image_path and the stored
+    // object commit together — a failed upload must not leave the row
+    // pointing at a file that was never written.
+    if (!DEMO && pendingPhoto) {
+        const path = await uploadTaskPhoto(task.id, pendingPhoto);
+        if (!path) return;
+        patch.image_path = path;
+    } else if (pendingPhotoRemoval) {
+        patch.image_path = null;
+    }
 
     if (DEMO) {
         Object.assign(task, patch);
@@ -778,7 +914,351 @@ async function enterApp() {
     await selectProfile(initial.id);
 }
 
+/* One row per completion, which is the shape a review actually needs:
+   "what did this person do, and when". A weekly total would be easier to
+   produce and useless for the thing this is for — evidencing progress in
+   a review, a report or an individual plan, where the specific days are
+   the point.
+
+   Built client-side from data already loaded, so it costs no request and
+   works on whatever the dashboard is showing. */
+function buildCSV() {
+    const profile = activeProfile();
+    const periods = new Map(state.data.timePeriods.map((p) => [p.id, p.name]));
+    const rows = [['Profile', 'Date', 'Task', 'Time period', 'Points']];
+
+    const completions = [];
+    for (const t of state.data.tasks) {
+        for (const ts of t.completion_history || []) {
+            completions.push({
+                date: dayKey(ts),
+                title: t.title || '',
+                period: periods.get(t.time_period_id) || '',
+                points: t.points || 0,
+            });
+        }
+    }
+    completions.sort((a, b) => (a.date === b.date ? a.title.localeCompare(b.title) : a.date.localeCompare(b.date)));
+    for (const c of completions) {
+        rows.push([profile?.name || '', c.date, c.title, c.period, String(c.points)]);
+    }
+
+    /* Excel and Numbers both treat a leading = + - @ as a formula, so a
+       task literally named "=SUM(A1)" would execute on open. Prefixing
+       with an apostrophe is the standard defence. Quotes are doubled and
+       every field is quoted so commas in task names survive. */
+    const cell = (v) => {
+        let out = String(v ?? '');
+        if (/^[=+\-@]/.test(out)) out = "'" + out;
+        return '"' + out.replace(/"/g, '""') + '"';
+    };
+    return rows.map((r) => r.map(cell).join(',')).join('\r\n');
+}
+
+function exportCSV() {
+    const profile = activeProfile();
+    // BOM so Excel opens UTF-8 correctly — without it Icelandic names
+    // arrive mangled, which is exactly the audience that would notice.
+    const blob = new Blob(['\uFEFF' + buildCSV()], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `vigdis-${(profile?.name || 'profile').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${todayKey()}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+}
+
+/* Copy the open task to other profiles.
+   This is the one bulk primitive that actually earns its place here. A
+   practitioner running the same "wash hands" step across eight children
+   otherwise types it eight times, and a full multi-select editing mode
+   would be a lot of surface for a job that is nearly always "give this
+   to those people too". Copies are independent rows from the moment they
+   land — editing one later does not touch the others, which is what you
+   want when one child's version drifts.
+
+   Photos are shared by reference rather than duplicated: storage paths
+   are per task id, so a copy points at its own path only once it gets
+   its own photo. The copy starts without one. */
+function openCopyModal() {
+    const task = state.data.tasks.find((t) => t.id === state.editingTaskId);
+    if (!task) return;
+    const others = state.profiles.filter((p) => p.id !== state.activeProfileId);
+    $('#copy-sub').textContent = others.length
+        ? `Give “${task.title}” to other profiles as well.`
+        : 'There is only one profile on this account.';
+    $('#copy-list').innerHTML = others.map((p) => `
+        <label class="copy-row">
+            <input type="checkbox" value="${esc(p.id)}">
+            <span>${esc(p.name || 'Profile')}</span>
+        </label>`).join('') || '';
+    $('#btn-copy-save').disabled = others.length === 0;
+    $('#modal-task').close();
+    $('#modal-copy').showModal();
+}
+
+async function copyTaskToProfiles() {
+    const task = state.data.tasks.find((t) => t.id === state.editingTaskId);
+    if (!task) return;
+    const ids = Array.from($('#copy-list').querySelectorAll('input:checked')).map((i) => i.value);
+    if (!ids.length) return;
+
+    const rows = ids.map((profileId) => ({
+        id: crypto.randomUUID(),
+        profile_id: profileId,
+        title: task.title,
+        points: task.points || 0,
+        notes: task.notes || null,
+        icon: task.icon || '📝',
+        task_type: task.task_type || 'regular',
+        behavior_type: task.behavior_type || 'regular',
+        recurrence_days: task.recurrence_days || null,
+        tags: [],
+        sort_order: 9999,
+        // Deliberately not copied: time_period_id, because periods belong
+        // to a profile and another profile's ids would be meaningless or
+        // rejected; completion_history, which is that child's record;
+        // image_path, which is keyed to this task's id.
+    }));
+
+    if (DEMO) {
+        toast(`Copied to ${ids.length} profile${ids.length === 1 ? '' : 's'}.`);
+        return;
+    }
+    const { error } = await sb.from('tasks').insert(rows);
+    if (error) { toast(`Couldn’t copy: ${error.message}`); return; }
+    toast(`Copied “${task.title}” to ${ids.length} profile${ids.length === 1 ? '' : 's'}.`);
+}
+
+/* ── Calendar ──────────────────────────────────────────
+   A month of completion density. Its job is orientation — "which days
+   did we actually do this" — so it encodes volume as depth of colour
+   rather than printing counts in 31 small boxes, which is unreadable at
+   a glance and is what the Statistics view is for.
+
+   Clicking a day sends you to it in Today, which is why the day
+   navigation went in first: the calendar is a jump target for it. */
+let calMonth = new Date(todayKey() + 'T12:00:00Z');
+
+function renderCalendar() {
+    const host = $('#calendar-grid');
+    if (!host) return;
+    const counts = completionsByDay();
+
+    const year = calMonth.getUTCFullYear(), month = calMonth.getUTCMonth();
+    const first = new Date(Date.UTC(year, month, 1));
+    const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+    // Monday-first: Icelandic and most European calendars start there,
+    // and getUTCDay() is Sunday-first, hence the shift.
+    const lead = (first.getUTCDay() + 6) % 7;
+
+    $('#cal-month').textContent = first.toLocaleDateString(undefined, { month: 'long', year: 'numeric', timeZone: 'UTC' });
+    // Never navigate past the current month — there is nothing there.
+    $('#cal-next').disabled = year > new Date().getUTCFullYear()
+        || (year === new Date().getUTCFullYear() && month >= new Date().getUTCMonth());
+
+    const max = Math.max(1, ...counts.values());
+    const cells = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        .map((d) => `<div class="cal__dow">${d}</div>`);
+    for (let i = 0; i < lead; i++) cells.push('<div class="cal__pad"></div>');
+
+    for (let day = 1; day <= daysInMonth; day++) {
+        const key = dayKey(new Date(Date.UTC(year, month, day)));
+        const n = counts.get(key) || 0;
+        const future = key > todayKey();
+        // Four steps, not a continuous ramp: a smooth gradient reads as
+        // noise at this size, while four levels are countable by eye.
+        const level = n === 0 ? 0 : Math.min(4, Math.ceil((n / max) * 4));
+        const cls = ['cal__day', `is-l${level}`];
+        if (key === todayKey()) cls.push('is-today');
+        if (key === viewKey) cls.push('is-viewing');
+        if (future) cls.push('is-future');
+        cells.push(`<button class="${cls.join(' ')}" type="button" data-day="${key}"${future ? ' disabled' : ''}
+            aria-label="${key}: ${n} completed">${day}</button>`);
+    }
+    // Month summary, computed from the same counts the grid is drawing.
+    let monthTotal = 0, monthActive = 0, bestDay = null, bestN = 0;
+    for (let day = 1; day <= daysInMonth; day++) {
+        const key = dayKey(new Date(Date.UTC(year, month, day)));
+        const n = counts.get(key) || 0;
+        if (!n) continue;
+        monthTotal += n; monthActive++;
+        if (n > bestN) { bestN = n; bestDay = day; }
+    }
+    const elapsed = Math.min(daysInMonth, (year === new Date().getUTCFullYear() && month === new Date().getUTCMonth())
+        ? new Date().getUTCDate() : daysInMonth);
+
+    host.innerHTML = `
+        <div class="cal-wrap">
+            <div>
+                <div class="cal">${cells.join('')}</div>
+                <div class="cal__legend"><span>Less</span>
+                    <i style="background:rgba(0,0,0,.035)"></i>
+                    <i style="background:rgba(240,145,144,.22)"></i>
+                    <i style="background:rgba(240,145,144,.42)"></i>
+                    <i style="background:rgba(240,145,144,.66)"></i>
+                    <i style="background:rgba(240,145,144,.92)"></i>
+                    <span>More</span>
+                </div>
+                <p class="cal__hint">Pick a day to open it in Today.</p>
+            </div>
+            <aside class="cal-side">
+                <h3 class="rhead">This month</h3>
+                <div class="cal-side__stat"><b>${monthTotal}</b><span>steps completed</span></div>
+                <div class="cal-side__stat"><b>${monthActive} of ${elapsed}</b><span>days with something done</span></div>
+                <div class="cal-side__stat"><b>${bestDay ? bestDay + ' ' + first.toLocaleDateString(undefined, { month: 'short', timeZone: 'UTC' }) : '—'}</b><span>busiest day${bestN ? ` · ${bestN} steps` : ''}</span></div>
+            </aside>
+        </div>`;
+    host.querySelectorAll('[data-day]').forEach((b) => {
+        b.addEventListener('click', () => {
+            viewKey = b.dataset.day;
+            setView('today');
+            renderAll();
+        });
+    });
+}
+
+/* ── Statistics ────────────────────────────────────────
+   Answers the questions a review actually asks: is this working overall,
+   which steps are reliable, which are consistently the hard ones, and
+   when in the day does it fall apart. Per-task reliability is the one
+   most worth having — it turns "they're struggling" into "getting
+   dressed works four days in five, teeth are the problem". */
+function renderReport() {
+    const host = $('#report-body');
+    if (!host) return;
+    const days = parseInt($('#report-range')?.value || '30', 10);
+
+    const since = new Date();
+    since.setUTCDate(since.getUTCDate() - (days - 1));
+    let sinceKey = dayKey(since);
+
+    /* Clamp the window to when this profile actually started.
+       Without this a profile with a week of history scored 23% over a
+       30-day range — the denominator counted three weeks in which the
+       task did not yet exist, so every number read as failure. A review
+       surface that makes a good week look like a bad month is worse than
+       no numbers at all. */
+    const allDates = state.data.tasks.flatMap((t) => (t.completion_history || []).map(dayKey));
+    const firstEver = allDates.length ? allDates.reduce((a, b) => (a < b ? a : b)) : null;
+    if (firstEver && firstEver > sinceKey) sinceKey = firstEver;
+    const spanDays = Math.max(1, Math.round((Date.parse(todayKey()) - Date.parse(sinceKey)) / 86400000) + 1);
+
+    const inRange = (ts) => dayKey(ts) >= sinceKey && dayKey(ts) <= todayKey();
+    const periods = new Map(state.data.timePeriods.map((p) => [p.id, p.name]));
+    const perTask = [];
+    let total = 0;
+    const byPeriod = new Map();
+    const activeDays = new Set();
+
+    for (const t of state.data.tasks) {
+        const hits = (t.completion_history || []).filter(inRange);
+        total += hits.length;
+        hits.forEach((ts) => activeDays.add(dayKey(ts)));
+        const label = periods.get(t.time_period_id) || 'No period';
+        byPeriod.set(label, (byPeriod.get(label) || 0) + hits.length);
+        // Scheduled days only: a weekdays-only task must not be marked
+        // down for the weekends it was never due.
+        let due = 0;
+        for (let i = 0; i < spanDays; i++) {
+            const d = new Date(Date.parse(sinceKey) + i * 86400000);
+            if (isScheduledOn(t, d)) due++;
+        }
+        perTask.push({ title: t.title || 'Untitled', done: hits.length, due, rate: due ? hits.length / due : 0 });
+    }
+
+    const ranked = perTask.filter((t) => t.due > 0).sort((a, b) => b.rate - a.rate || b.done - a.done);
+    const bar = (rate) => `<span class="rbar"><span style="width:${Math.round(rate * 100)}%"></span></span>`;
+    const row = (t) => `<li><span class="rrow__t">${esc(t.title)}</span>${bar(t.rate)}
+        <span class="rrow__n">${Math.round(t.rate * 100)}%<small> ${t.done}/${t.due}</small></span></li>`;
+
+    /* With a short list, a "best five" and a "worst five" are the same
+       five tasks printed twice, which reads as a rendering fault. Below
+       ten, show one ranked list; above it, split into two that cannot
+       overlap. */
+    let taskSections;
+    if (ranked.length === 0) {
+        taskSections = `<h3 class="rhead">Every task</h3><ul class="rlist"><li class="rempty">Nothing recorded yet.</li></ul>`;
+    } else if (ranked.length < 10) {
+        taskSections = `<h3 class="rhead">Every task · most to least reliable</h3>
+            <ul class="rlist">${ranked.map(row).join('')}</ul>`;
+    } else {
+        taskSections = `<h3 class="rhead">Most reliable</h3>
+            <ul class="rlist">${ranked.slice(0, 5).map(row).join('')}</ul>
+            <h3 class="rhead">Needs the most support</h3>
+            <ul class="rlist">${ranked.slice(-5).reverse().map(row).join('')}</ul>`;
+    }
+
+    const periodRows = [...byPeriod.entries()].filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1]);
+    const periodMax = Math.max(1, ...periodRows.map((r) => r[1]));
+
+    // Say the window out loud when it was clamped, so 7 of 7 is not read
+    // as 7 of 30.
+    const windowNote = firstEver && spanDays < days
+        ? `<p class="rnote">Showing ${spanDays} days — that is all the history this profile has.</p>` : '';
+
+    host.innerHTML = `
+        <div class="rgrid">
+            <div class="rstat"><b>${total}</b><span>steps completed</span></div>
+            <div class="rstat"><b>${activeDays.size} of ${spanDays}</b><span>days active</span></div>
+            <div class="rstat"><b>${total && activeDays.size ? (total / activeDays.size).toFixed(1) : '0'}</b><span>per active day</span></div>
+        </div>
+        ${windowNote}
+        ${taskSections}
+        <h3 class="rhead">By time of day</h3>
+        <ul class="rlist">${periodRows.map(([name, n]) => `<li><span class="rrow__t">${esc(name)}</span>
+            ${bar(n / periodMax)}<span class="rrow__n">${n}</span></li>`).join('') || '<li class="rempty">Nothing recorded yet.</li>'}</ul>`;
+}
+
+function setView(name, pushHash = true) {
+    document.querySelectorAll('.viewtab').forEach((t) =>
+        t.setAttribute('aria-selected', String(t.dataset.view === name)));
+    document.querySelectorAll('.viewpane').forEach((p) => { p.hidden = p.dataset.pane !== name; });
+    if (name === 'calendar') renderCalendar();
+    if (name === 'stats') renderReport();
+    // Hash must not collide with an element id or the browser scroll-jumps
+    // to it on load — "#stats" matched the stats strip and scrolled the
+    // greeting off screen.
+    const hash = name === 'today' ? '' : (name === 'stats' ? '#statistics' : `#${name}`);
+    if (pushHash) history.replaceState(null, '', hash || location.pathname + location.search);
+}
+
 function bindAppUI() {
+    document.querySelectorAll('.viewtab').forEach((t) =>
+        t.addEventListener('click', () => setView(t.dataset.view)));
+    const initial = location.hash.replace('#', '');
+    if (initial === 'calendar') setView('calendar', false);
+    if (initial === 'statistics') setView('stats', false);
+    $('#cal-prev')?.addEventListener('click', () => {
+        calMonth.setUTCMonth(calMonth.getUTCMonth() - 1); renderCalendar();
+    });
+    $('#cal-next')?.addEventListener('click', () => {
+        calMonth.setUTCMonth(calMonth.getUTCMonth() + 1); renderCalendar();
+    });
+    $('#report-range')?.addEventListener('change', renderReport);
+
+    $('#btn-task-copy')?.addEventListener('click', openCopyModal);
+    $('#btn-copy-cancel')?.addEventListener('click', () => $('#modal-copy').close());
+    $('#form-copy')?.addEventListener('submit', copyTaskToProfiles);
+
+    $('#task-photo')?.addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        pendingPhoto = file;
+        pendingPhotoRemoval = false;
+        renderPhotoField(state.data.tasks.find((t) => t.id === state.editingTaskId));
+    });
+    $('#btn-photo-remove')?.addEventListener('click', () => {
+        pendingPhoto = null;
+        pendingPhotoRemoval = true;
+        $('#task-photo').value = '';
+        renderPhotoField(state.data.tasks.find((t) => t.id === state.editingTaskId));
+    });
+
+    $('#btn-export')?.addEventListener('click', exportCSV);
+
     document.querySelectorAll('.filter-chip').forEach((chip) => {
         chip.addEventListener('click', () => {
             state.filter = chip.dataset.filter;

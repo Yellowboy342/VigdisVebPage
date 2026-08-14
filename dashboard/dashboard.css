@@ -803,3 +803,233 @@ dialog.modal[open] { animation: modal-in var(--dur-short) var(--ease-out); }
   .skeleton { animation: none; background: var(--coral-soft); }
   .task-row:hover { transform: none; }
 }
+
+/* ── Day navigation ────────────────────────────────────
+   The dashboard can review any past day, so the date line became a
+   control rather than a label. It reads as one unit — arrows sit tight
+   against the date instead of floating as separate buttons. */
+.dayline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.dayline__label { font-variant-numeric: tabular-nums; }
+.dayline__nav {
+    border: 1px solid rgba(0, 0, 0, .12);
+    background: #fff;
+    border-radius: 999px;
+    width: 26px;
+    height: 26px;
+    line-height: 1;
+    font-size: 1rem;
+    cursor: pointer;
+    color: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.dayline__nav:hover:not(:disabled) { background: rgba(0, 0, 0, .04); }
+/* Disabled rather than hidden: a control that vanishes at the edge of
+   its range makes the row jump and leaves you unsure it was ever there. */
+.dayline__nav:disabled { opacity: .35; cursor: default; }
+.dayline__today {
+    border: 0;
+    background: none;
+    padding: 0 4px;
+    font: inherit;
+    font-size: .85em;
+    color: var(--color-primary, #F09190);
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+/* ── Photo field ───────────────────────────────────────
+   Preview sits beside the controls rather than above them, so adding a
+   picture doesn't push the Save button below the fold in the modal. */
+.photo-field { display: flex; gap: 12px; align-items: flex-start; }
+.photo-field__preview {
+    width: 72px; height: 72px; flex: 0 0 72px;
+    border-radius: 14px;
+    background: rgba(0, 0, 0, .04);
+    border: 1px solid rgba(0, 0, 0, .08);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+}
+.photo-field__preview img { width: 100%; height: 100%; object-fit: cover; }
+.photo-field__empty { font-size: .72rem; color: rgba(0, 0, 0, .45); text-align: center; }
+.photo-field__controls { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.photo-field__controls input[type="file"] { font-size: .86rem; max-width: 100%; }
+
+/* ── Copy-to-profiles ──────────────────────────────────
+   Checkbox rows rather than a multi-select: a multi-select hides its own
+   state behind scrolling, and this list is read as "who is getting this". */
+.copy-list { display: flex; flex-direction: column; gap: 2px; margin-bottom: 14px; max-height: 260px; overflow-y: auto; }
+.copy-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+.copy-row:hover { background: rgba(0, 0, 0, .04); }
+.modal__sub { margin: -6px 0 14px; color: rgba(0, 0, 0, .6); font-size: .92rem; }
+
+/* Quick-add is now input + period + button; keep it on one line where
+   there's room and let it wrap on narrow screens rather than squashing. */
+.quick-add { flex-wrap: wrap; }
+.quick-add select { flex: 0 1 auto; }
+
+/* ── View tabs ─────────────────────────────────────────
+   Three views on one page rather than three URLs: the profile switcher,
+   points balance and day live above them and stay put when you move
+   between views, which is the thing that makes it feel like one desk. */
+.viewtabs { display: flex; gap: 4px; margin: 4px 0 18px; }
+.viewtab {
+    border: 0; background: none; cursor: pointer;
+    font: inherit; font-size: .94rem; font-weight: 600;
+    color: rgba(0, 0, 0, .5);
+    padding: 8px 14px; border-radius: 999px;
+}
+.viewtab:hover { background: rgba(0, 0, 0, .04); }
+.viewtab[aria-selected="true"] { background: rgba(0, 0, 0, .06); color: inherit; }
+
+/* ── Calendar ──────────────────────────────────────────
+   A month should read as a month at a glance, so the grid is capped and
+   the cells are small. The first version used `aspect-ratio: 1` inside a
+   full-width panel, which produced 150px squares — six rows of large
+   empty boxes with a 13px number adrift in each. Density is the whole
+   point of a month view; big cells destroy it. */
+.cal {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+    width: 100%;
+    max-width: 420px;
+}
+.cal__dow {
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    color: rgba(0, 0, 0, .35);
+    text-align: center;
+    padding-bottom: 2px;
+}
+.cal__pad { height: 40px; }
+.cal__day {
+    height: 40px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, .035);
+    cursor: pointer;
+    font: inherit;
+    font-size: .8rem;
+    font-variant-numeric: tabular-nums;
+    color: rgba(0, 0, 0, .6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform .12s ease;
+}
+.cal__day:hover:not(:disabled) { transform: scale(1.08); }
+/* Four steps of the brand coral. The count itself is not printed — at
+   this size a second number is noise, and the fill already answers "how
+   much". The exact figure stays in the aria-label and in Statistics. */
+.cal__day.is-l1 { background: rgba(240, 145, 144, .22); color: rgba(0, 0, 0, .7); }
+.cal__day.is-l2 { background: rgba(240, 145, 144, .42); color: rgba(0, 0, 0, .78); }
+.cal__day.is-l3 { background: rgba(240, 145, 144, .66); color: #fff; }
+.cal__day.is-l4 { background: rgba(240, 145, 144, .92); color: #fff; }
+/* Today gets the brand ring, not a black one — the previous inset black
+   shadow read as an error state on a warm page. */
+.cal__day.is-today { border-color: var(--color-primary, #F09190); font-weight: 700; }
+.cal__day.is-viewing { box-shadow: 0 0 0 2px var(--color-primary, #F09190); }
+.cal__day.is-future { opacity: .35; cursor: default; background: rgba(0, 0, 0, .02); }
+.cal__nav { display: inline-flex; align-items: center; gap: 8px; font-size: .92rem; }
+.cal__legend {
+    display: flex; align-items: center; gap: 6px;
+    margin-top: 14px; font-size: .72rem; color: rgba(0, 0, 0, .45);
+}
+.cal__legend i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+
+/* ── Statistics ────────────────────────────────────────
+   Percentage plus the raw fraction: 80% means something different from
+   4/5 when the denominator is small, and a review needs both. */
+.rgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 18px; max-width: 620px; }
+.rstat { background: rgba(0, 0, 0, .03); border-radius: 14px; padding: 14px; text-align: center; }
+.rstat b { display: block; font-size: 1.5rem; line-height: 1.1; }
+.rstat span { font-size: .78rem; color: rgba(0, 0, 0, .55); }
+.rhead { font-size: .82rem; text-transform: uppercase; letter-spacing: .04em; color: rgba(0, 0, 0, .45); margin: 18px 0 8px; }
+.rlist { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.rlist { max-width: 620px; }
+.rlist li { display: grid; grid-template-columns: minmax(0, 1fr) 160px 84px; align-items: center; gap: 14px; font-size: .92rem; }
+.rrow__t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rrow__n { font-variant-numeric: tabular-nums; font-weight: 600; font-size: .86rem; }
+.rrow__n small { font-weight: 400; color: rgba(0, 0, 0, .45); }
+.rbar { display: block; height: 10px; border-radius: 999px; background: rgba(0, 0, 0, .07); overflow: hidden; }
+.rbar > span { display: block; height: 100%; border-radius: 999px; background: var(--color-primary, #F09190); }
+.rempty { color: rgba(0, 0, 0, .45); font-size: .9rem; }
+
+@media (max-width: 520px) {
+    .rlist li { grid-template-columns: minmax(0, 1fr) 60px auto; }
+    .cal__day { font-size: .74rem; border-radius: 9px; }
+}
+
+/* Calendar + month summary sit side by side; the grid is capped at
+   420px, so on a wide card the remaining space carries the summary
+   instead of sitting empty. Wraps to stacked on narrow screens. */
+.cal-wrap { display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; }
+/* The grid holds its width instead of being squeezed by the summary
+   beside it. Without a fixed basis flex shrank it to ~200px and the day
+   cells collapsed to 24px — unreadable, and worse than the dead space
+   the summary was added to fill. */
+/* Holds 420px where there is room, shrinks where there is not. The
+   rigid `flex: 0 0 420px` this replaces could not shrink below its
+   basis, so on a phone it widened the whole document and every other
+   section stretched with it — the page scrolled sideways. */
+.cal-wrap > :first-child { flex: 0 1 420px; width: min(420px, 100%); min-width: 0; }
+.cal-side { flex: 1 1 220px; min-width: 200px; padding-top: 4px; }
+.cal-side .rhead { margin-top: 0; }
+.cal-side__stat { margin-bottom: 16px; }
+.cal-side__stat b { display: block; font-size: 1.35rem; line-height: 1.15; }
+.cal-side__stat span { font-size: .8rem; color: rgba(0, 0, 0, .55); }
+.cal__hint { margin: 8px 0 0; font-size: .78rem; color: rgba(0, 0, 0, .45); }
+
+.rnote { max-width: 620px; margin: -6px 0 16px; font-size: .8rem; color: rgba(0, 0, 0, .5); }
+.rrow__n { text-align: right; }
+
+/* Native selects were the one raw control on a page of rounded pills —
+   they read as unfinished next to everything around them. */
+#report-range, #quick-add-period, #task-period {
+    appearance: none;
+    border: 1px solid rgba(0, 0, 0, .10);
+    background: #fff;
+    border-radius: 999px;
+    padding: 8px 30px 8px 14px;
+    font: inherit;
+    font-size: .88rem;
+    color: inherit;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23999' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+#task-period { border-radius: 12px; width: 100%; }
+
+/* ── Small screens ─────────────────────────────────────
+   The dashboard was built desk-first and had one breakpoint, at 56rem.
+   Below ~30rem the stats strip still tried to hold two ~225px columns
+   and the whole shell exceeded the viewport — `overflow-x: clip` on body
+   hid the symptom by cutting the cards off rather than scrolling, which
+   is why it read as "half a card" instead of a scrollbar. */
+@media (max-width: 30rem) {
+    .shell { padding-left: var(--sp-sm); padding-right: var(--sp-sm); }
+    .topbar__inner { padding-left: var(--sp-sm); padding-right: var(--sp-sm); gap: var(--sp-sm); }
+    .stats { grid-template-columns: minmax(0, 1fr); }
+    .stat--chart { grid-column: auto; }
+    /* Tabs can scroll rather than wrap onto two lines and push the
+       content down on the smallest screens. */
+    .viewtabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .viewtab { flex: 0 0 auto; }
+    .cal-wrap { gap: 24px; }
+    .quick-add { gap: 8px; }
+    .quick-add input { flex: 1 1 100%; }
+}

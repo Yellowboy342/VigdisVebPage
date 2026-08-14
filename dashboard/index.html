@@ -119,8 +119,15 @@
 
             <div class="stats" id="stats"></div>
 
+                <nav class="viewtabs" role="tablist" aria-label="Dashboard views">
+                    <button class="viewtab" type="button" role="tab" data-view="today" aria-selected="true">Today</button>
+                    <button class="viewtab" type="button" role="tab" data-view="calendar" aria-selected="false">Calendar</button>
+                    <button class="viewtab" type="button" role="tab" data-view="stats" aria-selected="false">Statistics</button>
+                </nav>
+
+            <div class="viewpane" data-pane="today">
             <div class="columns">
-                <section class="panel" aria-labelledby="tasks-title">
+                    <section class="panel" aria-labelledby="tasks-title">
                     <div class="panel__head">
                         <h2 class="panel__title" id="tasks-title">Tasks</h2>
                         <div class="filter-chips" role="group" aria-label="Filter tasks">
@@ -132,6 +139,7 @@
                     <form class="quick-add" id="form-quick-add">
                         <label class="visually-hidden" for="in-quick-add">Add a task</label>
                         <input id="in-quick-add" type="text" placeholder="Add a task…" maxlength="120">
+                            <select id="quick-add-period" aria-label="Time period"></select>
                         <button type="submit" id="btn-quick-add">Add</button>
                     </form>
 
@@ -149,11 +157,42 @@
                     <section class="panel" aria-labelledby="activity-title">
                         <div class="panel__head">
                             <h2 class="panel__title" id="activity-title">Recent activity</h2>
+                            <button class="btn-ghost" id="btn-export" type="button">Export CSV</button>
                         </div>
                         <div id="activity-list"></div>
                     </section>
                 </div>
             </div>
+
+            </div>
+
+            <div class="viewpane" data-pane="calendar" hidden>
+                    <section class="panel" aria-labelledby="calendar-title">
+                        <div class="panel__head">
+                            <h2 class="panel__title" id="calendar-title">Calendar</h2>
+                            <div class="cal__nav">
+                                <button class="dayline__nav" type="button" id="cal-prev" aria-label="Previous month">‹</button>
+                                <span id="cal-month"></span>
+                                <button class="dayline__nav" type="button" id="cal-next" aria-label="Next month">›</button>
+                            </div>
+                        </div>
+                        <div id="calendar-grid"></div>
+                    </section>
+                </div>
+
+                <div class="viewpane" data-pane="stats" hidden>
+                    <section class="panel" aria-labelledby="report-title">
+                        <div class="panel__head">
+                            <h2 class="panel__title" id="report-title">Statistics</h2>
+                            <select id="report-range" aria-label="Range">
+                                <option value="7">Last 7 days</option>
+                                <option value="30" selected>Last 30 days</option>
+                                <option value="90">Last 90 days</option>
+                            </select>
+                        </div>
+                        <div id="report-body"></div>
+                    </section>
+                </div>
         </main>
 
         <footer class="shell-foot">
@@ -181,9 +220,27 @@
                     <input id="task-icon" type="text" maxlength="4">
                 </div>
             </div>
+            <div class="modal__row">
+                <div class="field">
+                    <label for="task-period">Time period</label>
+                    <select id="task-period"></select>
+                </div>
+                <div class="field">
+                    <label for="task-due">Due date</label>
+                    <input id="task-due" type="date">
+                </div>
+            </div>
+
             <div class="field">
-                <label for="task-due">Due date</label>
-                <input id="task-due" type="date">
+                <label for="task-photo">Photo</label>
+                <div class="photo-field">
+                    <div class="photo-field__preview" id="task-photo-preview" aria-hidden="true"></div>
+                    <div class="photo-field__controls">
+                        <input id="task-photo" type="file" accept="image/*">
+                        <button class="btn-ghost" type="button" id="btn-photo-remove" hidden>Remove photo</button>
+                        <p class="field__hint">A picture beats a label for a child who can't read yet.</p>
+                    </div>
+                </div>
             </div>
             <div class="field">
                 <label for="task-notes">Notes</label>
@@ -191,8 +248,21 @@
             </div>
             <div class="modal__actions">
                 <button class="btn-danger-quiet" type="button" id="btn-task-delete">Delete task</button>
+                                <button class="btn-ghost" type="button" id="btn-task-copy">Copy to…</button>
                 <button class="btn-ghost" type="button" id="btn-task-cancel">Cancel</button>
                 <button class="btn-primary" type="submit" id="btn-task-save">Save changes</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog class="modal" id="modal-copy">
+        <h2 class="modal__title">Copy to other profiles</h2>
+        <p class="modal__sub" id="copy-sub"></p>
+        <form id="form-copy" method="dialog">
+            <div class="copy-list" id="copy-list"></div>
+            <div class="modal__actions">
+                <button class="btn-ghost" type="button" id="btn-copy-cancel">Cancel</button>
+                <button class="btn-primary" type="submit" id="btn-copy-save">Copy task</button>
             </div>
         </form>
     </dialog>
