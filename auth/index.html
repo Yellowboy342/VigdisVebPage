@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="is">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vigdís — Opna í appinu / Open in the app</title>
+
+<!-- Never index this. It only ever appears with one-time auth tokens in
+     the URL fragment, and a search engine has no business anywhere near
+     that. `noarchive` matters as much as `noindex`. -->
+<meta name="robots" content="noindex, nofollow, noarchive">
+
+<!-- Do not send the fragment or path anywhere on outbound navigation. -->
+<meta name="referrer" content="no-referrer">
+
+<!--
+  Auth landing page.
+
+  WHY THIS EXISTS
+
+  Supabase's confirm and password-reset links resolve through its verify
+  endpoint and then redirect to whatever `redirectTo` the app asked for.
+  That used to be `vigdis://auth-callback` — a custom scheme, which only
+  a device with the app installed can handle. A parent opening the email
+  on a laptop got a dead link with no explanation, and no way to tell
+  whether the problem was the link, the app or their account.
+
+  So `redirectTo` now points here, and this page is what forwards them
+  into the app.
+
+  WHY NOT A UNIVERSAL LINK
+
+  The app does own `applinks:vigdisapp.is`, so in principle iOS could
+  open it directly. It will not: universal links fire on a user-initiated
+  tap, not on a cross-domain server redirect, which is exactly how the
+  user arrives here. The custom scheme is the thing that reliably works
+  from a script, so that is what this uses.
+
+  THE TOKENS
+
+  Supabase returns the session in the URL *fragment*
+  (`#access_token=...&type=recovery`). Fragments are never sent to the
+  server, so GitHub Pages never receives them and they appear in no
+  access log. This page keeps that property, and it is easy to destroy:
+
+    * No analytics, no third-party script, no fetch, no beacon — nothing
+      on this page may transmit anything, ever.
+    * `referrer: no-referrer` so the fragment cannot leak via Referer.
+    * The fragment is wiped from the address bar with `replaceState`
+      once forwarded, so it does not linger in history or in a
+      screenshot of a shared laptop.
+
+  Anyone adding a tag manager or a "quick" analytics snippet here is
+  putting live account tokens into a third party's logs.
+-->
+
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: #FDF6F5;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: #1a1a1a;
+  }
+  .card {
+    width: 100%;
+    max-width: 420px;
+    background: #fff;
+    border-radius: 20px;
+    padding: 36px 28px 32px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(168, 79, 77, .10);
+  }
+  .wordmark {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: #A84F4D;
+    letter-spacing: .5px;
+    margin-bottom: 22px;
+  }
+  h1 { font-size: 19px; margin: 0 0 10px; }
+  p  { font-size: 15px; line-height: 1.55; color: #4a4a4a; margin: 0 0 8px; }
+  .sub { font-size: 14px; color: #6a6a6a; }
+  .divider { border-top: 1px solid #eee; margin: 22px 0 18px; }
+  /* #A84F4D, not the brand coral #F0918F: white on the brand coral is
+     about 2:1, which is unreadable for a low-vision parent. Same hue,
+     darkened to roughly 5.8:1. */
+  .btn {
+    display: inline-block;
+    background: #A84F4D;
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 14px 32px;
+    border-radius: 12px;
+    margin: 6px 0 4px;
+  }
+  .hint { font-size: 13px; color: #8a8a8a; margin-top: 18px; }
+  .store { font-size: 13px; margin-top: 16px; }
+  .store a { color: #A84F4D; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="wordmark">Vigdís</div>
+
+    <!-- Phone: the deep link has already been attempted by the script
+         below; this is the manual fallback for when iOS suppresses the
+         automatic attempt (it does, if the page was not user-activated). -->
+    <div id="mobile" hidden>
+      <h1>Opnaðu Vigdísi til að halda áfram</h1>
+      <p>Smelltu hér að neðan ef appið opnaðist ekki sjálfkrafa.</p>
+      <a class="btn" id="open-app" href="#">Opna Vigdísi</a>
+      <div class="divider"></div>
+      <h1>Open Vigdís to continue</h1>
+      <p class="sub">Tap above if the app didn't open automatically.</p>
+      <p class="store">
+        Ekki með appið? / Don't have the app?<br>
+        <a href="https://apps.apple.com/app/id6760764940">App Store</a> ·
+        <a href="https://play.google.com/store/apps/details?id=com.vigdis.app">Google Play</a>
+      </p>
+    </div>
+
+    <!-- Desktop: say so plainly rather than offering a button that
+         cannot work. A dead button is worse than an explanation. -->
+    <div id="desktop" hidden>
+      <h1>Opnaðu þennan hlekk í símanum</h1>
+      <p>Vigdís er app fyrir síma og spjaldtölvur, svo þessi hlekkur virkar ekki í tölvu. Opnaðu póstinn í símanum þínum og smelltu á hlekkinn aftur.</p>
+      <div class="divider"></div>
+      <h1>Open this link on your phone</h1>
+      <p class="sub">Vigdís is a phone and tablet app, so this link can't open on a computer. Open the email on your phone and tap the link again.</p>
+      <p class="hint">Hlekkurinn gildir í eina klukkustund. / The link is valid for one hour.</p>
+    </div>
+  </div>
+
+<script>
+(function () {
+  // Everything after the '#' plus any query string. Both are forwarded
+  // verbatim: Supabase uses the fragment for the implicit flow
+  // (access_token, refresh_token, type) and the query string for the
+  // PKCE flow (code). Which one arrives depends on the project's flow
+  // setting, so this must not assume either.
+  var payload = window.location.search + window.location.hash;
+  var target = 'vigdis://auth-callback' + payload;
+
+  var link = document.getElementById('open-app');
+  if (link) link.setAttribute('href', target);
+
+  // Coarse, and deliberately so. The only decision here is "can this
+  // device plausibly have the app", and getting it wrong in the
+  // permissive direction costs a user one ignored button, while getting
+  // it wrong in the strict direction strands someone who could have
+  // continued. UA sniffing is the wrong tool for almost everything —
+  // this is one of the few places it is the right one, because no
+  // feature detection can answer "is there an iPhone app installed".
+  var ua = navigator.userAgent || '';
+  var isMobile = /iPhone|iPad|iPod|Android/i.test(ua)
+    // iPadOS 13+ reports itself as a Mac; the touch check is what
+    // distinguishes it from an actual desktop.
+    || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+
+  document.getElementById(isMobile ? 'mobile' : 'desktop').hidden = false;
+
+  if (isMobile) {
+    // Wipe the tokens out of the address bar before anything else. They
+    // have already been captured in `payload`, and leaving them visible
+    // means they survive in history, in the tab title on a shared
+    // device, and in any screenshot the user sends to support.
+    //
+    // Guarded because replaceState throws on a file:// origin, which is
+    // how anyone testing this locally will open it.
+    try {
+      history.replaceState(null, '', window.location.pathname);
+    } catch (e) {}
+
+    // Attempt the hand-off. iOS blocks scripted navigation to a custom
+    // scheme when the page has had no user interaction, which is
+    // precisely this case — so treat the automatic attempt as a bonus
+    // and the button above as the real path. Delayed a beat so the
+    // fallback UI has painted before any "Open in Vigdís?" sheet
+    // appears over it; a user who declines that sheet then still has
+    // something coherent to look at.
+    setTimeout(function () {
+      window.location.href = target;
+    }, 400);
+  }
+})();
+</script>
+</body>
+</html>
