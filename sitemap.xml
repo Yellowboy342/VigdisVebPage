@@ -8,7 +8,6 @@
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="is" href="https://vigdisapp.is/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://vigdisapp.is/lang/en.html"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://vigdisapp.is/lang/es.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vigdisapp.is/"/>
   </url>
   <url>
@@ -16,12 +15,6 @@
     <lastmod>2026-05-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://vigdisapp.is/lang/es.html</loc>
-    <lastmod>2026-05-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://vigdisapp.is/privacy.html</loc>
@@ -63,5 +56,23 @@
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="is" href="https://vigdisapp.is/lang/help-is.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://vigdisapp.is/help.html"/>
+  </url>
+  <url>
+    <loc>https://vigdisapp.is/schools.html</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vigdisapp.is/schools.html"/>
+    <xhtml:link rel="alternate" hreflang="is" href="https://vigdisapp.is/lang/schools-is.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vigdisapp.is/schools.html"/>
+  </url>
+  <url>
+    <loc>https://vigdisapp.is/lang/schools-is.html</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vigdisapp.is/schools.html"/>
+    <xhtml:link rel="alternate" hreflang="is" href="https://vigdisapp.is/lang/schools-is.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vigdisapp.is/schools.html"/>
   </url>
 </urlset>

@@ -254,6 +254,13 @@ section {
   display: block;
 }
 
+/* Phone screenshots are all 320x693 — reserve space to avoid layout shift */
+.shot--phone img {
+  aspect-ratio: 320 / 693;
+  height: auto;
+  object-fit: cover;
+}
+
 /* ===== Header / nav (N9 edge-aligned, quiet) ===== */
 .site-header {
   position: fixed;
