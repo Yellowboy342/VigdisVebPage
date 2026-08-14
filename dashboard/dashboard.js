@@ -275,10 +275,30 @@ async function loadProfileData(profileId) {
     };
 }
 
+/* What one completion was worth.
+ *
+ * Points used to be applied retroactively: earnings were
+ * points x completion_history.length, so editing a task's value
+ * rewrote everything the child had already banked. Each completion now
+ * carries a snapshot in `completion_points`, keyed by the UTC day of
+ * the completion instant — the same key `dayKey` already produces, and
+ * the same one Swift's Task.pointsKey(for:) and the SQL
+ * `to_char(c at time zone 'UTC', 'YYYY-MM-DD')` produce. All three
+ * agree by construction, which they must: the server re-derives this
+ * balance to approve spends.
+ *
+ * A missing key means no snapshot was recorded, and the fallback to the
+ * task's current points is exactly the old behaviour. */
+function pointsAwarded(task, completedAt) {
+    const snapshot = task.completion_points?.[dayKey(completedAt)];
+    return typeof snapshot === 'number' ? snapshot : (task.points || 0);
+}
+
 /* Canonical balance — the same formula the server uses in redeem_reward. */
 function pointsBalance() {
     const earned = state.data.tasks.reduce(
-        (sum, t) => sum + (t.points || 0) * (t.completion_history?.length || 0), 0);
+        (sum, t) => sum + (t.completion_history || []).reduce(
+            (acc, ts) => acc + pointsAwarded(t, ts), 0), 0);
     const bonus = state.data.bonus.reduce((sum, b) => sum + (b.amount || 0), 0);
     const spent = state.data.redemptions.reduce((sum, r) => sum + (r.points_spent || 0), 0);
     return earned + bonus - spent;
@@ -612,6 +632,9 @@ async function toggleTask(taskId) {
         return;
     }
     if (data?.completion_history) task.completion_history = data.completion_history;
+    // The RPC snapshots the value server-side; take it back so the
+    // balance shown here matches the one the server will check against.
+    if (data?.completion_points) task.completion_points = data.completion_points;
 }
 
 async function quickAddTask(title) {
@@ -629,7 +652,7 @@ async function quickAddTask(title) {
         time_period_id: $('#quick-add-period')?.value || null,
     };
     if (DEMO) {
-        state.data.tasks.push({ ...row, completion_history: [] });
+        state.data.tasks.push({ ...row, completion_history: [], completion_points: {} });
         renderStats();
         renderTasks();
         return true;
