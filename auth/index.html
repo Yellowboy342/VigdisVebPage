@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="is">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -107,6 +107,20 @@
   .store { font-size: 13px; margin-top: 16px; }
   .store a { color: #A84F4D; }
   [hidden] { display: none !important; }
+  .lang-toggle {
+    margin-top: 20px;
+    font-size: 13px;
+    color: #8a8a8a;
+  }
+  .lang-toggle button {
+    background: none;
+    border: 0;
+    padding: 4px 6px;
+    font: inherit;
+    color: #A84F4D;
+    text-decoration: underline;
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
@@ -115,16 +129,32 @@
 
     <!-- Phone: the deep link has already been attempted by the script
          below; this is the manual fallback for when iOS suppresses the
-         automatic attempt (it does, if the page was not user-activated). -->
+         automatic attempt (it does, if the page was not user-activated).
+
+         One language at a time, chosen from the browser. The page used
+         to stack Icelandic above English for everyone — which is fine
+         for an Icelandic parent and reads as a foreign-language page
+         with an afterthought below it for everyone else. Both are still
+         one tap away via the toggle, because a browser's language
+         setting is a decent guess and not a fact. -->
     <div id="mobile" hidden>
-      <h1>Opnaðu Vigdísi til að halda áfram</h1>
-      <p>Smelltu hér að neðan ef appið opnaðist ekki sjálfkrafa.</p>
-      <a class="btn" id="open-app" href="#">Opna Vigdísi</a>
-      <div class="divider"></div>
-      <h1>Open Vigdís to continue</h1>
-      <p class="sub">Tap above if the app didn't open automatically.</p>
+      <div data-lang="is" hidden>
+        <h1>Opnaðu Vigdísi til að halda áfram</h1>
+        <p>Smelltu hér að neðan ef appið opnaðist ekki sjálfkrafa.</p>
+      </div>
+      <div data-lang="en" hidden>
+        <h1>Open Vigdís to continue</h1>
+        <p>Tap below if the app didn't open automatically.</p>
+      </div>
+
+      <a class="btn" id="open-app" href="#">
+        <span data-lang="is" hidden>Opna Vigdísi</span>
+        <span data-lang="en" hidden>Open Vigdís</span>
+      </a>
+
       <p class="store">
-        Ekki með appið? / Don't have the app?<br>
+        <span data-lang="is" hidden>Ekki með appið?</span>
+        <span data-lang="en" hidden>Don't have the app?</span><br>
         <a href="https://apps.apple.com/app/id6760764940">App Store</a> ·
         <a href="https://play.google.com/store/apps/details?id=com.vigdis.app">Google Play</a>
       </p>
@@ -133,12 +163,20 @@
     <!-- Desktop: say so plainly rather than offering a button that
          cannot work. A dead button is worse than an explanation. -->
     <div id="desktop" hidden>
-      <h1>Opnaðu þennan hlekk í símanum</h1>
-      <p>Vigdís er app fyrir síma og spjaldtölvur, svo þessi hlekkur virkar ekki í tölvu. Opnaðu póstinn í símanum þínum og smelltu á hlekkinn aftur.</p>
-      <div class="divider"></div>
-      <h1>Open this link on your phone</h1>
-      <p class="sub">Vigdís is a phone and tablet app, so this link can't open on a computer. Open the email on your phone and tap the link again.</p>
-      <p class="hint">Hlekkurinn gildir í eina klukkustund. / The link is valid for one hour.</p>
+      <div data-lang="is" hidden>
+        <h1>Opnaðu þennan hlekk í símanum</h1>
+        <p>Vigdís er app fyrir síma og spjaldtölvur, svo þessi hlekkur virkar ekki í tölvu. Opnaðu póstinn í símanum þínum og smelltu á hlekkinn aftur.</p>
+        <p class="hint">Hlekkurinn gildir í eina klukkustund.</p>
+      </div>
+      <div data-lang="en" hidden>
+        <h1>Open this link on your phone</h1>
+        <p>Vigdís is a phone and tablet app, so this link can't open on a computer. Open the email on your phone and tap the link again.</p>
+        <p class="hint">The link is valid for one hour.</p>
+      </div>
+    </div>
+
+    <div class="lang-toggle">
+      <button type="button" id="lang-switch"></button>
     </div>
   </div>
 
@@ -169,6 +207,42 @@
     || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
 
   document.getElementById(isMobile ? 'mobile' : 'desktop').hidden = false;
+
+  // Pick a language from the browser, defaulting to English.
+  //
+  // Icelandic used to lead for everyone, which is right for the home
+  // market and wrong for the English-speaking users the App Store
+  // listing actually targets — the listing is English in every
+  // storefront. `navigator.languages` is a preference ORDER, so the
+  // first Icelandic or English entry wins rather than just the top one:
+  // a device set to Icelandic-then-English and one set to
+  // English-then-Icelandic should not get the same answer.
+  var chosen = 'en';
+  var prefs = navigator.languages || [navigator.language || 'en'];
+  for (var i = 0; i < prefs.length; i++) {
+    var tag = String(prefs[i]).toLowerCase();
+    if (tag.indexOf('is') === 0) { chosen = 'is'; break; }
+    if (tag.indexOf('en') === 0) { chosen = 'en'; break; }
+  }
+
+  function applyLanguage(lang) {
+    chosen = lang;
+    document.documentElement.lang = lang;
+    var nodes = document.querySelectorAll('[data-lang]');
+    for (var i = 0; i < nodes.length; i++) {
+      nodes[i].hidden = nodes[i].getAttribute('data-lang') !== lang;
+    }
+    // The toggle always names the language you would switch TO, in
+    // that language — the one string on the page a reader of the other
+    // language is guaranteed to understand.
+    document.getElementById('lang-switch').textContent =
+      lang === 'is' ? 'In English' : 'Á íslensku';
+  }
+
+  applyLanguage(chosen);
+  document.getElementById('lang-switch').addEventListener('click', function () {
+    applyLanguage(chosen === 'is' ? 'en' : 'is');
+  });
 
   if (isMobile) {
     // Wipe the tokens out of the address bar before anything else. They
