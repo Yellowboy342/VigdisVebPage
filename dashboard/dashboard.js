@@ -11,8 +11,9 @@ import {
     initManagement, loadEntitlement, renderManagement, renderTaskSteps,
     setProfileReloader, setRecurrence, readRecurrence, loadReadOnlyExtras,
     refreshShares, loadReferralCode, applyProfileTheme,
-
 } from './manage.js';
+/* The completion moment — points fly, Lóa cheers, confetti. */
+import { celebrateCompletion, clearCelebrations } from './celebrate.js';
 
 const SUPABASE_URL = 'https://vfdjirmowbjdmieeyjkl.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_XxI8jNl0ERoIlLLKdS93_g_cuNyvLy5';
