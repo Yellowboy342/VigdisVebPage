@@ -16,6 +16,28 @@
         rel="stylesheet">
 
     <link rel="stylesheet" href="dashboard.css">
+    <!-- Generated from the app's Theme.swift. Loaded after dashboard.css
+         so a theme block can override the base tokens. -->
+    <link rel="stylesheet" href="themes.css">
+
+    <script>
+        /* Applied before first paint so the page never flashes coral-on-
+           cream before the profile's real theme lands. Reads the last
+           known theme from localStorage; the authoritative value arrives
+           with the profile a moment later and re-applies. */
+        (function () {
+            try {
+                var t = localStorage.getItem('vigdis-web-theme');
+                var a = localStorage.getItem('vigdis-web-appearance');
+                var r = document.documentElement;
+                if (t) r.setAttribute('data-theme', t);
+                if (a === 'dark' || (a === 'system' &&
+                    window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    r.setAttribute('data-appearance', 'dark');
+                }
+            } catch (e) { /* private mode — the default theme is fine */ }
+        })();
+    </script>
 </head>
 
 <body>
@@ -53,24 +75,38 @@
 
             <div class="auth__divider" id="auth-or-divider" aria-hidden="true">or</div>
 
+            <!-- Email sign-in leads with a one-time link rather than a
+                 password field. Every account that exists today was made
+                 with Apple or Google, so it has no password at all — a
+                 password-only form would fail for every current user. A
+                 link works for them straight away. Password stays available
+                 behind a disclosure for anyone who has set one. -->
             <form id="form-email" novalidate>
                 <div class="field">
                     <label for="in-email">Email address</label>
                     <input id="in-email" type="email" autocomplete="email" inputmode="email"
                         placeholder="name@example.com" required>
                 </div>
-                <div class="field">
+
+                <div class="field" id="field-password" hidden>
                     <label for="in-password">Password</label>
-                    <input id="in-password" type="password" autocomplete="current-password" required>
+                    <input id="in-password" type="password" autocomplete="current-password">
                     <p class="field__hint" id="hint-password"></p>
                 </div>
-                <button class="btn-primary" id="btn-signin" type="submit">Sign in</button>
+
+                <button class="btn-primary" id="btn-signin" type="submit">Email me a sign-in link</button>
             </form>
 
             <p class="auth__error" id="auth-error" role="alert" aria-live="polite"></p>
 
-            <p class="auth__note" id="note-forgot">
+            <p class="auth__note" id="note-password-toggle">
+                <a href="#" id="link-use-password">Use a password instead</a>
+            </p>
+
+            <p class="auth__note" id="note-forgot" hidden>
                 <a href="#" id="link-forgot">Forgot your password?</a>
+                &nbsp;·&nbsp;
+                <a href="#" id="link-use-link">Email me a link instead</a>
             </p>
             <p class="auth__note">
                 No account yet? Create one in the
@@ -123,6 +159,7 @@
                     <button class="viewtab" type="button" role="tab" data-view="today" aria-selected="true">Today</button>
                     <button class="viewtab" type="button" role="tab" data-view="calendar" aria-selected="false">Calendar</button>
                     <button class="viewtab" type="button" role="tab" data-view="stats" aria-selected="false">Statistics</button>
+                    <button class="viewtab" type="button" role="tab" data-view="manage" aria-selected="false">Setup</button>
                 </nav>
 
             <div class="viewpane" data-pane="today">
@@ -134,6 +171,7 @@
                             <button class="filter-chip" data-filter="today" aria-pressed="true" type="button">Today</button>
                             <button class="filter-chip" data-filter="all" aria-pressed="false" type="button">All</button>
                         </div>
+                        <button class="btn-ghost" id="btn-do-mode" type="button">Do mode</button>
                     </div>
 
                     <form class="quick-add" id="form-quick-add">
@@ -193,6 +231,83 @@
                         <div id="report-body"></div>
                     </section>
                 </div>
+
+                <!-- Setup: the half of the app a keyboard is better at.
+                     Deliberately its own view rather than controls bolted
+                     onto Today — a parent editing the shape of the week is
+                     doing something different from ticking today off, and
+                     mixing the two puts destructive buttons next to the
+                     ones a child might use. -->
+                <div class="viewpane" data-pane="manage" hidden>
+                    <section class="panel" aria-labelledby="profiles-manage-title">
+                        <div class="panel__head">
+                            <h2 class="panel__title" id="profiles-manage-title">Profiles</h2>
+                            <button class="btn-ghost" id="btn-add-profile" type="button">Add profile</button>
+                        </div>
+                        <p class="rnote" id="profile-limit-note"></p>
+                        <div id="profile-manage-list"></div>
+                    </section>
+
+                    <div class="columns">
+                        <section class="panel" aria-labelledby="periods-title">
+                            <div class="panel__head">
+                                <h2 class="panel__title" id="periods-title">Time periods</h2>
+                                <button class="btn-ghost" id="btn-add-period" type="button">Add period</button>
+                            </div>
+                            <p class="rnote">How the day is divided. Every task belongs to one.</p>
+                            <div id="period-list"></div>
+                        </section>
+
+                        <section class="panel" aria-labelledby="manage-rewards-title">
+                            <div class="panel__head">
+                                <h2 class="panel__title" id="manage-rewards-title">Rewards</h2>
+                                <button class="btn-ghost" id="btn-add-reward" type="button">Add reward</button>
+                            </div>
+                            <p class="rnote">What points can be spent on.</p>
+                            <div id="manage-reward-list"></div>
+                        </section>
+                    </div>
+
+                    <div class="columns">
+                        <section class="panel" aria-labelledby="achievements-title">
+                            <div class="panel__head">
+                                <h2 class="panel__title" id="achievements-title">Achievements</h2>
+                                <button class="btn-ghost" id="btn-award-bonus" type="button">Award points</button>
+                            </div>
+                            <div id="achievement-list"></div>
+                        </section>
+
+                        <section class="panel" aria-labelledby="timers-title">
+                            <div class="panel__head">
+                                <h2 class="panel__title" id="timers-title">Focus timer sessions</h2>
+                            </div>
+                            <p class="rnote">The last 20 timed runs, newest first.</p>
+                            <div id="timer-list"></div>
+                        </section>
+                    </div>
+
+                    <div class="columns">
+                        <section class="panel" aria-labelledby="sharing-title">
+                            <div class="panel__head">
+                                <h2 class="panel__title" id="sharing-title">Who has access</h2>
+                                <button class="btn-ghost" id="btn-invite" type="button">Invite someone</button>
+                            </div>
+                            <p class="rnote">People who can see and change this profile.</p>
+                            <div id="sharing-list"></div>
+                        </section>
+
+                        <section class="panel" aria-labelledby="referral-title">
+                            <div class="panel__head">
+                                <h2 class="panel__title" id="referral-title">Invite another family</h2>
+                            </div>
+                            <p class="rnote">Your code: <strong id="referral-code">…</strong></p>
+                            <div class="quick-add">
+                                <input id="referral-link" type="text" readonly aria-label="Referral link">
+                                <button class="btn-ghost" id="btn-referral-copy" type="button">Copy</button>
+                            </div>
+                        </section>
+                    </div>
+                </div>
         </main>
 
         <footer class="shell-foot">
@@ -203,7 +318,187 @@
     </div>
 
     <!-- ══════════ Edit task ══════════ -->
-    <dialog class="modal" id="modal-task">
+    <dialog class="modal modal--do" id="modal-do">
+    <div id="do-body"></div>
+    <div class="modal__actions">
+        <button class="btn-ghost" id="btn-do-close" type="button">Close</button>
+        <button class="btn-ghost" id="btn-do-skip" type="button">Skip</button>
+        <button class="btn-primary" id="btn-do-done" type="button">Done</button>
+    </div>
+</dialog>
+
+<dialog class="modal" id="modal-invite">
+    <h2 class="modal__title">Invite someone</h2>
+    <p class="modal__sub">They'll get an email with a link to accept.</p>
+    <form id="form-invite" method="dialog">
+        <div class="field">
+            <label for="invite-email">Email address</label>
+            <input id="invite-email" type="email" inputmode="email" placeholder="name@example.com">
+        </div>
+        <div class="field">
+            <label for="invite-role">Access level</label>
+            <select id="invite-role"></select>
+        </div>
+        <p class="auth__error" id="invite-error" role="alert" aria-live="polite"></p>
+        <div class="modal__actions">
+            <button class="btn-ghost" id="btn-invite-cancel" type="button">Cancel</button>
+            <button class="btn-primary" type="submit">Send invite</button>
+        </div>
+    </form>
+</dialog>
+
+<dialog class="modal" id="modal-bonus">
+    <h2 class="modal__title">Award points</h2>
+    <p class="modal__sub">For something that was never on the list.</p>
+    <form id="form-bonus" method="dialog">
+        <div class="modal__row">
+            <div class="field">
+                <label for="bonus-amount">Points</label>
+                <input id="bonus-amount" type="number" step="1">
+                <p class="field__hint">A negative number takes points back.</p>
+            </div>
+            <div class="field">
+                <label for="bonus-reason">What for</label>
+                <input id="bonus-reason" type="text" maxlength="120" placeholder="Helped without being asked">
+            </div>
+        </div>
+        <p class="auth__error" id="bonus-error" role="alert" aria-live="polite"></p>
+        <div class="modal__actions">
+            <button class="btn-ghost" id="btn-bonus-cancel" type="button">Cancel</button>
+            <button class="btn-primary" type="submit">Award</button>
+        </div>
+    </form>
+</dialog>
+
+<dialog class="modal" id="modal-profile">
+    <h2 class="modal__title" id="modal-profile-title">Profile</h2>
+    <form id="form-profile" method="dialog">
+        <div class="field">
+            <label for="profile-name">Name</label>
+            <input id="profile-name" type="text" maxlength="60" required>
+        </div>
+        <div class="modal__row">
+            <div class="field">
+                <label for="profile-language">Language</label>
+                <select id="profile-language"></select>
+            </div>
+            <div class="field">
+                <label for="profile-list-style">Task list style</label>
+                <select id="profile-list-style"></select>
+            </div>
+        </div>
+
+        <!-- The gamification toggles. Off is a legitimate setup for a
+             child who finds points and streaks stressful rather than
+             motivating, which is why they are per profile and not a
+             device setting. -->
+        <div class="modal__row">
+            <div class="field">
+                <label for="profile-theme">Theme</label>
+                <select id="profile-theme"></select>
+            </div>
+            <div class="field">
+                <label for="profile-appearance">Appearance</label>
+                <select id="profile-appearance"></select>
+            </div>
+        </div>
+        <div class="modal__row">
+            <div class="field">
+                <label for="profile-chime">Completion sound</label>
+                <select id="profile-chime"></select>
+            </div>
+            <div class="field">
+                <label id="profile-sound-label">Play it</label>
+                <div class="toggle-row" role="group" aria-labelledby="profile-sound-label">
+                    <label><input id="profile-sound" type="checkbox"> Sound on</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label id="profile-toggles-label">Show</label>
+            <div class="toggle-row" role="group" aria-labelledby="profile-toggles-label">
+                <label><input id="profile-show-score" type="checkbox"> Points</label>
+                <label><input id="profile-show-streaks" type="checkbox"> Streaks</label>
+                <label><input id="profile-show-confetti" type="checkbox"> Confetti</label>
+            </div>
+        </div>
+
+        <p class="rnote" id="profile-delete-note"></p>
+        <p class="auth__error" id="profile-error" role="alert" aria-live="polite"></p>
+        <div class="modal__actions">
+            <button class="btn-danger-quiet" id="btn-profile-delete" type="button">Remove profile</button>
+            <button class="btn-ghost" id="btn-profile-cancel" type="button">Cancel</button>
+            <button class="btn-primary" type="submit">Save</button>
+        </div>
+    </form>
+</dialog>
+
+<dialog class="modal" id="modal-period">
+    <h2 class="modal__title" id="modal-period-title">Time period</h2>
+    <form id="form-period" method="dialog">
+        <div class="field">
+            <label for="period-name">Name</label>
+            <input id="period-name" type="text" maxlength="40" required>
+        </div>
+        <div class="modal__row">
+            <div class="field">
+                <label for="period-start">Starts (hour)</label>
+                <input id="period-start" type="number" min="0" max="24" step="1">
+            </div>
+            <div class="field">
+                <label for="period-end">Ends (hour)</label>
+                <input id="period-end" type="number" min="0" max="24" step="1">
+            </div>
+        </div>
+        <div class="modal__row">
+            <div class="field">
+                <label for="period-icon">Icon</label>
+                <select id="period-icon"></select>
+            </div>
+            <div class="field">
+                <label for="period-color">Colour</label>
+                <input id="period-color" type="color">
+            </div>
+        </div>
+        <p class="rnote" id="period-delete-note"></p>
+        <p class="auth__error" id="period-error" role="alert" aria-live="polite"></p>
+        <div class="modal__actions">
+            <button class="btn-danger-quiet" id="btn-period-delete" type="button">Remove</button>
+            <button class="btn-ghost" id="btn-period-cancel" type="button">Cancel</button>
+            <button class="btn-primary" type="submit">Save</button>
+        </div>
+    </form>
+</dialog>
+
+<dialog class="modal" id="modal-reward">
+    <h2 class="modal__title" id="modal-reward-title">Reward</h2>
+    <form id="form-reward" method="dialog">
+        <div class="field">
+            <label for="reward-title">Name</label>
+            <input id="reward-title" type="text" maxlength="80" required>
+        </div>
+        <div class="modal__row">
+            <div class="field">
+                <label for="reward-icon">Icon</label>
+                <input id="reward-icon" type="text" maxlength="8" placeholder="🎁">
+            </div>
+            <div class="field">
+                <label for="reward-cost">Cost in points</label>
+                <input id="reward-cost" type="number" min="0" step="1">
+            </div>
+        </div>
+        <p class="rnote" id="reward-delete-note"></p>
+        <p class="auth__error" id="reward-error" role="alert" aria-live="polite"></p>
+        <div class="modal__actions">
+            <button class="btn-danger-quiet" id="btn-reward-delete" type="button">Remove</button>
+            <button class="btn-ghost" id="btn-reward-cancel" type="button">Cancel</button>
+            <button class="btn-primary" type="submit">Save</button>
+        </div>
+    </form>
+</dialog>
+
+<dialog class="modal" id="modal-task">
         <h2 class="modal__title">Edit task</h2>
         <form id="form-task" method="dialog">
             <div class="field">
@@ -246,6 +541,32 @@
                 <label for="task-notes">Notes</label>
                 <textarea id="task-notes" maxlength="1000"></textarea>
             </div>
+
+            <div class="field">
+                <label id="task-recurrence-label">Repeats on</label>
+                <div class="recurrence" id="task-recurrence" role="group"
+                     aria-labelledby="task-recurrence-label"></div>
+            </div>
+
+            <!-- Steps (subtasks). They live inside the task modal rather
+                 than in the Setup view because a step has no meaning
+                 apart from its task. Writes go straight through on each
+                 action rather than waiting for "Save changes" — the
+                 completion tick has to call the server function either
+                 way, and half the section saving instantly while the
+                 other half waited for a button would be worse than
+                 either rule applied consistently. -->
+            <div class="field" id="task-steps-field">
+                <label id="task-steps-label">Steps</label>
+                <div id="task-steps"></div>
+                <div class="quick-add quick-add--steps">
+                    <input id="new-step-title" type="text" maxlength="120" placeholder="Add a step…"
+                        aria-labelledby="task-steps-label">
+                    <button class="btn-ghost" type="button" id="btn-add-step">Add</button>
+                </div>
+                <p class="auth__error" id="step-error" role="alert" aria-live="polite"></p>
+            </div>
+
             <div class="modal__actions">
                 <button class="btn-danger-quiet" type="button" id="btn-task-delete">Delete task</button>
                                 <button class="btn-ghost" type="button" id="btn-task-copy">Copy to…</button>

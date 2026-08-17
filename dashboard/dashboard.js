@@ -3,6 +3,16 @@
  * row-level security, so a signed-in user can only reach their own profiles. */
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+/* Setup/management lives in its own module — see manage.js for why it
+   is not appended to this file. It receives its dependencies through
+   initManagement rather than importing back from here, which would
+   make a cycle. */
+import {
+    initManagement, loadEntitlement, renderManagement, renderTaskSteps,
+    setProfileReloader, setRecurrence, readRecurrence, loadReadOnlyExtras,
+    refreshShares, loadReferralCode, applyProfileTheme,
+
+} from './manage.js';
 
 const SUPABASE_URL = 'https://vfdjirmowbjdmieeyjkl.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_XxI8jNl0ERoIlLLKdS93_g_cuNyvLy5';
@@ -14,9 +24,10 @@ const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
  * useful for previewing the design before signing in. */
 const DEMO = new URLSearchParams(location.search).has('demo');
 
-/* Email/password is currently disabled in this Supabase project
- * (external_email_enabled = false) — flip this if it's ever turned on. */
-const EMAIL_AUTH_ENABLED = false;
+/* Email auth IS enabled on this project — verified against
+ * GET /auth/v1/settings, which reports `external.email: true`. The note
+ * that used to sit here claiming otherwise was stale, and it was hiding
+ * a working sign-in form behind a hardcoded false. */
 
 /* ── State ─────────────────────────────────────────── */
 
@@ -155,13 +166,57 @@ function authRedirectUrl() {
     return location.origin + location.pathname;
 }
 
+/* Supabase reports a provider as enabled in /auth/v1/settings as soon as
+   its toggle is on, even when it has no client secret configured. Apple
+   on the web is exactly that case right now: the toggle is on, the
+   secret is missing, and /auth/v1/authorize answers
+
+       400 {"error_code":"validation_failed",
+             "msg":"Unsupported provider: missing OAuth secret"}
+
+   Because signInWithOAuth navigates the browser straight at that URL,
+   the user's reward for pressing "Continue with Apple" is a page of raw
+   JSON. So probe first and only navigate if the provider really answers.
+
+   The probe is a hand-built URL rather than skipBrowserRedirect so it
+   doesn't mint a PKCE verifier we're going to throw away. A configured
+   provider answers with a cross-origin redirect, which fetch surfaces as
+   an opaque response — unreadable, but its very opaqueness is the signal
+   that we got a redirect rather than a JSON error. Anything we can't
+   classify falls through to navigating, so a probe that breaks for its
+   own reasons never blocks a working sign-in.
+
+   Nothing here needs changing once the Apple secret is configured: the
+   probe simply starts passing. */
+async function providerIsConfigured(provider) {
+    const url = `${SUPABASE_URL}/auth/v1/authorize?provider=${encodeURIComponent(provider)}`
+        + `&redirect_to=${encodeURIComponent(authRedirectUrl())}`;
+    try {
+        const res = await fetch(url, { method: 'GET', redirect: 'manual' });
+        if (res.type === 'opaqueredirect' || res.status === 0) return true;
+        if (res.status === 400) return false;
+        return true;
+    } catch {
+        return true;
+    }
+}
+
 async function signInWithProvider(provider) {
-    $('#auth-error').textContent = '';
+    const errEl = $('#auth-error');
+    errEl.textContent = '';
+
+    const label = provider === 'apple' ? 'Apple' : 'Google';
+    if (!(await providerIsConfigured(provider))) {
+        errEl.textContent = `${label} sign-in isn’t set up for the website yet. `
+            + `Use the email link below — it works with the same account.`;
+        return;
+    }
+
     const { error } = await sb.auth.signInWithOAuth({
         provider,
         options: { redirectTo: authRedirectUrl() },
     });
-    if (error) $('#auth-error').textContent = error.message;
+    if (error) errEl.textContent = error.message;
 }
 
 function surfaceOAuthError() {
@@ -173,35 +228,91 @@ function surfaceOAuthError() {
     }
 }
 
+/* Which email method the form is currently offering. Starts on the link
+   because no account created so far has a password to type. */
+let emailMode = 'link';
+
+function setEmailMode(mode) {
+    emailMode = mode;
+    const usingPassword = mode === 'password';
+    $('#field-password').hidden = !usingPassword;
+    $('#note-password-toggle').hidden = usingPassword;
+    $('#note-forgot').hidden = !usingPassword;
+    $('#btn-signin').textContent = usingPassword ? 'Sign in' : 'Email me a sign-in link';
+    $('#auth-error').textContent = '';
+    if (usingPassword) $('#in-password').focus();
+}
+
+async function sendSignInLink(email) {
+    const errEl = $('#auth-error');
+    const btn = $('#btn-signin');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner" aria-hidden="true"></span> Sending…';
+
+    /* shouldCreateUser: false because accounts belong to the app. Letting
+       the dashboard mint one would produce an account with no profiles,
+       nothing to show, and no obvious way to explain why. */
+    const { error } = await sb.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: authRedirectUrl(), shouldCreateUser: false },
+    });
+
+    btn.disabled = false;
+    btn.textContent = 'Email me a sign-in link';
+
+    if (error) {
+        errEl.textContent = /signups not allowed|not found/i.test(error.message)
+            ? 'No Vigdís account uses that email address. Check the spelling, or create an account in the app first.'
+            : error.message;
+        return;
+    }
+    errEl.textContent = '';
+    toast(`Sign-in link sent to ${email}. Open it on this device.`, { duration: 8000 });
+}
+
+async function signInWithPassword(email, password) {
+    const errEl = $('#auth-error');
+    const btn = $('#btn-signin');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner" aria-hidden="true"></span> Signing in…';
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    btn.disabled = false;
+    btn.textContent = 'Sign in';
+    if (error) {
+        errEl.textContent = error.message === 'Invalid login credentials'
+            ? 'That email and password don’t match an account. If you signed up with Apple or Google you won’t have a password yet — use the emailed link instead.'
+            : error.message;
+    }
+}
+
 function bindAuthUI() {
     $('#btn-apple').addEventListener('click', () => signInWithProvider('apple'));
     $('#btn-google').addEventListener('click', () => signInWithProvider('google'));
 
-    if (!EMAIL_AUTH_ENABLED) {
-        $('#form-email').hidden = true;
-        $('#auth-or-divider').hidden = true;
-        $('#note-forgot').hidden = true;
-    }
+    $('#link-use-password').addEventListener('click', (e) => {
+        e.preventDefault();
+        setEmailMode('password');
+    });
+    $('#link-use-link').addEventListener('click', (e) => {
+        e.preventDefault();
+        setEmailMode('link');
+    });
 
     $('#form-email').addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = $('#in-email').value.trim();
-        const password = $('#in-password').value;
         const errEl = $('#auth-error');
         errEl.textContent = '';
-        if (!email || !password) { errEl.textContent = 'Enter your email address and password.'; return; }
-
-        const btn = $('#btn-signin');
-        btn.disabled = true;
-        btn.innerHTML = '<span class="spinner" aria-hidden="true"></span> Signing in…';
-        const { error } = await sb.auth.signInWithPassword({ email, password });
-        btn.disabled = false;
-        btn.textContent = 'Sign in';
-        if (error) {
-            errEl.textContent = error.message === 'Invalid login credentials'
-                ? 'That email and password don’t match an account. Check them, or use Apple/Google if that’s how you signed up.'
-                : error.message;
+        if (!email) {
+            errEl.textContent = 'Enter your email address.';
+            $('#in-email').focus();
+            return;
         }
+        if (emailMode === 'link') { await sendSignInLink(email); return; }
+
+        const password = $('#in-password').value;
+        if (!password) { errEl.textContent = 'Enter your password.'; $('#in-password').focus(); return; }
+        await signInWithPassword(email, password);
     });
 
     $('#link-forgot').addEventListener('click', async (e) => {
@@ -265,7 +376,17 @@ async function loadProfileData(profileId) {
     const firstError = [tp, tasks, subtasks, rewards, redemptions, bonus].find((r) => r.error)?.error;
     if (firstError) toast(`Couldn’t load data: ${firstError.message}`);
 
+    /* Achievements and timer sessions are read-only extras the Setup
+       view shows; loaded here so they follow the same profile switch
+       as everything else. */
+    await loadReadOnlyExtras(profileId);
+    /* Who-has-access is per profile, so it reloads on every switch.
+       Not awaited into the render path: an admin-only RPC that a
+       non-admin cannot call should not delay the page for them. */
+    refreshShares();
+
     state.data = {
+        ...state.data,
         timePeriods: tp.data || [],
         tasks: tasks.data || [],
         subtasks: subtasks.data || [],
@@ -584,6 +705,7 @@ function renderActivity() {
 
 function renderAll() {
     fillPeriodSelect($('#quick-add-period'), $('#quick-add-period')?.value || '');
+    renderManagement();
     if (!$('[data-pane="calendar"]')?.hidden) renderCalendar();
     if (!$('[data-pane="stats"]')?.hidden) renderReport();
     renderGreeting();
@@ -610,7 +732,22 @@ async function toggleTask(taskId) {
     renderStats();
     renderTasks();
     renderRewards();
-    if (!wasDone) $('#stat-balance')?.classList.add('balance-pulse');
+
+    /* Only on the positive edge. Un-ticking is a correction, and
+       celebrating it would be the app congratulating someone for
+       undoing their own work. */
+    if (!wasDone) {
+        /* Read the row AFTER the re-render above, or we would anchor
+           the animation to a node that has just been replaced. */
+        const rowEl = document.querySelector(`[data-edit="${taskId}"]`);
+        const activeProfile = state.profiles.find((p) => p.id === state.activeProfileId);
+        celebrateCompletion({
+            rowEl,
+            pillEl: $('#stat-balance'),
+            points: task.points,
+            showConfetti: activeProfile?.show_confetti ?? true,
+        });
+    }
     if (DEMO) return;
 
     const { data, error } = await sb.rpc('set_task_completion', {
@@ -760,6 +897,8 @@ function openTaskModal(taskId) {
     pendingPhotoRemoval = false;
     $('#task-photo').value = '';
     renderPhotoField(task);
+    setRecurrence(Array.isArray(task.recurrence_days) ? task.recurrence_days : []);
+    renderTaskSteps(task.id);
     $('#modal-task').showModal();
 }
 
@@ -767,6 +906,11 @@ async function saveTaskEdits() {
     const task = state.data.tasks.find((t) => t.id === state.editingTaskId);
     if (!task) return;
     const patch = {
+        /* Recurrence comes from the setup module's checkboxes. Folded
+           into this patch rather than written separately so the whole
+           task saves in one round trip — two writes would leave a
+           window where the days changed but the title didn't. */
+        ...readRecurrence(),
         title: $('#task-title').value.trim() || task.title,
         points: Math.max(0, parseInt($('#task-points').value, 10) || 0),
         notes: $('#task-notes').value.trim() || null,
@@ -900,7 +1044,12 @@ function subscribeRealtime(profileId) {
 /* ── Flow ──────────────────────────────────────────── */
 
 async function selectProfile(profileId, { skeleton = true } = {}) {
+    clearCelebrations();
     state.activeProfileId = profileId;
+    /* Wear this profile's theme. Applied before the data loads so the
+       skeletons below are already the right colour — switching child and
+       watching the page recolour a beat later would look like a glitch. */
+    applyProfileTheme(state.profiles.find((p) => p.id === profileId));
     renderProfiles();
     if (DEMO) { state.data = demoData(profileId); renderAll(); return; }
     if (skeleton) {
@@ -916,7 +1065,52 @@ async function selectProfile(profileId, { skeleton = true } = {}) {
 async function enterApp() {
     showView('view-app');
     $('#user-email').textContent = state.session?.user?.email || '';
+
+    /* Hand the setup module its dependencies once, on the way in. It
+       needs the client and the shared state, and `refresh` so a write
+       re-reads and re-renders through the same path the rest of the
+       page uses rather than keeping its own copy of the data. */
+    initManagement({
+        sb,
+        state,
+        $,
+        esc,
+        toast,
+        /* Do mode completes through the task list's own toggle so the
+           write, the server function and the celebration are identical
+           either way. */
+        toggleTask,
+        refresh: async () => {
+            if (state.activeProfileId) await loadProfileData(state.activeProfileId);
+            renderAll();
+        },
+    });
+
+    /* Adding or removing a profile changes a list that lives outside
+       the per-profile data bundle, so the setup module needs its own
+       way to re-read it and land the user somewhere valid. */
+    setProfileReloader(async () => {
+        state.profiles = await loadProfiles();
+        const stillThere = state.profiles.some((p) => p.id === state.activeProfileId);
+        if (!stillThere) {
+            const next = state.profiles[0];
+            if (next) { await selectProfile(next.id); return; }
+            state.activeProfileId = null;
+        }
+        if (state.activeProfileId) await loadProfileData(state.activeProfileId);
+        renderAll();
+    });
+
     state.profiles = await loadProfiles();
+    /* Entitlement drives whether the Setup view will let this account
+       add another profile. Read after profiles so the owned-profile
+       count it compares against is populated. Deliberately not awaited
+       into the critical path below — a slow entitlement read should not
+       delay the first paint of the task list. */
+    loadEntitlement();
+    /* The referral code belongs to the account, not the profile, so it
+       is fetched once on entry rather than per switch. */
+    loadReferralCode();
 
     if (!state.profiles.length) {
         $('#profile-switcher').innerHTML = '';
@@ -1241,6 +1435,7 @@ function setView(name, pushHash = true) {
     document.querySelectorAll('.viewpane').forEach((p) => { p.hidden = p.dataset.pane !== name; });
     if (name === 'calendar') renderCalendar();
     if (name === 'stats') renderReport();
+    if (name === 'manage') renderManagement();
     // Hash must not collide with an element id or the browser scroll-jumps
     // to it on load — "#stats" matched the stats strip and scrolled the
     // greeting off screen.
@@ -1254,6 +1449,7 @@ function bindAppUI() {
     const initial = location.hash.replace('#', '');
     if (initial === 'calendar') setView('calendar', false);
     if (initial === 'statistics') setView('stats', false);
+    if (initial === 'manage') setView('manage', false);
     $('#cal-prev')?.addEventListener('click', () => {
         calMonth.setUTCMonth(calMonth.getUTCMonth() - 1); renderCalendar();
     });

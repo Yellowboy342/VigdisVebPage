@@ -1,0 +1,643 @@
+/* Generated from the iOS app's Theme.swift — do not hand-edit.
+ *
+ * The dashboard used to be coral-only while `profiles.selected_theme_raw`
+ * and `profiles.appearance_mode_raw` were already syncing from the app.
+ * A parent who set Ocean and dark mode on their phone still got a light
+ * coral website. These blocks make the web wear the same clothes.
+ *
+ * Token NAMES stay `--coral-*` deliberately. They are referenced in ~200
+ * places across dashboard.css; renaming them would be a large diff for no
+ * behavioural gain, and the name is the role ("the brand accent"), not
+ * the hue. Each theme overrides the values.
+ *
+ * Derived tones are computed, not eyeballed:
+ *   --coral-deep   ≥ 4.5:1 on white  (fills carrying white text)
+ *   --coral-strong ≥ 7:1  on white   (small labels, focus ring)
+ * so every theme clears AA at the same places coral already did.
+ */
+
+[data-theme="coral"] {
+  --coral:        #F0918F;
+  --coral-soft:   #FDF0EF;
+  --coral-deep:   #A66463;
+  --coral-strong: #7D4B4A;
+  --cream:        #F6ECEC;
+  --paper:        #FBF6F6;
+  --rule:         #F0918F29;
+  --focus:        #7D4B4A;
+}
+[data-theme="ocean"] {
+  --coral:        #3B82F6;
+  --coral-soft:   #E4EEFE;
+  --coral-deep:   #3574DB;
+  --coral-strong: #2857A5;
+  --cream:        #ECF0F6;
+  --paper:        #F6F8FB;
+  --rule:         #3B82F629;
+  --focus:        #2857A5;
+}
+[data-theme="forest"] {
+  --coral:        #10B981;
+  --coral-soft:   #DEF5ED;
+  --coral-deep:   #0C875E;
+  --coral-strong: #096647;
+  --cream:        #ECF6F3;
+  --paper:        #F6FBFA;
+  --rule:         #10B98129;
+  --focus:        #096647;
+}
+[data-theme="lavender"] {
+  --coral:        #8B5CF6;
+  --coral-soft:   #EFE8FE;
+  --coral-deep:   #8558EC;
+  --coral-strong: #6442B1;
+  --cream:        #EFECF6;
+  --paper:        #F8F6FB;
+  --rule:         #8B5CF629;
+  --focus:        #6442B1;
+}
+[data-theme="sunset"] {
+  --coral:        #F59E0B;
+  --coral-soft:   #FEF1DD;
+  --coral-deep:   #A46A07;
+  --coral-strong: #7A4F06;
+  --cream:        #F6F2EC;
+  --paper:        #FBF9F6;
+  --rule:         #F59E0B29;
+  --focus:        #7A4F06;
+}
+[data-theme="midnight"] {
+  --coral:        #6366F1;
+  --coral-soft:   #E9EAFD;
+  --coral-deep:   #6265EF;
+  --coral-strong: #494BB2;
+  --cream:        #ECECF6;
+  --paper:        #F6F6FB;
+  --rule:         #6366F129;
+  --focus:        #494BB2;
+}
+[data-theme="rose"] {
+  --coral:        #E11D48;
+  --coral-soft:   #FBDFE5;
+  --coral-deep:   #E11D48;
+  --coral-strong: #AD1637;
+  --cream:        #F6ECEE;
+  --paper:        #FBF6F7;
+  --rule:         #E11D4829;
+  --focus:        #AD1637;
+}
+[data-theme="mint"] {
+  --coral:        #14B8A6;
+  --coral-soft:   #DEF5F3;
+  --coral-deep:   #0E8478;
+  --coral-strong: #0B635A;
+  --cream:        #ECF6F5;
+  --paper:        #F6FBFA;
+  --rule:         #14B8A629;
+  --focus:        #0B635A;
+}
+[data-theme="berry"] {
+  --coral:        #D946EF;
+  --coral-soft:   #FAE5FD;
+  --coral-deep:   #BB3CCE;
+  --coral-strong: #8D2E9B;
+  --cream:        #F5ECF6;
+  --paper:        #FAF6FB;
+  --rule:         #D946EF29;
+  --focus:        #8D2E9B;
+}
+[data-theme="slate"] {
+  --coral:        #64748B;
+  --coral-soft:   #E9ECEF;
+  --coral-deep:   #64748B;
+  --coral-strong: #4D596B;
+  --cream:        #ECF0F6;
+  --paper:        #F6F8FB;
+  --rule:         #64748B29;
+  --focus:        #4D596B;
+}
+[data-theme="sunflower"] {
+  --coral:        #EAB308;
+  --coral-soft:   #FCF4DC;
+  --coral-deep:   #937105;
+  --coral-strong: #6E5404;
+  --cream:        #F2F3F8;
+  --paper:        #F9FAFC;
+  --rule:         #EAB30829;
+  --focus:        #6E5404;
+}
+[data-theme="bubblegum"] {
+  --coral:        #EC4899;
+  --coral-soft:   #FCE5F1;
+  --coral-deep:   #CD3F85;
+  --coral-strong: #992F63;
+  --cream:        #F6ECF1;
+  --paper:        #FBF6F9;
+  --rule:         #EC489929;
+  --focus:        #992F63;
+}
+[data-theme="sky"] {
+  --coral:        #0EA5E9;
+  --coral-soft:   #DDF2FC;
+  --coral-deep:   #0B7DB1;
+  --coral-strong: #085E85;
+  --cream:        #ECF3F6;
+  --paper:        #F6FAFB;
+  --rule:         #0EA5E929;
+  --focus:        #085E85;
+}
+[data-theme="matcha"] {
+  --coral:        #84CC16;
+  --coral-soft:   #EEF8DE;
+  --coral-deep:   #54830E;
+  --coral-strong: #3F620B;
+  --cream:        #F2F6EC;
+  --paper:        #F9FBF6;
+  --rule:         #84CC1629;
+  --focus:        #3F620B;
+}
+[data-theme="ruby"] {
+  --coral:        #EF4444;
+  --coral-soft:   #FDE5E5;
+  --coral-deep:   #D73D3D;
+  --coral-strong: #A32E2E;
+  --cream:        #F6ECEC;
+  --paper:        #FBF6F6;
+  --rule:         #EF444429;
+  --focus:        #A32E2E;
+}
+[data-theme="tangerine"] {
+  --coral:        #F97316;
+  --coral-soft:   #FEEBDE;
+  --coral-deep:   #C05911;
+  --coral-strong: #90430D;
+  --cream:        #F6F0EC;
+  --paper:        #FBF8F6;
+  --rule:         #F9731629;
+  --focus:        #90430D;
+}
+[data-theme="lagoon"] {
+  --coral:        #06B6D4;
+  --coral-soft:   #DCF5F9;
+  --coral-deep:   #048197;
+  --coral-strong: #036070;
+  --cream:        #ECF5F6;
+  --paper:        #F6FAFB;
+  --rule:         #06B6D429;
+  --focus:        #036070;
+}
+[data-theme="lilac"] {
+  --coral:        #A855F7;
+  --coral-soft:   #F3E7FE;
+  --coral-deep:   #9B4EE3;
+  --coral-strong: #743BAA;
+  --cream:        #F1ECF6;
+  --paper:        #F9F6FB;
+  --rule:         #A855F729;
+  --focus:        #743BAA;
+}
+[data-theme="moss"] {
+  --coral:        #65A30D;
+  --coral-soft:   #E9F2DD;
+  --coral-deep:   #52840B;
+  --coral-strong: #3D6208;
+  --cream:        #F2F6EC;
+  --paper:        #F9FBF6;
+  --rule:         #65A30D29;
+  --focus:        #3D6208;
+}
+[data-theme="cocoa"] {
+  --coral:        #92400E;
+  --coral-soft:   #F0E4DD;
+  --coral-deep:   #92400E;
+  --coral-strong: #92400E;
+  --cream:        #F6F0EC;
+  --paper:        #FBF8F6;
+  --rule:         #92400E29;
+  --focus:        #92400E;
+}
+[data-theme="ice"] {
+  --coral:        #0891B2;
+  --coral-soft:   #DCF0F4;
+  --coral-deep:   #07819E;
+  --coral-strong: #056177;
+  --cream:        #ECF4F6;
+  --paper:        #F6FAFB;
+  --rule:         #0891B229;
+  --focus:        #056177;
+}
+[data-theme="grape"] {
+  --coral:        #7E22CE;
+  --coral-soft:   #EDE0F8;
+  --coral-deep:   #7E22CE;
+  --coral-strong: #7D22CC;
+  --cream:        #F1ECF6;
+  --paper:        #F9F6FB;
+  --rule:         #7E22CE29;
+  --focus:        #7D22CC;
+}
+[data-theme="apricot"] {
+  --coral:        #FB923C;
+  --coral-soft:   #FEF0E4;
+  --coral-deep:   #AD6529;
+  --coral-strong: #804A1F;
+  --cream:        #F2F5F8;
+  --paper:        #F9FAFC;
+  --rule:         #FB923C29;
+  --focus:        #804A1F;
+}
+
+/* Dark. `--card` and the ink ramp come from the app's own dark palette
+   (Theme.cardDark is #1C1C1E); the page wash is the theme's dark
+   gradient, so light and dark are recognisably the same theme. */
+[data-appearance="dark"][data-theme="coral"] {
+  --coral:        #F3A5A3;
+  --coral-soft:   #0B0707;
+  --coral-deep:   #F0918F;
+  --coral-strong: #F5B6B5;
+  --cream:        #592D2C;
+  --paper:        #0B0707;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #F3A5A333;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #F5B6B5;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="ocean"] {
+  --coral:        #5E98F8;
+  --coral-soft:   #07080B;
+  --coral-deep:   #3B82F6;
+  --coral-strong: #7EACF9;
+  --cream:        #161F2D;
+  --paper:        #07080B;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #5E98F833;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #7EACF9;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="forest"] {
+  --coral:        #3BC698;
+  --coral-soft:   #070B0A;
+  --coral-deep:   #10B981;
+  --coral-strong: #61D1AC;
+  --cream:        #1F3F34;
+  --paper:        #070B0A;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #3BC69833;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #61D1AC;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="lavender"] {
+  --coral:        #A079F8;
+  --coral-soft:   #08070B;
+  --coral-deep:   #8B5CF6;
+  --coral-strong: #B293F9;
+  --cream:        #120D1B;
+  --paper:        #08070B;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #A079F833;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #B293F9;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="sunset"] {
+  --coral:        #F7AF37;
+  --coral-soft:   #0B0907;
+  --coral-deep:   #F59E0B;
+  --coral-strong: #F8BF5E;
+  --cream:        #514228;
+  --paper:        #0B0907;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #F7AF3733;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #F8BF5E;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="midnight"] {
+  --coral:        #7F82F4;
+  --coral-soft:   #07070B;
+  --coral-deep:   #6366F1;
+  --coral-strong: #989AF6;
+  --cream:        #06070D;
+  --paper:        #07070B;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #7F82F433;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #989AF6;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="rose"] {
+  --coral:        #E64669;
+  --coral-soft:   #0B0708;
+  --coral-deep:   #E11D48;
+  --coral-strong: #EB6A86;
+  --cream:        #11080A;
+  --paper:        #0B0708;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #E6466933;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #EB6A86;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="mint"] {
+  --coral:        #3EC5B6;
+  --coral-soft:   #070B0A;
+  --coral-deep:   #14B8A6;
+  --coral-strong: #64D0C4;
+  --cream:        #20403D;
+  --paper:        #070B0A;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #3EC5B633;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #64D0C4;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="berry"] {
+  --coral:        #E067F2;
+  --coral-soft:   #0A070B;
+  --coral-deep:   #D946EF;
+  --coral-strong: #E685F4;
+  --cream:        #321B36;
+  --paper:        #0A070B;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #E067F233;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #E685F4;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="slate"] {
+  --coral:        #808DA0;
+  --coral-soft:   #07090B;
+  --coral-deep:   #64748B;
+  --coral-strong: #99A3B2;
+  --cream:        #080C11;
+  --paper:        #07090B;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #808DA033;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #99A3B2;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="sunflower"] {
+  --coral:        #EEC134;
+  --coral-soft:   #0B0A07;
+  --coral-deep:   #EAB308;
+  --coral-strong: #F1CD5C;
+  --cream:        #554B2A;
+  --paper:        #0B0A07;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #EEC13433;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #F1CD5C;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="bubblegum"] {
+  --coral:        #EF69AB;
+  --coral-soft:   #0B0709;
+  --coral-deep:   #EC4899;
+  --coral-strong: #F286BC;
+  --cream:        #331926;
+  --paper:        #0B0709;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #EF69AB33;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #F286BC;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="sky"] {
+  --coral:        #39B5ED;
+  --coral-soft:   #070A0B;
+  --coral-deep:   #0EA5E9;
+  --coral-strong: #60C4F0;
+  --cream:        #203640;
+  --paper:        #070A0B;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #39B5ED33;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #60C4F0;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="matcha"] {
+  --coral:        #9AD540;
+  --coral-soft:   #090B07;
+  --coral-deep:   #84CC16;
+  --coral-strong: #AEDD65;
+  --cream:        #3F4F27;
+  --paper:        #090B07;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #9AD54033;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #AEDD65;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="ruby"] {
+  --coral:        #F26666;
+  --coral-soft:   #0B0707;
+  --coral-deep:   #EF4444;
+  --coral-strong: #F48484;
+  --cream:        #2D1616;
+  --paper:        #0B0707;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #F2666633;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #F48484;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="tangerine"] {
+  --coral:        #FA8C40;
+  --coral-soft:   #0B0907;
+  --coral-deep:   #F97316;
+  --coral-strong: #FBA365;
+  --cream:        #422E21;
+  --paper:        #0B0907;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #FA8C4033;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #FBA365;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="lagoon"] {
+  --coral:        #33C3DC;
+  --coral-soft:   #070A0B;
+  --coral-deep:   #06B6D4;
+  --coral-strong: #5BCFE3;
+  --cream:        #234146;
+  --paper:        #070A0B;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #33C3DC33;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #5BCFE3;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="lilac"] {
+  --coral:        #B874F8;
+  --coral-soft:   #09070B;
+  --coral-deep:   #A855F7;
+  --coral-strong: #C68FFA;
+  --cream:        #1D1327;
+  --paper:        #09070B;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #B874F833;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #C68FFA;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="moss"] {
+  --coral:        #81B439;
+  --coral-soft:   #090B07;
+  --coral-deep:   #65A30D;
+  --coral-strong: #99C25F;
+  --cream:        #252F17;
+  --paper:        #090B07;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #81B43933;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #99C25F;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="cocoa"] {
+  --coral:        #A66239;
+  --coral-soft:   #0B0807;
+  --coral-deep:   #92400E;
+  --coral-strong: #B78160;
+  --cream:        #110C08;
+  --paper:        #0B0807;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #A6623933;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #B78160;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="ice"] {
+  --coral:        #34A5C0;
+  --coral-soft:   #070A0B;
+  --coral-deep:   #0891B2;
+  --coral-strong: #5CB6CC;
+  --cream:        #122024;
+  --paper:        #070A0B;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #34A5C033;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #5CB6CC;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="grape"] {
+  --coral:        #954AD7;
+  --coral-soft:   #09070B;
+  --coral-deep:   #7E22CE;
+  --coral-strong: #AA6DDF;
+  --cream:        #0D0811;
+  --paper:        #09070B;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #954AD733;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #AA6DDF;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+[data-appearance="dark"][data-theme="apricot"] {
+  --coral:        #FCA65F;
+  --coral-soft:   #0B0907;
+  --coral-deep:   #FB923C;
+  --coral-strong: #FCB77E;
+  --cream:        #533C29;
+  --paper:        #0B0907;
+  --card:         #1C1C1E;
+  --ink:          #F2F2F0;
+  --ink-2:        #A0A0A5;
+  --rule:         #FCA65F33;
+  --rule-soft:    rgba(255, 255, 255, 0.10);
+  --focus:        #FCB77E;
+  --shadow-card:  0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lift:  0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}

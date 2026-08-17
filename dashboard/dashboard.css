@@ -569,7 +569,7 @@ input, textarea { font: inherit; color: inherit; }
   gap: 4px;
   padding: 1px 10px;
   border-radius: var(--r-pill);
-  background: rgba(240, 145, 144, 0.14);
+  background: color-mix(in srgb, var(--coral) 14%, transparent);
   color: var(--coral-strong);
   font-weight: 700;
   font-size: var(--text-sm);
@@ -816,8 +816,8 @@ dialog.modal[open] { animation: modal-in var(--dur-short) var(--ease-out); }
 }
 .dayline__label { font-variant-numeric: tabular-nums; }
 .dayline__nav {
-    border: 1px solid rgba(0, 0, 0, .12);
-    background: #fff;
+    border: 1px solid var(--rule-soft);
+    background: var(--card);
     border-radius: 999px;
     width: 26px;
     height: 26px;
@@ -829,7 +829,7 @@ dialog.modal[open] { animation: modal-in var(--dur-short) var(--ease-out); }
     align-items: center;
     justify-content: center;
 }
-.dayline__nav:hover:not(:disabled) { background: rgba(0, 0, 0, .04); }
+.dayline__nav:hover:not(:disabled) { background: color-mix(in srgb, var(--ink) 6%, transparent); }
 /* Disabled rather than hidden: a control that vanishes at the edge of
    its range makes the row jump and leaves you unsure it was ever there. */
 .dayline__nav:disabled { opacity: .35; cursor: default; }
@@ -871,7 +871,7 @@ dialog.modal[open] { animation: modal-in var(--dur-short) var(--ease-out); }
     border-radius: 12px;
     cursor: pointer;
 }
-.copy-row:hover { background: rgba(0, 0, 0, .04); }
+.copy-row:hover { background: color-mix(in srgb, var(--ink) 6%, transparent); }
 .modal__sub { margin: -6px 0 14px; color: rgba(0, 0, 0, .6); font-size: .92rem; }
 
 /* Quick-add is now input + period + button; keep it on one line where
@@ -890,7 +890,7 @@ dialog.modal[open] { animation: modal-in var(--dur-short) var(--ease-out); }
     color: rgba(0, 0, 0, .5);
     padding: 8px 14px; border-radius: 999px;
 }
-.viewtab:hover { background: rgba(0, 0, 0, .04); }
+.viewtab:hover { background: color-mix(in srgb, var(--ink) 6%, transparent); }
 .viewtab[aria-selected="true"] { background: rgba(0, 0, 0, .06); color: inherit; }
 
 /* ── Calendar ──────────────────────────────────────────
@@ -934,10 +934,10 @@ dialog.modal[open] { animation: modal-in var(--dur-short) var(--ease-out); }
 /* Four steps of the brand coral. The count itself is not printed — at
    this size a second number is noise, and the fill already answers "how
    much". The exact figure stays in the aria-label and in Statistics. */
-.cal__day.is-l1 { background: rgba(240, 145, 144, .22); color: rgba(0, 0, 0, .7); }
-.cal__day.is-l2 { background: rgba(240, 145, 144, .42); color: rgba(0, 0, 0, .78); }
-.cal__day.is-l3 { background: rgba(240, 145, 144, .66); color: #fff; }
-.cal__day.is-l4 { background: rgba(240, 145, 144, .92); color: #fff; }
+.cal__day.is-l1 { background: color-mix(in srgb, var(--coral) 22%, transparent); color: var(--ink); }
+.cal__day.is-l2 { background: color-mix(in srgb, var(--coral) 42%, transparent); color: var(--ink); }
+.cal__day.is-l3 { background: color-mix(in srgb, var(--coral-deep) 78%, transparent); color: #fff; }
+.cal__day.is-l4 { background: var(--coral-deep); color: #fff; }
 /* Today gets the brand ring, not a black one — the previous inset black
    shadow read as an error state on a warm page. */
 .cal__day.is-today { border-color: var(--color-primary, #F09190); font-weight: 700; }
@@ -1000,8 +1000,9 @@ dialog.modal[open] { animation: modal-in var(--dur-short) var(--ease-out); }
    they read as unfinished next to everything around them. */
 #report-range, #quick-add-period, #task-period {
     appearance: none;
-    border: 1px solid rgba(0, 0, 0, .10);
-    background: #fff;
+    border: 1px solid var(--rule-soft);
+    background: var(--card);
+    color: var(--ink);
     border-radius: 999px;
     padding: 8px 30px 8px 14px;
     font: inherit;
@@ -1032,4 +1033,366 @@ dialog.modal[open] { animation: modal-in var(--dur-short) var(--ease-out); }
     .cal-wrap { gap: 24px; }
     .quick-add { gap: 8px; }
     .quick-add input { flex: 1 1 100%; }
+}
+
+/* ── Setup view ────────────────────────────────────────
+   Rows in the management lists. Same visual weight as .reward-row so
+   the Setup tab reads as part of the dashboard rather than an admin
+   panel bolted on, but with the reorder/edit controls a list you can
+   rearrange needs. */
+
+.manage-row {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-sm);
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--rule-soft);
+}
+
+.manage-row:last-child { border-bottom: 0; }
+
+.manage-row__dot {
+    flex: 0 0 auto;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.manage-row__body { flex: 1 1 auto; min-width: 0; }
+
+.manage-row__title {
+    font-weight: 600;
+    color: var(--ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.manage-row__meta {
+    font-size: var(--text-sm);
+    color: var(--ink-2);
+    margin-top: 2px;
+}
+
+/* Reorder arrows. Deliberately NOT .ring-btn: that class is the task
+   completion circle and sets `color: transparent` so only its
+   checkmark SVG shows. Reusing it rendered these as two empty circles
+   with invisible arrows. 32px is the smallest hit area that stays
+   comfortable on a trackpad without the pair merging visually. */
+.reorder-btn {
+    width: 32px;
+    height: 32px;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px solid var(--rule-soft);
+    background: transparent;
+    color: var(--ink-2);
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+@media (hover: hover) {
+    .reorder-btn:hover:not([disabled]) {
+        border-color: var(--coral);
+        color: var(--coral);
+    }
+}
+
+.reorder-btn[disabled] {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* Step rows are denser than the Setup lists: they sit inside a modal
+   that already has a form above them, so they borrow .manage-row's
+   layout but drop its padding and rules. */
+.manage-row--step {
+    padding: 6px 0;
+    border-bottom: 0;
+    gap: 8px;
+}
+
+.manage-row--step input[type="checkbox"] {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--coral);
+}
+
+/* The step name is an input rather than text so renaming is one click
+   instead of opening a nested editor. Styled flat so a row of them
+   reads as a list, not a stack of form fields. */
+.step-title {
+    width: 100%;
+    border: 1px solid transparent;
+    background: transparent;
+    padding: 6px 8px;
+    border-radius: 8px;
+    font: inherit;
+    color: var(--ink);
+}
+
+.step-title:hover { border-color: var(--rule-soft); }
+.step-title:focus-visible { border-color: var(--coral); background: var(--card); outline: none; }
+
+.quick-add--steps { margin-top: 10px; }
+
+/* Checkbox group inside a modal field. Inline-wrapped rather than
+   stacked: three short labels stacked vertically read as three
+   separate decisions when they are really one row of preferences. */
+.toggle-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-sm) var(--sp-md);
+}
+
+.toggle-row label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    color: var(--ink);
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.toggle-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--coral);
+}
+
+/* Weekday pickers plus the three shortcut buttons, wrapped on one row.
+   The shortcuts matter more than they look: "Daily" and "Weekdays"
+   cover almost every real routine, and without them setting a school
+   week means seven separate clicks. */
+.recurrence {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+}
+
+.recurrence label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 500;
+    color: var(--ink);
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.recurrence input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--coral);
+}
+
+.recurrence .btn-ghost { padding: 4px 10px; font-size: var(--text-sm); }
+
+/* A locked achievement is context, not an action — muted so the
+   unlocked ones carry the eye. */
+.manage-row.is-locked { opacity: 0.55; }
+
+/* ── Do mode ───────────────────────────────────────────
+   One task, centred, nothing else competing. Wider and airier than
+   the editing modals because it is meant to be read across a table
+   rather than filled in. */
+.modal--do { max-width: 460px; text-align: center; }
+
+.do-progress {
+    font-size: var(--text-sm);
+    color: var(--ink-2);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: var(--sp-md);
+}
+
+.do-icon { font-size: 64px; line-height: 1; margin-bottom: var(--sp-sm); }
+
+.do-title {
+    font-family: var(--font-display, inherit);
+    font-size: 1.5rem;
+    color: var(--ink);
+    margin: 0 0 6px;
+}
+
+.do-points { color: var(--coral); font-weight: 600; margin: 0 0 var(--sp-md); }
+
+.do-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto var(--sp-md);
+    max-width: 300px;
+    text-align: left;
+}
+
+.do-steps li {
+    padding: 6px 0 6px 22px;
+    position: relative;
+    color: var(--ink);
+}
+
+.do-steps li::before {
+    content: "○";
+    position: absolute;
+    left: 0;
+    color: var(--ink-2);
+}
+
+.do-steps li.is-done { color: var(--ink-2); text-decoration: line-through; }
+.do-steps li.is-done::before { content: "●"; color: var(--coral); }
+
+.do-done { padding: var(--sp-md) 0; }
+.do-done h3 { font-size: 1.25rem; margin: var(--sp-sm) 0 4px; color: var(--ink); }
+
+/* ── Completion celebration ────────────────────────────
+   Ported from the app's completion moment: points fly to the balance,
+   Lóa reacts, confetti if the profile wants it. All three are
+   pointer-transparent and aria-hidden — decoration that must never
+   intercept a click or reach a screen reader, which already gets the
+   change announced by the task list itself. */
+
+.fly-points,
+.cheer-loa,
+.confetti-layer {
+    position: fixed;
+    pointer-events: none;
+    z-index: 60;
+}
+
+.fly-points {
+    transform: translate(-50%, -50%);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #fff;
+    background: var(--coral-deep);
+    padding: 4px 12px;
+    border-radius: var(--r-pill);
+    box-shadow: var(--shadow-lift);
+    white-space: nowrap;
+    animation: fly-points 700ms var(--ease-out) forwards;
+}
+
+/* The mid-point keyframe is what makes it an arc rather than a slide:
+   most of the horizontal travel happens while the badge is still
+   lifted, so it falls into the pill instead of sliding into it. */
+@keyframes fly-points {
+    0%   { transform: translate(-50%, -50%) scale(0.6); opacity: 0; }
+    15%  { transform: translate(-50%, -50%) scale(1.12); opacity: 1; }
+    55%  {
+        transform: translate(calc(-50% + var(--dx) * 0.55), calc(-50% + var(--dy) * 0.55 - var(--lift))) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.45);
+        opacity: 0;
+    }
+}
+
+.cheer-loa {
+    width: 60px;
+    height: auto;
+    animation: cheer-loa 1300ms var(--ease-out) forwards;
+}
+
+@keyframes cheer-loa {
+    0%   { transform: translateY(10px) scale(0.4); opacity: 0; }
+    22%  { transform: translateY(-6px) scale(1.06); opacity: 1; }
+    38%  { transform: translateY(0) scale(1); }
+    52%  { transform: translateY(-5px) scale(1.02); }
+    68%  { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-4px) scale(0.9); opacity: 0; }
+}
+
+.confetti-layer { inset: 0; overflow: hidden; }
+
+.confetti-layer i {
+    position: absolute;
+    top: -14px;
+    left: var(--x);
+    width: var(--size);
+    height: calc(var(--size) * 0.6);
+    background: var(--tint);
+    border-radius: 1px;
+    opacity: 0;
+    animation: confetti-fall var(--fall) linear var(--delay) forwards;
+}
+
+@keyframes confetti-fall {
+    0%   { opacity: 1; transform: translate(0, 0) rotate(0); }
+    100% { opacity: 0; transform: translate(var(--drift), 78vh) rotate(var(--spin)); }
+}
+
+/* The module already checks prefers-reduced-motion before injecting
+   anything; this is the belt to that braces, covering a preference
+   flipped after the elements were created. */
+@media (prefers-reduced-motion: reduce) {
+    .fly-points, .cheer-loa, .confetti-layer { display: none; }
+}
+
+/* ── Arrival ───────────────────────────────────────────
+   Panels and rows settle in rather than appearing all at once. The
+   stagger is small on purpose — 28ms per item, capped at six — because
+   the goal is a page that feels assembled, not a page that performs.
+   Anything longer and a returning user is waiting on choreography they
+   have already seen. */
+
+@keyframes rise-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
+}
+
+.viewpane:not([hidden]) > *,
+.viewpane:not([hidden]) .columns > * {
+    animation: rise-in 380ms var(--ease-out) both;
+}
+
+.viewpane:not([hidden]) .columns > *:nth-child(2) { animation-delay: 56ms; }
+
+.task-row { animation: rise-in 300ms var(--ease-out) both; }
+.task-row:nth-child(1) { animation-delay: 0ms; }
+.task-row:nth-child(2) { animation-delay: 28ms; }
+.task-row:nth-child(3) { animation-delay: 56ms; }
+.task-row:nth-child(4) { animation-delay: 84ms; }
+.task-row:nth-child(5) { animation-delay: 112ms; }
+.task-row:nth-child(n+6) { animation-delay: 140ms; }
+
+/* Depth on hover, and a real one: the shadow grows downward while the
+   card lifts, so the two agree about where the light is. A transform
+   alone reads as a sticker sliding. */
+@media (hover: hover) {
+    .panel {
+        transition: box-shadow var(--dur-short) var(--ease-out),
+                    transform var(--dur-short) var(--ease-out);
+    }
+    .panel:hover {
+        box-shadow: var(--shadow-lift);
+        transform: translateY(-1px);
+    }
+    .manage-row { transition: background-color var(--dur-micro) var(--ease-out); }
+    .manage-row:hover { background: color-mix(in srgb, var(--coral) 5%, transparent); }
+}
+
+/* Numerals that change — balances, streaks, counts — get tabular
+   figures so a 1 and a 7 occupy the same width. Without it the whole
+   stat row twitches sideways every time a number ticks over. */
+.stat__value,
+.rrow__n,
+.do-progress,
+.manage-row__meta {
+    font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .viewpane:not([hidden]) > *,
+    .viewpane:not([hidden]) .columns > *,
+    .task-row {
+        animation: none;
+    }
+    .panel:hover { transform: none; }
 }
