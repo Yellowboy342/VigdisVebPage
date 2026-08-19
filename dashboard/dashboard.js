@@ -10,10 +10,11 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 import {
     initManagement, loadEntitlement, renderManagement, renderTaskSteps,
     setProfileReloader, setRecurrence, readRecurrence, loadReadOnlyExtras,
-    refreshShares, loadReferralCode, applyProfileTheme,
+    loadReferralCode, applyProfileTheme, openProfileModal, openShareModal,
 } from './manage.js';
 /* The completion moment — points fly, Lóa cheers, confetti. */
 import { celebrateCompletion, clearCelebrations } from './celebrate.js';
+import { trendChart, barChart, rankBars, reliabilityRows } from './charts.js';
 
 const SUPABASE_URL = 'https://vfdjirmowbjdmieeyjkl.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_XxI8jNl0ERoIlLLKdS93_g_cuNyvLy5';
@@ -77,10 +78,53 @@ const isViewingToday = () => viewKey === todayKey();
    UTC. Today keeps a real "now" so ordering within today stays honest. */
 const stampForView = () => (isViewingToday() ? new Date().toISOString() : viewKey + 'T12:00:00Z');
 
+/* Whether a task belongs on `date`. Ported from the app's
+   `TaskListView.matchesSelectedDate` so both clients answer the same
+   question the same way — this used to diverge in three places:
+
+   1. A task appeared on every past day, including days before it
+      existed. Step back a week in the app and a task made yesterday is
+      simply not there; on the web it was, with a 0% completion rate
+      attached to days it could not possibly have been done. That is
+      what `created_at` fixes below, and it is also why the statistics
+      view kept reporting misses that never happened.
+
+   2. `recurrence_days` was always read as weekdays. For a monthly task
+      those numbers are days of the MONTH, so a task set to the 1st was
+      showing every Sunday — the same bug the app fixed by storing an
+      explicit `recurrence_pattern` instead of inferring one.
+
+   3. A due date was ignored, so a one-off with a due date showed on
+      every day rather than on its day. */
 function isScheduledOn(task, date) {
+    /* End of the viewed day, as an exclusive upper bound. A task
+       created at 21:00 still counts as belonging to that whole day. */
+    const endOfDay = new Date(date);
+    endOfDay.setUTCHours(23, 59, 59, 999);
+    const existedYet = !task.created_at || new Date(task.created_at) < endOfDay;
+
+    if (task.due_date) {
+        return dayKey(task.due_date) === dayKey(date);
+    }
+
     const rec = task.recurrence_days;
-    if (Array.isArray(rec) && rec.length > 0) return rec.includes(appWeekday(date));
-    return true; // one-off tasks stay visible until done
+    if (Array.isArray(rec) && rec.length > 0) {
+        /* Rows written before the discriminator existed carry no
+           pattern; the app falls back to inferring weekly for those, so
+           this does too rather than newly changing their behaviour. */
+        switch (task.recurrence_pattern || 'weekly') {
+            case 'daily':
+                return existedYet;
+            case 'monthly':
+                return rec.includes(date.getUTCDate()) && existedYet;
+            case 'weekly':
+            default:
+                return rec.includes(appWeekday(date)) && existedYet;
+        }
+    }
+
+    // Plain one-off: no due date, no recurrence. Stays visible until done.
+    return true;
 }
 
 function safeColor(hex) {
@@ -381,10 +425,11 @@ async function loadProfileData(profileId) {
        view shows; loaded here so they follow the same profile switch
        as everything else. */
     await loadReadOnlyExtras(profileId);
-    /* Who-has-access is per profile, so it reloads on every switch.
-       Not awaited into the render path: an admin-only RPC that a
-       non-admin cannot call should not delay the page for them. */
-    refreshShares();
+    /* Sharing is no longer eagerly loaded. It moved from a panel that
+       always described the active profile into a modal opened from a
+       specific profile row, so the RPC now runs when someone actually
+       asks who has access — one fewer admin-only call on every profile
+       switch, and no ambiguity about which profile it described. */
 
     state.data = {
         ...state.data,
@@ -488,22 +533,94 @@ function shiftDay(delta) {
     renderAll();
 }
 
+/* One row per profile: the chip switches, the ⋯ opens the things you do
+   TO that profile. Sharing used to sit in the Setup view, two clicks and
+   one mental model away from the profile it applied to; a menu hanging
+   off the profile itself needs no explanation about which one it means. */
 function renderProfiles() {
     const host = $('#profile-switcher');
-    host.innerHTML = state.profiles.map((p) => `
-        <button class="profile-chip" type="button" data-profile="${p.id}"
-                aria-pressed="${p.id === state.activeProfileId}">
-            <span class="profile-chip__avatar">
-                ${p.avatar_path
-                    ? `<img data-storage-path="${esc(p.avatar_path)}" alt="" hidden><span>${esc((p.name || '?')[0].toUpperCase())}</span>`
-                    : `<span>${esc((p.name || '?')[0].toUpperCase())}</span>`}
-            </span>
-            ${esc(p.name || 'Profile')}
-        </button>`).join('');
+    const userId = state.session?.user?.id;
+
+    host.innerHTML = state.profiles.map((p) => {
+        const owned = p.owner_user_id === userId;
+        const initial = esc((p.name || '?').trim().charAt(0).toUpperCase() || '?');
+        const active = p.id === state.activeProfileId;
+        return `
+        <div class="profile-row${active ? ' is-active' : ''}" data-row="${esc(p.id)}">
+            <button class="profile-chip" type="button" data-profile="${esc(p.id)}"
+                    aria-pressed="${active}">
+                <span class="profile-chip__avatar">
+                    ${p.avatar_path
+                        ? `<img data-storage-path="${esc(p.avatar_path)}" alt="" hidden><span>${initial}</span>`
+                        : `<span>${initial}</span>`}
+                </span>
+                <span class="profile-chip__name">${esc(p.name || 'Profile')}</span>
+            </button>
+            <button class="profile-more" type="button" data-more="${esc(p.id)}"
+                    aria-haspopup="menu" aria-expanded="false"
+                    aria-label="Options for ${esc(p.name || 'profile')}">
+                <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor" aria-hidden="true">
+                    <circle cx="10" cy="4.6" r="1.5"/><circle cx="10" cy="10" r="1.5"/><circle cx="10" cy="15.4" r="1.5"/>
+                </svg>
+            </button>
+            <div class="profile-menu" role="menu" hidden>
+                <button class="profile-menu__item" type="button" role="menuitem" data-menu-edit="${esc(p.id)}">
+                    Edit profile…
+                </button>
+                ${owned
+                    ? `<button class="profile-menu__item" type="button" role="menuitem" data-menu-share="${esc(p.id)}">
+                           Who has access…
+                       </button>`
+                    : '<p class="profile-menu__note">Shared with you</p>'}
+            </div>
+        </div>`;
+    }).join('');
+
+    const closeMenus = closeProfileMenus;
+    const byId = (id) => state.profiles.find((p) => p.id === id);
+
     host.querySelectorAll('[data-profile]').forEach((btn) => {
-        btn.addEventListener('click', () => selectProfile(btn.dataset.profile));
+        btn.addEventListener('click', () => {
+            closeMenus();
+            selectProfile(btn.dataset.profile);
+            // Same reason as the nav items: the choice is made, get out of the way.
+            $('#rail')?.classList.remove('is-open');
+            $('#btn-rail')?.setAttribute('aria-expanded', 'false');
+        });
     });
+
+    host.querySelectorAll('[data-more]').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const row = btn.closest('.profile-row');
+            const menu = row.querySelector('.profile-menu');
+            const opening = menu.hidden;
+            closeMenus(row);
+            menu.hidden = !opening;
+            row.classList.toggle('is-menu-open', opening);
+            btn.setAttribute('aria-expanded', String(opening));
+            if (opening) menu.querySelector('.profile-menu__item')?.focus();
+        });
+    });
+
+    host.querySelectorAll('[data-menu-edit]').forEach((b) =>
+        b.addEventListener('click', () => { closeMenus(); openProfileModal(byId(b.dataset.menuEdit)); }));
+    host.querySelectorAll('[data-menu-share]').forEach((b) =>
+        b.addEventListener('click', () => { closeMenus(); openShareModal(byId(b.dataset.menuShare)); }));
+
     hydrateImages(host);
+}
+
+/* Bound once in bindAppUI rather than per render — the rows are replaced
+   on every profile switch, but the document is not. */
+function closeProfileMenus(except) {
+    document.querySelectorAll('#profile-switcher .profile-row').forEach((row) => {
+        if (row === except) return;
+        row.classList.remove('is-menu-open');
+        const menu = row.querySelector('.profile-menu');
+        if (menu) menu.hidden = true;
+        row.querySelector('.profile-more')?.setAttribute('aria-expanded', 'false');
+    });
 }
 
 function renderStats() {
@@ -523,30 +640,39 @@ function renderStats() {
     const max = Math.max(1, ...days.map((d) => d.n));
     const weekTotal = days.reduce((s, d) => s + d.n, 0);
 
+    const pct = scheduled.length ? Math.round((doneToday / scheduled.length) * 100) : 0;
+
     $('#stats').innerHTML = `
         <div class="stat" id="stat-balance">
-            <div class="stat__label">Points</div>
-            <div class="stat__value">⭐ ${balance}</div>
+            <div class="stat__label"><span class="stat__icon" aria-hidden="true">⭐</span>Points</div>
+            <div class="stat__value">${balance}</div>
             <div class="stat__meta">available to spend</div>
         </div>
         <div class="stat">
-            <div class="stat__label">Streak</div>
-            <div class="stat__value">🔥 ${streak}</div>
+            <div class="stat__label"><span class="stat__icon" aria-hidden="true">🔥</span>Streak</div>
+            <div class="stat__value">${streak}</div>
             <div class="stat__meta">${streak === 1 ? 'day' : 'days'} in a row</div>
         </div>
         <div class="stat">
-            <div class="stat__label">Today</div>
-            <div class="stat__value">${doneToday}<span style="color:var(--ink-2)">/${scheduled.length}</span></div>
+            <div class="stat__label"><span class="stat__icon" aria-hidden="true">✅</span>${isViewingToday() ? 'Today' : 'That day'}</div>
+            <div class="stat__value">${doneToday}<span class="stat__of">/${scheduled.length}</span></div>
+            <div class="stat__bar" role="img" aria-label="${pct}% of tasks done">
+                <span style="width:${pct}%"></span>
+            </div>
             <div class="stat__meta">tasks done</div>
         </div>
         <div class="stat stat--chart">
-            <div class="stat__label">Last 7 days</div>
+            <div class="stat__label">
+                <span class="stat__icon" aria-hidden="true">📈</span>Last 7 days
+                <span class="stat__tag">${weekTotal} done</span>
+            </div>
             <div class="chart-week" role="img" aria-label="${weekTotal} completions in the last 7 days">
                 ${days.map((d) => `
                     <div class="chart-week__col">
-                        <div class="chart-week__bar ${d.n === 0 ? 'is-empty' : ''}"
-                             style="height:${Math.max(4, Math.round((d.n / max) * 44))}px"
-                             title="${d.n} on ${d.label}"></div>
+                        <div class="chart-week__track" title="${d.n} on ${d.label}">
+                            <div class="chart-week__bar ${d.n === 0 ? 'is-empty' : ''}"
+                                 style="height:${d.n === 0 ? 3 : Math.max(8, Math.round((d.n / max) * 100))}%"></div>
+                        </div>
                         <span class="chart-week__day">${d.label}</span>
                     </div>`).join('')}
             </div>
@@ -1063,14 +1189,16 @@ async function selectProfile(profileId, { skeleton = true } = {}) {
     subscribeRealtime(profileId);
 }
 
-async function enterApp() {
-    showView('view-app');
-    $('#user-email').textContent = state.session?.user?.email || '';
+/* Hand the setup module its dependencies once, on the way in. It needs
+   the client and the shared state, and `refresh` so a write re-reads and
+   re-renders through the same path the rest of the page uses rather than
+   keeping its own copy of the data.
 
-    /* Hand the setup module its dependencies once, on the way in. It
-       needs the client and the shared state, and `refresh` so a write
-       re-reads and re-renders through the same path the rest of the
-       page uses rather than keeping its own copy of the data. */
+   Demo mode calls this too. It used not to, which meant manage.js ran
+   with an undefined `$` and the very first call in renderAll threw —
+   taking the greeting, the stats and the task list with it. A preview
+   that renders an empty shell is worse than no preview. */
+function wireManagement() {
     initManagement({
         sb,
         state,
@@ -1082,6 +1210,7 @@ async function enterApp() {
            either way. */
         toggleTask,
         refresh: async () => {
+            if (DEMO) { renderAll(); return; }
             if (state.activeProfileId) await loadProfileData(state.activeProfileId);
             renderAll();
         },
@@ -1101,6 +1230,12 @@ async function enterApp() {
         if (state.activeProfileId) await loadProfileData(state.activeProfileId);
         renderAll();
     });
+}
+
+async function enterApp() {
+    showView('view-app');
+    $('#user-email').textContent = state.session?.user?.email || '';
+    wireManagement();
 
     state.profiles = await loadProfiles();
     /* Entitlement drives whether the Setup view will let this account
@@ -1344,10 +1479,71 @@ function renderCalendar() {
    when in the day does it fall apart. Per-task reliability is the one
    most worth having — it turns "they're struggling" into "getting
    dressed works four days in five, teeth are the problem". */
+/* ── Statistics ────────────────────────────────────────
+ *
+ * This screen used to be three grey boxes, a stretched area chart and
+ * two identical bar charts, in one flat panel. It reported numbers
+ * without ever answering the question a parent brings to it: is this
+ * working, and if not, where is it failing?
+ *
+ * So it is built around four answers now — how much, how consistently,
+ * what changed since last time, and what stands out — each in its own
+ * card, with the raw per-task ranking kept at the bottom for the
+ * review-and-evidence case (an IEP meeting, a specialist appointment)
+ * that the CSV export also serves.
+ *
+ * Every number is derived from data already loaded, so changing the
+ * range costs no request.
+ */
+
+/* The range chips replace a native <select>. It is three options that
+   never grow; a dropdown to choose between three things is a click and
+   a menu where two clicks-worth of buttons fit on one line. */
+let reportRange = 30;
+
+function completionsBetween(fromKey, toKey) {
+    let n = 0;
+    let points = 0;
+    for (const t of state.data.tasks) {
+        for (const ts of t.completion_history || []) {
+            const k = dayKey(ts);
+            if (k < fromKey || k > toKey) continue;
+            n += 1;
+            points += pointsAwarded(t, ts);
+        }
+    }
+    return { n, points };
+}
+
+/** Rolling mean over `win` days, aligned to the right so each point is
+ *  "the average of the week ending here". The first few points average
+ *  fewer days rather than being dropped — a chart that starts a week
+ *  late looks like missing data. */
+function rollingMean(values, win = 7) {
+    return values.map((_, i) => {
+        const from = Math.max(0, i - win + 1);
+        const slice = values.slice(from, i + 1);
+        return slice.reduce((a, b) => a + b, 0) / slice.length;
+    });
+}
+
+/** A change against the previous window of the same length. Returns
+ *  null when there is no previous window to compare with, which is not
+ *  the same as "no change" and must not be drawn as 0%. */
+function deltaBadge(current, previous) {
+    if (previous == null) return '';
+    if (previous === 0 && current === 0) return '';
+    if (previous === 0) return '<span class="delta is-up">new</span>';
+    const pct = Math.round(((current - previous) / previous) * 100);
+    if (pct === 0) return '<span class="delta is-flat">level</span>';
+    const up = pct > 0;
+    return `<span class="delta ${up ? 'is-up' : 'is-down'}">${up ? '↑' : '↓'} ${Math.abs(pct)}%</span>`;
+}
+
 function renderReport() {
     const host = $('#report-body');
     if (!host) return;
-    const days = parseInt($('#report-range')?.value || '30', 10);
+    const days = reportRange;
 
     const since = new Date();
     since.setUTCDate(since.getUTCDate() - (days - 1));
@@ -1363,6 +1559,19 @@ function renderReport() {
     const firstEver = allDates.length ? allDates.reduce((a, b) => (a < b ? a : b)) : null;
     if (firstEver && firstEver > sinceKey) sinceKey = firstEver;
     const spanDays = Math.max(1, Math.round((Date.parse(todayKey()) - Date.parse(sinceKey)) / 86400000) + 1);
+
+    if (!allDates.length) {
+        host.innerHTML = `
+            <section class="panel">
+                <div class="empty">
+                    <img src="../assets/mascot/loa-sleeping.svg" alt="">
+                    <strong>Nothing to report yet</strong>
+                    <p>Tick a few tasks off and this fills with what is working
+                       and what is slipping.</p>
+                </div>
+            </section>`;
+        return;
+    }
 
     const inRange = (ts) => dayKey(ts) >= sinceKey && dayKey(ts) <= todayKey();
     const periods = new Map(state.data.timePeriods.map((p) => [p.id, p.name]));
@@ -1388,9 +1597,6 @@ function renderReport() {
     }
 
     const ranked = perTask.filter((t) => t.due > 0).sort((a, b) => b.rate - a.rate || b.done - a.done);
-    const bar = (rate) => `<span class="rbar"><span style="width:${Math.round(rate * 100)}%"></span></span>`;
-    const row = (t) => `<li><span class="rrow__t">${esc(t.title)}</span>${bar(t.rate)}
-        <span class="rrow__n">${Math.round(t.rate * 100)}%<small> ${t.done}/${t.due}</small></span></li>`;
 
     /* With a short list, a "best five" and a "worst five" are the same
        five tasks printed twice, which reads as a rendering fault. Below
@@ -1398,39 +1604,207 @@ function renderReport() {
        overlap. */
     let taskSections;
     if (ranked.length === 0) {
-        taskSections = `<h3 class="rhead">Every task</h3><ul class="rlist"><li class="rempty">Nothing recorded yet.</li></ul>`;
+        taskSections = reliabilityRows([]);
     } else if (ranked.length < 10) {
         taskSections = `<h3 class="rhead">Every task · most to least reliable</h3>
-            <ul class="rlist">${ranked.map(row).join('')}</ul>`;
+            ${reliabilityRows(ranked)}`;
     } else {
         taskSections = `<h3 class="rhead">Most reliable</h3>
-            <ul class="rlist">${ranked.slice(0, 5).map(row).join('')}</ul>
+            ${reliabilityRows(ranked.slice(0, 5))}
             <h3 class="rhead">Needs the most support</h3>
-            <ul class="rlist">${ranked.slice(-5).reverse().map(row).join('')}</ul>`;
+            ${reliabilityRows(ranked.slice(-5).reverse())}`;
     }
 
     const periodRows = [...byPeriod.entries()].filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1]);
-    const periodMax = Math.max(1, ...periodRows.map((r) => r[1]));
+
+    /* Per-day series for the trend chart. Built across the whole span
+       including empty days — skipping them would compress gaps and draw
+       a rising line through a week nothing happened. */
+    const dayCounts = new Map();
+    for (const t of state.data.tasks) {
+        for (const ts of (t.completion_history || [])) {
+            if (!inRange(ts)) continue;
+            const k = dayKey(ts);
+            dayCounts.set(k, (dayCounts.get(k) || 0) + 1);
+        }
+    }
+    const series = [];
+    for (let i = 0; i < spanDays; i += 1) {
+        const d = new Date(Date.parse(sinceKey) + i * 86400000);
+        const k = dayKey(d);
+        series.push({
+            label: d.toLocaleDateString(undefined, { day: 'numeric', month: 'short' }),
+            value: dayCounts.get(k) || 0,
+        });
+    }
+    const average = spanDays >= 10 ? rollingMean(series.map((d) => d.value), 7) : null;
+
+    /* Weekday pattern. Sunday-first to match the app's `appWeekday`,
+       relabelled Mon-first for reading because a week starting Monday
+       is what a school routine actually looks like. */
+    const WD_ORDER = [2, 3, 4, 5, 6, 7, 1];
+    const WD_LABEL = { 1: 'Sun', 2: 'Mon', 3: 'Tue', 4: 'Wed', 5: 'Thu', 6: 'Fri', 7: 'Sat' };
+    const WD_FULL = { 1: 'Sundays', 2: 'Mondays', 3: 'Tuesdays', 4: 'Wednesdays', 5: 'Thursdays', 6: 'Fridays', 7: 'Saturdays' };
+    const byWeekday = new Map(WD_ORDER.map((w) => [w, 0]));
+    for (const [k, n] of dayCounts) {
+        const w = new Date(k + 'T12:00:00Z').getUTCDay() + 1;
+        byWeekday.set(w, (byWeekday.get(w) || 0) + n);
+    }
+    const weekdayRows = WD_ORDER.map((w) => ({ key: w, label: WD_LABEL[w], value: byWeekday.get(w) || 0 }));
+
+    const perDay = total && activeDays.size ? (total / activeDays.size).toFixed(1) : '0';
+    const consistency = Math.round((activeDays.size / spanDays) * 100);
+    const pointsEarned = completionsBetween(sinceKey, todayKey()).points
+        + state.data.bonus.reduce((s, b) => {
+            const k = dayKey(b.date);
+            return k >= sinceKey && k <= todayKey() && (b.amount || 0) > 0 ? s + b.amount : s;
+        }, 0);
+
+    /* The previous window of the same length, for the deltas. Only
+       offered when the profile actually has history that far back —
+       comparing against days before the profile existed would report a
+       collapse every time someone opens a longer range. */
+    const prevEnd = dayKey(new Date(Date.parse(sinceKey) - 86400000));
+    const prevStart = dayKey(new Date(Date.parse(sinceKey) - spanDays * 86400000));
+    const hasPrev = firstEver != null && firstEver <= prevEnd;
+    const prev = hasPrev ? completionsBetween(prevStart, prevEnd) : null;
+    let prevActive = null;
+    if (hasPrev) {
+        const set = new Set();
+        for (const t of state.data.tasks) {
+            for (const ts of t.completion_history || []) {
+                const k = dayKey(ts);
+                if (k >= prevStart && k <= prevEnd) set.add(k);
+            }
+        }
+        prevActive = Math.round((set.size / spanDays) * 100);
+    }
 
     // Say the window out loud when it was clamped, so 7 of 7 is not read
     // as 7 of 30.
     const windowNote = firstEver && spanDays < days
-        ? `<p class="rnote">Showing ${spanDays} days — that is all the history this profile has.</p>` : '';
+        ? `Showing ${spanDays} days — that is all the history this profile has.`
+        : `${fmtDate(new Date(sinceKey + 'T12:00:00Z'), { day: 'numeric', month: 'short' })} – ${fmtDate(new Date(), { day: 'numeric', month: 'short' })}`;
+
+    /* ── What stands out ──
+       Two or three plain sentences, each one a thing you could act on.
+       Suppressed below a week of data, where every "pattern" is noise. */
+    const insights = [];
+    if (total >= 5) {
+        const bestDay = [...weekdayRows].sort((a, b) => b.value - a.value)[0];
+        const worstDay = [...weekdayRows].sort((a, b) => a.value - b.value)[0];
+        if (bestDay.value > 0 && bestDay.value > worstDay.value) {
+            insights.push({
+                icon: '📅',
+                text: `${WD_FULL[bestDay.key]} carry this routine — ${bestDay.value} done. `
+                    + `${WD_FULL[worstDay.key]} are the thinnest, at ${worstDay.value}.`,
+            });
+        }
+        if (periodRows.length > 1) {
+            insights.push({
+                icon: '⏰',
+                text: `${periodRows[0][0]} is where most gets done (${Math.round((periodRows[0][1] / total) * 100)}% of everything ticked off).`,
+            });
+        }
+        const struggling = ranked.filter((t) => t.due >= 3).slice(-1)[0];
+        if (struggling && struggling.rate < 0.5) {
+            insights.push({
+                icon: '🎯',
+                text: `“${struggling.title}” is landing ${Math.round(struggling.rate * 100)}% of the time — `
+                    + 'the one to make easier, move, or drop.',
+            });
+        }
+        if (prev && prev.n > 0) {
+            const diff = total - prev.n;
+            insights.push({
+                icon: diff >= 0 ? '📈' : '📉',
+                text: diff === 0
+                    ? `Exactly the same as the ${spanDays} days before this one.`
+                    : `${Math.abs(diff)} ${diff > 0 ? 'more' : 'fewer'} than the previous ${spanDays} days.`,
+            });
+        }
+    }
 
     host.innerHTML = `
-        <div class="rgrid">
-            <div class="rstat"><b>${total}</b><span>steps completed</span></div>
-            <div class="rstat"><b>${activeDays.size} of ${spanDays}</b><span>days active</span></div>
-            <div class="rstat"><b>${total && activeDays.size ? (total / activeDays.size).toFixed(1) : '0'}</b><span>per active day</span></div>
+        <div class="report-kpis">
+            <div class="stat">
+                <div class="stat__label"><span class="stat__icon" aria-hidden="true">✅</span>Completed</div>
+                <div class="stat__value">${total}${deltaBadge(total, prev?.n ?? null)}</div>
+                <div class="stat__meta">tasks ticked off</div>
+            </div>
+            <div class="stat">
+                <div class="stat__label"><span class="stat__icon" aria-hidden="true">🎯</span>Consistency</div>
+                <div class="stat__value">${consistency}<span class="stat__of">%</span>${deltaBadge(consistency, prevActive)}</div>
+                <div class="stat__bar"><span style="width:${consistency}%"></span></div>
+                <div class="stat__meta">${activeDays.size} of ${spanDays} days had something done</div>
+            </div>
+            <div class="stat">
+                <div class="stat__label"><span class="stat__icon" aria-hidden="true">📊</span>Per active day</div>
+                <div class="stat__value">${perDay}</div>
+                <div class="stat__meta">on the days it happened</div>
+            </div>
+            <div class="stat">
+                <div class="stat__label"><span class="stat__icon" aria-hidden="true">⭐</span>Points earned</div>
+                <div class="stat__value">${pointsEarned}</div>
+                <div class="stat__meta">in this range</div>
+            </div>
         </div>
-        ${windowNote}
-        ${taskSections}
-        <h3 class="rhead">By time of day</h3>
-        <ul class="rlist">${periodRows.map(([name, n]) => `<li><span class="rrow__t">${esc(name)}</span>
-            ${bar(n / periodMax)}<span class="rrow__n">${n}</span></li>`).join('') || '<li class="rempty">Nothing recorded yet.</li>'}</ul>`;
+
+        <p class="report-window">${esc(windowNote)}</p>
+
+        ${insights.length ? `
+        <section class="panel panel--insights" aria-labelledby="insight-title">
+            <div class="panel__head"><h2 class="panel__title" id="insight-title">What stands out</h2></div>
+            <ul class="insights">
+                ${insights.map((i) => `
+                <li class="insight">
+                    <span class="insight__icon" aria-hidden="true">${i.icon}</span>
+                    <span>${esc(i.text)}</span>
+                </li>`).join('')}
+            </ul>
+        </section>` : ''}
+
+        <section class="panel" aria-labelledby="trend-title">
+            <div class="panel__head">
+                <h2 class="panel__title" id="trend-title">Tasks completed each day</h2>
+            </div>
+            ${trendChart(series, { label: '', average })}
+        </section>
+
+        <div class="setup-grid">
+            <section class="panel" aria-labelledby="weekday-title">
+                <div class="panel__head">
+                    <h2 class="panel__title" id="weekday-title">Which days work</h2>
+                </div>
+                ${barChart(weekdayRows, { label: '' })}
+            </section>
+
+            <section class="panel" aria-labelledby="period-title">
+                <div class="panel__head">
+                    <h2 class="panel__title" id="period-title">By time of day</h2>
+                </div>
+                ${rankBars(periodRows.map(([name, n]) => ({ label: name, value: n })), { label: '' })}
+            </section>
+        </div>
+
+        <section class="panel" aria-labelledby="reliability-title">
+            <div class="panel__head">
+                <h2 class="panel__title" id="reliability-title">Task by task</h2>
+                <button class="btn-ghost" id="btn-export-stats" type="button">Export CSV</button>
+            </div>
+            <p class="rnote">How often each task was done on the days it was actually due.</p>
+            ${taskSections}
+        </section>`;
+
+    $('#btn-export-stats')?.addEventListener('click', exportCSV);
 }
 
 function setView(name, pushHash = true) {
+    /* The pane is not the only thing that changes with the view: the
+       Today summary strip sits outside every pane and has no business
+       being on Statistics, which opens with a better summary of its
+       own. One attribute on <body> lets CSS handle that. */
+    document.body.dataset.view = name;
     document.querySelectorAll('.viewtab').forEach((t) =>
         t.setAttribute('aria-selected', String(t.dataset.view === name)));
     document.querySelectorAll('.viewpane').forEach((p) => { p.hidden = p.dataset.pane !== name; });
@@ -1445,8 +1819,35 @@ function setView(name, pushHash = true) {
 }
 
 function bindAppUI() {
+    /* Rail drawer, narrow windows only. Closing on navigation matters
+       more than opening does: a drawer that stays over the content
+       after you have chosen where to go is the most common way this
+       pattern goes wrong. */
+    const rail = $('#rail');
+    const railToggle = $('#btn-rail');
+    const setRail = (open) => {
+        rail?.classList.toggle('is-open', open);
+        railToggle?.setAttribute('aria-expanded', String(open));
+    };
+    railToggle?.addEventListener('click', () =>
+        setRail(!rail?.classList.contains('is-open')));
+    /* Escape and outside-click, because a drawer with only one way out
+       is a trap on a touch screen. The profile ⋯ menus close on the same
+       two gestures, for the same reason. */
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        setRail(false);
+        closeProfileMenus();
+    });
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest?.('.profile-row')) closeProfileMenus();
+        if (!rail?.classList.contains('is-open')) return;
+        if (rail.contains(e.target) || railToggle?.contains(e.target)) return;
+        setRail(false);
+    });
+
     document.querySelectorAll('.viewtab').forEach((t) =>
-        t.addEventListener('click', () => setView(t.dataset.view)));
+        t.addEventListener('click', () => { setView(t.dataset.view); setRail(false); }));
     const initial = location.hash.replace('#', '');
     if (initial === 'calendar') setView('calendar', false);
     if (initial === 'statistics') setView('stats', false);
@@ -1457,7 +1858,14 @@ function bindAppUI() {
     $('#cal-next')?.addEventListener('click', () => {
         calMonth.setUTCMonth(calMonth.getUTCMonth() + 1); renderCalendar();
     });
-    $('#report-range')?.addEventListener('change', renderReport);
+    document.querySelectorAll('[data-range]').forEach((chip) => {
+        chip.addEventListener('click', () => {
+            reportRange = Number(chip.dataset.range);
+            document.querySelectorAll('[data-range]').forEach((c) =>
+                c.setAttribute('aria-pressed', String(c === chip)));
+            renderReport();
+        });
+    });
 
     $('#btn-task-copy')?.addEventListener('click', openCopyModal);
     $('#btn-copy-cancel')?.addEventListener('click', () => $('#modal-copy').close());
@@ -1534,12 +1942,38 @@ function demoData(profileId) {
         tp('tp-3', 'Evening', '#8B5CF6', 19, 21, 2),
     ];
     const everyDay = [1, 2, 3, 4, 5, 6, 7];
+
+    /* Eight weeks of history, not one.
+     *
+     * The demo used to carry seven days, which meant the statistics
+     * screen — the whole point of which is "is this getting better" —
+     * opened on a seven-point line with no rolling average, no
+     * period-on-period change, and a clamp note explaining why. Long
+     * enough to show a trend now, and deterministic, so the preview
+     * looks the same for everyone who opens it. */
+    const SPAN = 56;
+    const weekdayOf = (n) => {
+        const d = new Date();
+        d.setUTCDate(d.getUTCDate() - n);
+        return d.getUTCDay(); // 0 = Sunday
+    };
+    const history = (hour, keep) => {
+        const out = [];
+        for (let n = SPAN; n >= 0; n -= 1) if (keep(n, weekdayOf(n))) out.push(daysAgo(n, hour));
+        return out;
+    };
+    const isWeekend = (w) => w === 0 || w === 6;
+
     const tasks = [
-        { id: 't-1', profile_id: profileId, title: 'Brush teeth', icon: '🪥', points: 10, time_period_id: 'tp-1', recurrence_days: everyDay, sort_order: 0, completion_history: [0, 1, 2, 3, 4, 5, 6].map((n) => daysAgo(n, 8)) },
-        { id: 't-2', profile_id: profileId, title: 'Make the bed', icon: '🛏️', points: 5, time_period_id: 'tp-1', recurrence_days: everyDay, sort_order: 1, completion_history: [1, 2, 4].map((n) => daysAgo(n, 8)) },
-        { id: 't-3', profile_id: profileId, title: 'Homework', icon: '📚', points: 20, time_period_id: 'tp-2', recurrence_days: [2, 3, 4, 5, 6], sort_order: 2, completion_history: [1, 3].map((n) => daysAgo(n)) },
-        { id: 't-4', profile_id: profileId, title: 'Read a book', icon: '📖', points: 15, time_period_id: 'tp-3', recurrence_days: everyDay, sort_order: 3, completion_history: [1, 2, 3, 5].map((n) => daysAgo(n, 20)) },
-        { id: 't-5', profile_id: profileId, title: 'Feed the cat', icon: '🐱', points: 10, time_period_id: null, recurrence_days: everyDay, sort_order: 4, completion_history: [0, 1, 2].map((n) => daysAgo(n, 17)) },
+        // Nearly perfect: the habit that stuck.
+        { id: 't-1', profile_id: profileId, title: 'Brush teeth', icon: '🪥', points: 10, time_period_id: 'tp-1', recurrence_days: everyDay, sort_order: 0, completion_history: history(8, (n) => n % 11 !== 5) },
+        // Was patchy, has taken hold in the last three weeks.
+        { id: 't-2', profile_id: profileId, title: 'Make the bed', icon: '🛏️', points: 5, time_period_id: 'tp-1', recurrence_days: everyDay, sort_order: 1, completion_history: history(8, (n) => (n <= 21 ? n % 2 === 0 : n % 4 === 0)) },
+        // Weekdays only, and the one that slips.
+        { id: 't-3', profile_id: profileId, title: 'Homework', icon: '📚', points: 20, time_period_id: 'tp-2', recurrence_days: [2, 3, 4, 5, 6], sort_order: 2, completion_history: history(16, (n, w) => !isWeekend(w) && (n <= 14 ? n % 3 !== 0 : n % 2 === 0)) },
+        { id: 't-4', profile_id: profileId, title: 'Read a book', icon: '📖', points: 15, time_period_id: 'tp-3', recurrence_days: everyDay, sort_order: 3, completion_history: history(20, (n) => n % 3 !== 1) },
+        // Easy at the weekend, forgotten mid-week.
+        { id: 't-5', profile_id: profileId, title: 'Feed the cat', icon: '🐱', points: 10, time_period_id: null, recurrence_days: everyDay, sort_order: 4, completion_history: history(17, (n, w) => isWeekend(w) || n % 4 !== 2) },
         { id: 't-6', profile_id: profileId, title: 'Pack for football practice', icon: '⚽', points: 10, time_period_id: null, recurrence_days: null, due_date: daysAgo(-2), sort_order: 5, completion_history: [] },
     ];
     const subtasks = [
@@ -1552,11 +1986,22 @@ function demoData(profileId) {
         { id: 'r-2', profile_id: profileId, title: 'Ice-cream trip', icon: '🍦', cost: 60, sort_order: 1 },
         { id: 'r-3', profile_id: profileId, title: '30 min extra screen time', icon: '🎮', cost: 40, sort_order: 2 },
     ];
+    /* Enough spending to keep the balance in a range a family would
+       recognise — eight weeks of earning with one redemption would show
+       a four-figure pile of unspent points, which is not what the app
+       is for. */
     const redemptions = [
         { id: 'rd-1', profile_id: profileId, reward_title: 'Ice-cream trip', points_spent: 60, redeemed_at: daysAgo(3) },
+        { id: 'rd-2', profile_id: profileId, reward_title: 'Movie night', points_spent: 100, redeemed_at: daysAgo(11) },
+        { id: 'rd-3', profile_id: profileId, reward_title: '30 min extra screen time', points_spent: 40, redeemed_at: daysAgo(19) },
+        { id: 'rd-4', profile_id: profileId, reward_title: 'Movie night', points_spent: 100, redeemed_at: daysAgo(26) },
+        { id: 'rd-5', profile_id: profileId, reward_title: 'Ice-cream trip', points_spent: 60, redeemed_at: daysAgo(38) },
+        { id: 'rd-6', profile_id: profileId, reward_title: 'Movie night', points_spent: 100, redeemed_at: daysAgo(47) },
     ];
     const bonus = [
         { id: 'b-1', profile_id: profileId, amount: 20, reason: 'Helped with the groceries', date: daysAgo(1) },
+        { id: 'b-2', profile_id: profileId, amount: 15, reason: 'Tidied up without being asked', date: daysAgo(9) },
+        { id: 'b-3', profile_id: profileId, amount: 25, reason: 'Looked after her brother', date: daysAgo(23) },
     ];
     return { timePeriods: periods, tasks, subtasks, rewards, redemptions, bonus };
 }
@@ -1564,6 +2009,7 @@ function demoData(profileId) {
 async function enterDemo() {
     showView('view-app');
     $('#user-email').textContent = 'Sample data';
+    wireManagement();
     state.profiles = [
         { id: 'demo-1', name: 'Anna', avatar_path: null },
         { id: 'demo-2', name: 'Kári', avatar_path: null },

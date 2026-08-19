@@ -67,6 +67,10 @@ export function initManagement(ctx) {
 const entitlement = {
     tier: null,
     profileLimit: null,
+    /* Whether the SERVER holds an entitlement record for this account —
+       which is a different question from what the account has paid for.
+       See the note on canCreateProfile. */
+    hasServerRecord: false,
     loaded: false,
 };
 
@@ -74,16 +78,25 @@ export async function loadEntitlement() {
     const userId = state.session?.user?.id;
     if (!userId) return entitlement;
 
-    const [tierRes, limitRes] = await Promise.all([
+    const [rowsRes, limitRes] = await Promise.all([
+        /* A list, not `.maybeSingle()`. A user can legitimately hold two
+           rows — a school licence and an IAP entitlement — and
+           maybeSingle turns that into an error, which then read as "no
+           entitlement" and downgraded them. Same rule as the app's
+           CloudAuthService: take the most generous active row. */
         sb.from('user_entitlements')
-            .select('tier, is_active, expires_at')
+            .select('tier, source, is_active, expires_at, profile_limit_override')
             .eq('user_id', userId)
-            .eq('is_active', true)
-            .maybeSingle(),
+            .eq('is_active', true),
         sb.rpc('active_profile_limit_for_user', { target_user_id: userId }),
     ]);
 
-    entitlement.tier = tierRes.data?.tier ?? 'free';
+    const now = Date.now();
+    const active = (rowsRes.data || []).filter(
+        (r) => !r.expires_at || Date.parse(r.expires_at) > now);
+
+    entitlement.hasServerRecord = active.length > 0;
+    entitlement.tier = active[0]?.tier ?? null;
     /* A null limit means "no cap" in the app's model. Treat an errored
        lookup as unlimited rather than zero: a failed read should never
        be the thing that stops a paying customer adding a profile. The
@@ -104,8 +117,38 @@ function ownedProfileCount() {
     return state.profiles.filter((p) => p.owner_user_id === userId).length;
 }
 
+/* Why a missing entitlement row is NOT "free".
+ *
+ * `user_entitlements` is written by exactly one thing: redeem_license_code.
+ * App Store subscriptions never reach it — there is no receipt
+ * validation, no App Store Server Notifications endpoint, no edge
+ * function of any kind. The tier a subscriber pays for lives in
+ * StoreKit on the device, and the app computes its cap as
+ * `max(tierCap_from_StoreKit, entitlementLimit ?? 1)`.
+ *
+ * The web has no StoreKit. It used to read
+ * `active_profile_limit_for_user`, whose COALESCE default is 1, and
+ * present that as fact — so a Multi-Family subscriber was told "your
+ * plan includes one profile. Upgrade in the app" by the same account
+ * the app was showing six for. Verified against the live database on
+ * 2026-08-17: 36 accounts, one entitlement row between them, and
+ * several accounts already owning 2–4 profiles against a reported
+ * limit of 1.
+ *
+ * So: enforce the cap only where the server actually knows something —
+ * a licence or a promo row. Otherwise defer to the app, which is the
+ * only client that can see the subscription. This does not open a hole
+ * the app closes: the cap has never been enforced by RLS on either
+ * client, so a determined user could always exceed it. It stops the
+ * website lying to paying customers, which is the live problem.
+ *
+ * The real fix is server-side: an App Store Server Notifications V2
+ * endpoint writing user_entitlements on subscribe/renew/lapse. Until
+ * that exists, no web surface should gate on tier — including sharing.
+ */
 export function canCreateProfile() {
     if (!entitlement.loaded) return { allowed: true };
+    if (!entitlement.hasServerRecord) return { allowed: true };
     const limit = entitlement.profileLimit;
     if (limit == null) return { allowed: true };
     if (ownedProfileCount() < limit) return { allowed: true };
@@ -527,10 +570,16 @@ export function renderManageRewards() {
 /** Single entry point for the Setup view, so dashboard.js has one thing
  *  to call rather than tracking which lists this module owns. */
 export function renderManagement() {
+    /* Deep-linking to #manage runs setView — and therefore this — from
+       bindAppUI at boot, which is before initManagement has handed the
+       module its `$`. It used to throw there and take the rest of
+       bindAppUI's bindings with it, so /dashboard/#manage came up with
+       a dead quick-add and dead filter chips. Nothing to draw yet is a
+       state, not an error; the render runs again with real data. */
+    if (!initialised) return;
     renderManageProfiles();
     renderAchievements();
     renderTimerSessions();
-    renderSharing();
     renderTimePeriods();
     renderManageRewards();
 }
@@ -937,12 +986,16 @@ export function setProfileReloader(fn) {
     reloadProfilesAndRender = fn;
 }
 
+/* The profile LIST moved to the rail (see dashboard.js renderProfiles),
+   along with Edit and Share. What is left here is the entitlement gate on
+   "Add profile" — which lives in the rail too, but whose rule belongs
+   with the rest of the entitlement code. The list block below still runs
+   if a `#profile-manage-list` host is ever put back. */
 export function renderManageProfiles() {
     const host = $('#profile-manage-list');
-    if (!host) return;
     const userId = state.session?.user?.id;
 
-    host.innerHTML = state.profiles.map((p) => {
+    if (host) host.innerHTML = state.profiles.map((p) => {
         const owned = p.owner_user_id === userId;
         return `
         <div class="manage-row">
@@ -951,13 +1004,22 @@ export function renderManageProfiles() {
                 <div class="manage-row__title">${esc(p.name)}</div>
                 <div class="manage-row__meta">${owned ? 'Yours' : 'Shared with you'} · ${p.language === 'is' ? 'Íslenska' : 'English'}</div>
             </div>
+            ${owned ? `<button class="btn-ghost" data-profile-share="${esc(p.id)}">Share</button>` : ''}
             <button class="btn-ghost" data-profile-edit="${esc(p.id)}">Edit</button>
         </div>`;
     }).join('') || '<p class="empty">No profiles yet.</p>';
 
-    host.querySelectorAll('[data-profile-edit]').forEach((b) =>
-        b.addEventListener('click', () => openProfileModal(
-            state.profiles.find((p) => p.id === b.dataset.profileEdit))));
+    if (host) {
+        host.querySelectorAll('[data-profile-edit]').forEach((b) =>
+            b.addEventListener('click', () => openProfileModal(
+                state.profiles.find((p) => p.id === b.dataset.profileEdit))));
+        /* Only owners get the button. `list_profile_shares` and the invite
+           RPC both refuse a non-admin server-side, so offering it to someone
+           shared-with would produce nothing but an error. */
+        host.querySelectorAll('[data-profile-share]').forEach((b) =>
+            b.addEventListener('click', () => openShareModal(
+                state.profiles.find((p) => p.id === b.dataset.profileShare))));
+    }
 
     /* Show the cap rather than only enforcing it — a disabled button
        with no explanation is the worst version of a limit. */
@@ -1044,11 +1106,17 @@ const WEEKDAYS = [
 function bindRecurrenceUI() {
     const host = $('#task-recurrence');
     if (!host || host.children.length) return;
-    host.innerHTML = WEEKDAYS.map(([n, label]) =>
-        `<label><input type="checkbox" data-weekday="${n}"> ${label}</label>`).join('')
-        + '<button class="btn-ghost" type="button" id="btn-rec-daily">Daily</button>'
-        + '<button class="btn-ghost" type="button" id="btn-rec-weekdays">Weekdays</button>'
-        + '<button class="btn-ghost" type="button" id="btn-rec-none">None</button>';
+    /* The seven days and the three shortcuts are different kinds of
+       control — one sets state, the other sets all seven at once — so
+       they get their own rows rather than wrapping into each other. */
+    host.innerHTML = `
+        <div class="recurrence__days">${WEEKDAYS.map(([n, label]) =>
+            `<label><input type="checkbox" data-weekday="${n}"> ${label}</label>`).join('')}</div>
+        <div class="recurrence__presets">
+            <button class="btn-ghost" type="button" id="btn-rec-daily">Daily</button>
+            <button class="btn-ghost" type="button" id="btn-rec-weekdays">Weekdays</button>
+            <button class="btn-ghost" type="button" id="btn-rec-none">None</button>
+        </div>`;
 
     $('#btn-rec-daily')?.addEventListener('click', () => setRecurrence([1, 2, 3, 4, 5, 6, 7]));
     $('#btn-rec-weekdays')?.addEventListener('click', () => setRecurrence([2, 3, 4, 5, 6]));
@@ -1170,19 +1238,32 @@ const INVITE_ROLES = [
 ];
 
 function bindSharingUI() {
-    $('#btn-invite')?.addEventListener('click', openInviteModal);
     $('#form-invite')?.addEventListener('submit', sendInvite);
-    $('#btn-invite-cancel')?.addEventListener('click', () => $('#modal-invite').close());
+    $('#btn-share-close')?.addEventListener('click', () => $('#modal-share').close());
     $('#btn-referral-copy')?.addEventListener('click', copyReferralCode);
     fillSelect($('#invite-role'), INVITE_ROLES);
 }
 
-function openInviteModal() {
-    if (!activeProfileId()) return;
+/* Which profile is being shared. Deliberately NOT the active profile:
+   sharing used to live in its own panel that always described whichever
+   profile was selected in the switcher, while the Profiles list beside
+   it showed several. You could be reading "who has access" under a
+   heading for one child and be looking at another's shares. Opening it
+   from a row removes the question. */
+let sharingProfileId = null;
+
+export async function openShareModal(profile) {
+    if (!profile) return;
+    sharingProfileId = profile.id;
+    $('#modal-share-title').textContent = `Who has access to ${profile.name}`;
+    $('#modal-share-sub').textContent =
+        'People here can see this profile. Parents and editors can change it too.';
     $('#invite-email').value = '';
     $('#invite-role').value = 'parent';
     $('#invite-error').textContent = '';
-    $('#modal-invite').showModal();
+    $('#sharing-list').innerHTML = '<div class="skeleton"></div>';
+    $('#modal-share').showModal();
+    await refreshShares();
 }
 
 async function sendInvite(e) {
@@ -1193,21 +1274,23 @@ async function sendInvite(e) {
     if (!email) { errEl.textContent = 'Enter the email address to invite.'; return; }
 
     const { error } = await sb.rpc('create_profile_invite', {
-        target_profile_id: activeProfileId(),
+        target_profile_id: sharingProfileId,
         invite_email: email,
         invite_role: $('#invite-role').value,
     });
     if (error) { errEl.textContent = error.message; return; }
 
     toast(`Invite sent to ${email}.`);
-    $('#modal-invite').close();
+    /* Stay open. The next thing a parent does after inviting one person
+       is check the list, and often invite a second. */
+    $('#invite-email').value = '';
     await refreshShares();
 }
 
 let shares = [];
 
 export async function refreshShares() {
-    const profileId = activeProfileId();
+    const profileId = sharingProfileId;
     if (!profileId) { shares = []; renderSharing(); return; }
     const { data, error } = await sb.rpc('list_profile_shares', { target_profile_id: profileId });
     /* A non-admin gets an error here rather than an empty list, which

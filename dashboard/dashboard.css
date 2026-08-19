@@ -839,7 +839,7 @@ dialog.modal[open] { animation: modal-in var(--dur-short) var(--ease-out); }
     padding: 0 4px;
     font: inherit;
     font-size: .85em;
-    color: var(--color-primary, #F09190);
+    color: var(--coral-deep);
     cursor: pointer;
     text-decoration: underline;
 }
@@ -851,13 +851,13 @@ dialog.modal[open] { animation: modal-in var(--dur-short) var(--ease-out); }
 .photo-field__preview {
     width: 72px; height: 72px; flex: 0 0 72px;
     border-radius: 14px;
-    background: rgba(0, 0, 0, .04);
-    border: 1px solid rgba(0, 0, 0, .08);
+    background: color-mix(in srgb, var(--ink) 4%, transparent);
+    border: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
     display: flex; align-items: center; justify-content: center;
     overflow: hidden;
 }
 .photo-field__preview img { width: 100%; height: 100%; object-fit: cover; }
-.photo-field__empty { font-size: .72rem; color: rgba(0, 0, 0, .45); text-align: center; }
+.photo-field__empty { font-size: .72rem; color: var(--ink-2); text-align: center; }
 .photo-field__controls { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
 .photo-field__controls input[type="file"] { font-size: .86rem; max-width: 100%; }
 
@@ -872,7 +872,7 @@ dialog.modal[open] { animation: modal-in var(--dur-short) var(--ease-out); }
     cursor: pointer;
 }
 .copy-row:hover { background: color-mix(in srgb, var(--ink) 6%, transparent); }
-.modal__sub { margin: -6px 0 14px; color: rgba(0, 0, 0, .6); font-size: .92rem; }
+.modal__sub { margin: -6px 0 14px; color: var(--ink-2); font-size: .92rem; }
 
 /* Quick-add is now input + period + button; keep it on one line where
    there's room and let it wrap on narrow screens rather than squashing. */
@@ -887,11 +887,11 @@ dialog.modal[open] { animation: modal-in var(--dur-short) var(--ease-out); }
 .viewtab {
     border: 0; background: none; cursor: pointer;
     font: inherit; font-size: .94rem; font-weight: 600;
-    color: rgba(0, 0, 0, .5);
+    color: var(--ink-2);
     padding: 8px 14px; border-radius: 999px;
 }
 .viewtab:hover { background: color-mix(in srgb, var(--ink) 6%, transparent); }
-.viewtab[aria-selected="true"] { background: rgba(0, 0, 0, .06); color: inherit; }
+.viewtab[aria-selected="true"] { background: color-mix(in srgb, var(--ink) 6%, transparent); color: inherit; }
 
 /* ── Calendar ──────────────────────────────────────────
    A month should read as a month at a glance, so the grid is capped and
@@ -910,7 +910,7 @@ dialog.modal[open] { animation: modal-in var(--dur-short) var(--ease-out); }
     font-size: .68rem;
     font-weight: 700;
     letter-spacing: .02em;
-    color: rgba(0, 0, 0, .35);
+    color: var(--ink-2);
     text-align: center;
     padding-bottom: 2px;
 }
@@ -919,12 +919,12 @@ dialog.modal[open] { animation: modal-in var(--dur-short) var(--ease-out); }
     height: 40px;
     border: 1px solid transparent;
     border-radius: 10px;
-    background: rgba(0, 0, 0, .035);
+    background: color-mix(in srgb, var(--ink) 4%, transparent);
     cursor: pointer;
     font: inherit;
     font-size: .8rem;
     font-variant-numeric: tabular-nums;
-    color: rgba(0, 0, 0, .6);
+    color: var(--ink-2);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -940,13 +940,13 @@ dialog.modal[open] { animation: modal-in var(--dur-short) var(--ease-out); }
 .cal__day.is-l4 { background: var(--coral-deep); color: #fff; }
 /* Today gets the brand ring, not a black one — the previous inset black
    shadow read as an error state on a warm page. */
-.cal__day.is-today { border-color: var(--color-primary, #F09190); font-weight: 700; }
-.cal__day.is-viewing { box-shadow: 0 0 0 2px var(--color-primary, #F09190); }
-.cal__day.is-future { opacity: .35; cursor: default; background: rgba(0, 0, 0, .02); }
+.cal__day.is-today { border-color: var(--coral-deep); font-weight: 700; }
+.cal__day.is-viewing { box-shadow: 0 0 0 2px var(--coral-deep); }
+.cal__day.is-future { opacity: .35; cursor: default; background: color-mix(in srgb, var(--ink) 2%, transparent); }
 .cal__nav { display: inline-flex; align-items: center; gap: 8px; font-size: .92rem; }
 .cal__legend {
     display: flex; align-items: center; gap: 6px;
-    margin-top: 14px; font-size: .72rem; color: rgba(0, 0, 0, .45);
+    margin-top: 14px; font-size: .72rem; color: var(--ink-2);
 }
 .cal__legend i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
 
@@ -954,19 +954,19 @@ dialog.modal[open] { animation: modal-in var(--dur-short) var(--ease-out); }
    Percentage plus the raw fraction: 80% means something different from
    4/5 when the denominator is small, and a review needs both. */
 .rgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 18px; max-width: 620px; }
-.rstat { background: rgba(0, 0, 0, .03); border-radius: 14px; padding: 14px; text-align: center; }
+.rstat { background: color-mix(in srgb, var(--ink) 3%, transparent); border-radius: 14px; padding: 14px; text-align: center; }
 .rstat b { display: block; font-size: 1.5rem; line-height: 1.1; }
-.rstat span { font-size: .78rem; color: rgba(0, 0, 0, .55); }
-.rhead { font-size: .82rem; text-transform: uppercase; letter-spacing: .04em; color: rgba(0, 0, 0, .45); margin: 18px 0 8px; }
+.rstat span { font-size: .78rem; color: var(--ink-2); }
+.rhead { font-size: .82rem; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-2); margin: 18px 0 8px; }
 .rlist { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
 .rlist { max-width: 620px; }
 .rlist li { display: grid; grid-template-columns: minmax(0, 1fr) 160px 84px; align-items: center; gap: 14px; font-size: .92rem; }
 .rrow__t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rrow__n { font-variant-numeric: tabular-nums; font-weight: 600; font-size: .86rem; }
-.rrow__n small { font-weight: 400; color: rgba(0, 0, 0, .45); }
-.rbar { display: block; height: 10px; border-radius: 999px; background: rgba(0, 0, 0, .07); overflow: hidden; }
-.rbar > span { display: block; height: 100%; border-radius: 999px; background: var(--color-primary, #F09190); }
-.rempty { color: rgba(0, 0, 0, .45); font-size: .9rem; }
+.rrow__n small { font-weight: 400; color: var(--ink-2); }
+.rbar { display: block; height: 10px; border-radius: 999px; background: color-mix(in srgb, var(--ink) 7%, transparent); overflow: hidden; }
+.rbar > span { display: block; height: 100%; border-radius: 999px; background: var(--coral-deep); }
+.rempty { color: var(--ink-2); font-size: .9rem; }
 
 @media (max-width: 520px) {
     .rlist li { grid-template-columns: minmax(0, 1fr) 60px auto; }
@@ -990,15 +990,15 @@ dialog.modal[open] { animation: modal-in var(--dur-short) var(--ease-out); }
 .cal-side .rhead { margin-top: 0; }
 .cal-side__stat { margin-bottom: 16px; }
 .cal-side__stat b { display: block; font-size: 1.35rem; line-height: 1.15; }
-.cal-side__stat span { font-size: .8rem; color: rgba(0, 0, 0, .55); }
-.cal__hint { margin: 8px 0 0; font-size: .78rem; color: rgba(0, 0, 0, .45); }
+.cal-side__stat span { font-size: .8rem; color: var(--ink-2); }
+.cal__hint { margin: 8px 0 0; font-size: .78rem; color: var(--ink-2); }
 
-.rnote { max-width: 620px; margin: -6px 0 16px; font-size: .8rem; color: rgba(0, 0, 0, .5); }
+.rnote { max-width: 620px; margin: -6px 0 16px; font-size: .8rem; color: var(--ink-2); }
 .rrow__n { text-align: right; }
 
 /* Native selects were the one raw control on a page of rounded pills —
    they read as unfinished next to everything around them. */
-#report-range, #quick-add-period, #task-period {
+#quick-add-period, #task-period {
     appearance: none;
     border: 1px solid var(--rule-soft);
     background: var(--card);
@@ -1396,3 +1396,1707 @@ dialog.modal[open] { animation: modal-in var(--dur-short) var(--ease-out); }
     }
     .panel:hover { transform: none; }
 }
+
+/* ── Setup view ────────────────────────────────────────
+   Equal-weight pairs, unlike .columns (1.7fr/1fr), which is tuned for
+   Today's wide-tasks / narrow-rewards split and made two same-sized
+   panels look squeezed against each other. */
+
+.setup-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sp-lg);
+    align-items: start;
+    margin-bottom: var(--sp-lg);
+}
+
+@media (max-width: 56rem) {
+    .setup-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* The Setup view was a stack of panels with no opening line, so it
+   read as a settings dump. One sentence gives it a job. */
+.setup-intro {
+    margin: var(--sp-xs) 0 var(--sp-lg);
+}
+
+.setup-intro h2 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--text-lg);
+    color: var(--ink);
+    margin: 0 0 4px;
+}
+
+.setup-intro p {
+    color: var(--ink-2);
+    margin: 0;
+    max-width: 46ch;
+}
+
+/* Panels in Setup carry lists of controls rather than reading matter,
+   so they need more internal air than a Today panel. */
+.viewpane[data-pane="manage"] .panel { margin-bottom: var(--sp-lg); }
+.viewpane[data-pane="manage"] .panel__head { margin-bottom: var(--sp-2xs); }
+.viewpane[data-pane="manage"] .rnote { margin-bottom: var(--sp-sm); }
+.manage-row { padding: 14px 4px; gap: var(--sp-md); }
+
+/* ── Charts ────────────────────────────────────────────
+   Everything inherits from the theme tokens, so a chart in Ocean is
+   blue and a chart in dark mode is legible without a second palette. */
+
+.chart { margin: 0 0 var(--sp-lg); }
+
+.chart__cap {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--ink-2);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: var(--sp-xs);
+}
+
+.chart__max { font-weight: 500; text-transform: none; letter-spacing: 0; }
+
+.chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+
+.chart__axis {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--text-sm);
+    color: var(--ink-2);
+    margin-top: 2px;
+}
+
+.chart-grid { stroke: var(--rule-soft); stroke-width: 1; }
+.chart-line { fill: none; stroke: var(--coral-deep); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.chart-dot  { fill: var(--coral-deep); }
+.chart-fill-top    { stop-color: var(--coral); stop-opacity: 0.30; }
+.chart-fill-bottom { stop-color: var(--coral); stop-opacity: 0.02; }
+
+.chart-bar-track { fill: var(--rule-soft); }
+.chart-bar { fill: var(--coral); transition: fill var(--dur-micro) var(--ease-out); }
+/* The busiest column is the answer to "which day works"; everything
+   else is context for it. */
+.chart-bar.is-peak { fill: var(--coral-deep); }
+
+.chart-tick {
+    fill: var(--ink-2);
+    font-size: 11px;
+    text-anchor: middle;
+    font-family: var(--font-body);
+}
+
+.chart-empty {
+    color: var(--ink-2);
+    background: color-mix(in srgb, var(--ink) 3%, transparent);
+    border-radius: var(--r-input);
+    padding: var(--sp-md);
+    margin: 0 0 var(--sp-lg);
+    text-align: center;
+}
+
+.chart-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sp-lg);
+}
+
+@media (max-width: 56rem) {
+    .chart-pair { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ── Reliability rows ──────────────────────────────────
+   Banded rather than a single hue: a parent needs "this one is
+   slipping", not a colour they have to decode. */
+
+.rel-list { list-style: none; margin: 0 0 var(--sp-lg); padding: 0; }
+
+.rel-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(90px, 2fr) auto;
+    align-items: center;
+    gap: var(--sp-md);
+    padding: 9px 0;
+    border-bottom: 1px solid var(--rule-soft);
+}
+
+.rel-row:last-child { border-bottom: 0; }
+
+.rel-row__title {
+    color: var(--ink);
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.rel-row__track {
+    height: 8px;
+    border-radius: var(--r-pill);
+    background: var(--rule-soft);
+    overflow: hidden;
+}
+
+.rel-row__fill {
+    display: block;
+    height: 100%;
+    border-radius: var(--r-pill);
+    transition: width var(--dur-short) var(--ease-out);
+}
+
+.rel-row__fill.is-good { background: var(--done-green); }
+.rel-row__fill.is-mid  { background: var(--coral); }
+.rel-row__fill.is-low  { background: color-mix(in srgb, var(--danger) 60%, var(--coral)); }
+
+.rel-row__pct {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    color: var(--ink);
+    text-align: right;
+    white-space: nowrap;
+}
+
+.rel-row__pct small { font-weight: 500; color: var(--ink-2); margin-left: 6px; }
+
+/* ══════════════════════════════════════════════════════
+   SIDEBAR SHELL
+   ══════════════════════════════════════════════════════
+
+   The previous layout was a phone screen stretched wide: a 1200px
+   window spent most of its width on empty margin, navigation lived in
+   a row of tabs, and the profile switcher was a horizontally scrolling
+   strip — a pattern that only exists because a phone has no room for a
+   list.
+
+   A fixed rail puts the whole product on screen at once: where you
+   are, who you're looking at, and everywhere you could go, without a
+   click. The content gets the width back.
+
+   These rules come last in the file and deliberately override the
+   earlier .shell / .profiles / .viewtab blocks rather than editing
+   them, so the auth and recovery screens — which reuse none of this —
+   keep working untouched.
+   ────────────────────────────────────────────────────── */
+
+.app {
+    display: grid;
+    grid-template-columns: 248px minmax(0, 1fr);
+    align-items: start;
+    min-height: 100vh;
+}
+
+/* ── The rail ── */
+
+.rail {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-lg);
+    padding: var(--sp-lg) var(--sp-md);
+    background: color-mix(in srgb, var(--cream) 55%, var(--paper));
+    border-right: 1px solid var(--rule-soft);
+}
+
+.rail__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    padding: 0 var(--sp-xs);
+}
+
+.rail__brand img { width: 28px; height: 28px; border-radius: 8px; }
+
+.rail__brand span {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--ink);
+}
+
+.rail__label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    margin: 0 0 var(--sp-xs);
+    padding: 0 var(--sp-xs);
+}
+
+/* The switcher stacks now. Overrides the horizontal scroller, which
+   was a phone affordance — on a rail there is room to simply show the
+   profiles, and a list you can read beats a strip you have to swipe. */
+.rail .profiles {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: visible;
+    padding: 0;
+}
+
+.rail .profile-chip {
+    width: 100%;
+    height: 40px;
+    justify-content: flex-start;
+    border: 1px solid transparent;
+    background: transparent;
+    border-radius: var(--r-input);
+    padding: 0 var(--sp-xs);
+    font-size: var(--text-base);
+}
+
+.rail .profile-chip[aria-pressed="true"] {
+    background: color-mix(in srgb, var(--coral) 16%, transparent);
+    border-color: color-mix(in srgb, var(--coral) 30%, transparent);
+    color: var(--ink);
+}
+
+.rail__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* Vertical nav items, not pills in a row. */
+.rail .viewtab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    padding: 9px var(--sp-xs);
+    border-radius: var(--r-input);
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--ink-2);
+}
+
+.rail .viewtab__icon {
+    width: 20px;
+    text-align: center;
+    font-size: 0.95rem;
+    opacity: 0.85;
+}
+
+.rail .viewtab[aria-selected="true"] {
+    background: var(--card);
+    color: var(--ink);
+    box-shadow: var(--shadow-card);
+}
+
+/* The selected item gets a spine on its leading edge — the cheapest
+   way to make "you are here" survive a glance, without relying on a
+   background alone that dark mode flattens. */
+.rail .viewtab[aria-selected="true"] .viewtab__icon { color: var(--coral-deep); opacity: 1; }
+
+.rail__foot {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-xs);
+    align-items: flex-start;
+    padding-top: var(--sp-md);
+    border-top: 1px solid var(--rule-soft);
+}
+
+.rail__user {
+    font-size: var(--text-sm);
+    color: var(--ink-2);
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 var(--sp-xs);
+}
+
+/* ── Content ── */
+
+.app .shell {
+    max-width: 1180px;
+    margin: 0;
+    padding: var(--sp-xl) var(--sp-xl) var(--sp-2xl);
+    width: 100%;
+}
+
+.page-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--sp-lg);
+    margin-bottom: var(--sp-lg);
+}
+
+/* Bigger, because it now has the room to be — the greeting is the one
+   piece of warmth on an otherwise working screen, and at the old size
+   it was competing with the stat tiles rather than introducing them. */
+.app .greeting h1 {
+    font-size: clamp(1.9rem, 1.2rem + 2vw, 2.6rem);
+    line-height: 1.1;
+    margin: 0;
+}
+
+.app .greeting { margin-bottom: 0; }
+
+.rail-toggle { display: none; }
+
+/* ── Narrow ──
+   Below the breakpoint the rail becomes a drawer rather than a strip
+   of icons: four destinations with real names beat four glyphs, and a
+   parent on a tablet is not navigating by muscle memory. */
+
+@media (max-width: 60rem) {
+    .app { grid-template-columns: minmax(0, 1fr); }
+
+    .rail {
+        position: fixed;
+        z-index: 40;
+        top: 0;
+        left: 0;
+        width: 264px;
+        transform: translateX(-100%);
+        transition: transform var(--dur-short) var(--ease-out);
+        box-shadow: var(--shadow-lift);
+    }
+
+    .rail.is-open { transform: none; }
+
+    .rail-toggle {
+        display: grid;
+        place-items: center;
+        position: fixed;
+        z-index: 41;
+        top: var(--sp-sm);
+        left: var(--sp-sm);
+        width: 40px;
+        height: 40px;
+        border-radius: var(--r-input);
+        border: 1px solid var(--rule-soft);
+        background: var(--card);
+        color: var(--ink);
+        font-size: 1.1rem;
+        cursor: pointer;
+        box-shadow: var(--shadow-card);
+    }
+
+    .app .shell { padding: calc(var(--sp-xl) + 24px) var(--sp-md) var(--sp-2xl); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rail { transition: none; }
+}
+
+/* ── Sharpening ────────────────────────────────────────
+   "Keep the warmth, sharpen it." The palette, Fraunces and Lóa all
+   stay; what changes is the discipline around them. Three things were
+   making it read soft rather than warm:
+
+   1. Everything shared one corner radius, so a 4px stat tile and a
+      full-width panel looked like the same object at different sizes.
+      Radius now scales with the surface.
+   2. Card padding was tighter vertically than horizontally, which
+      reads as cramped at width.
+   3. The stat tiles were the same visual weight as the panels beneath
+      them, so nothing led.
+   ────────────────────────────────────────────────────── */
+
+.app .stats {
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: var(--sp-md);
+    margin-bottom: var(--sp-xl);
+}
+
+/* Tiles lead. Flatter than the panels below rather than louder — a
+   border and a tint instead of a shadow, so the eye reads them as a
+   summary strip and the panels as the substance. */
+.app .stat {
+    background: color-mix(in srgb, var(--coral) 6%, var(--card));
+    border: 1px solid color-mix(in srgb, var(--coral) 18%, transparent);
+    box-shadow: none;
+    border-radius: 18px;
+    padding: var(--sp-md);
+}
+
+.app .stat__value {
+    font-size: clamp(1.5rem, 1.1rem + 1.1vw, 2rem);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+}
+
+.app .panel {
+    padding: var(--sp-lg);
+    border-radius: 20px;
+}
+
+/* Panel titles were the same size as body copy in bold, so a panel
+   opened without announcing itself. */
+.app .panel__title {
+    font-size: 1.0625rem;
+    letter-spacing: -0.01em;
+}
+
+.app .panel__head {
+    padding-bottom: var(--sp-sm);
+    border-bottom: 1px solid var(--rule-soft);
+    margin-bottom: var(--sp-md);
+}
+
+/* Setup panels carry their own intro line under the head, so the rule
+   would sit between a heading and its own description. */
+.viewpane[data-pane="manage"] .panel__head { border-bottom: 0; padding-bottom: 0; }
+
+/* Task rows: less rounding, more separation. The old 20px radius on a
+   full-width row made a list look like a stack of lozenges rather than
+   a list. */
+.app .task-row { border-radius: 14px; }
+
+/* One shadow language. Cards were mixing a soft ambient shadow with a
+   coloured lift on hover, which made hovering change the apparent
+   light source. */
+.app .panel:hover { box-shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.28); }
+
+/* A setup-grid with one child should not leave half the row empty. */
+.setup-grid--single { grid-template-columns: minmax(0, 1fr); }
+
+/* The share modal is a list plus a short form, so it wants to be
+   narrower than the task editor and taller than the confirmations. */
+#modal-share { max-width: 520px; }
+#modal-share #sharing-list { margin-bottom: var(--sp-md); }
+#modal-share .manage-row { padding: 10px 0; }
+
+/* ══════════════════════════════════════════════════════
+   FACELIFT — the dashboard as a product, not a page
+   ══════════════════════════════════════════════════════
+
+   What was wrong, in order of how much it hurt:
+
+   1. Nothing had a ground. Panels were white cards on a near-white
+      page, so the whole screen read as one flat sheet with lines
+      drawn on it. The content area now carries a faint accent wash
+      and the rail a slightly deeper one, so cards sit ON something.
+   2. The nav icons were text glyphs (◧ ▦ ◔ ⚙) at whatever weight the
+      font felt like. They are drawn strokes now, aligned to a grid.
+   3. The stat strip was four flat tints with an emoji jammed into the
+      number. Label, icon, value and meta are now four separate jobs,
+      and the week chart has a track behind each bar so an empty day
+      reads as empty rather than missing.
+   4. Controls were inconsistent: pills, rounded rectangles and bare
+      text buttons in the same row. One button language, three roles.
+   5. The profile was a single pink slab in the rail with no way to
+      act on it. It is a switcher, a menu and an add button now.
+
+   These rules come last and override deliberately, so the auth and
+   recovery screens — which share the tokens but none of this shell —
+   are untouched.
+   ────────────────────────────────────────────────────── */
+
+/* ── Ground ── */
+
+.app {
+    background: color-mix(in srgb, var(--coral) 7%, var(--paper));
+    grid-template-columns: 260px minmax(0, 1fr);
+}
+
+.rail {
+    background: color-mix(in srgb, var(--coral) 13%, var(--paper));
+    border-right: 1px solid color-mix(in srgb, var(--coral) 18%, transparent);
+    padding: var(--sp-lg) 14px var(--sp-md);
+    gap: var(--sp-lg);
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.rail__brand {
+    gap: 11px;
+    padding: 0 6px var(--sp-xs);
+}
+
+.rail__brand img {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    box-shadow: var(--shadow-card);
+}
+
+.rail__brand span { font-size: 1.35rem; }
+
+.rail__label {
+    font-size: 0.625rem;
+    letter-spacing: 0.12em;
+    color: color-mix(in srgb, var(--ink-2) 88%, transparent);
+    margin: 0 0 6px;
+    padding: 0 6px;
+}
+
+/* ── Profiles: switch, act, add ──
+   Everything a profile can have done to it hangs off the profile
+   itself. Sharing lived in Setup, which meant the answer to "who can
+   see this child's chores" was filed under a heading about time
+   periods. */
+
+.rail .profiles { gap: 3px; }
+
+.profile-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    border-radius: 14px;
+    border: 1px solid transparent;
+    transition: background-color var(--dur-micro) var(--ease-out),
+                box-shadow var(--dur-micro) var(--ease-out);
+}
+
+@media (hover: hover) {
+    .profile-row:hover { background: color-mix(in srgb, var(--ink) 5%, transparent); }
+}
+
+.profile-row.is-active {
+    background: var(--card);
+    border-color: var(--rule);
+    box-shadow: var(--shadow-card);
+}
+
+/* A spine, not just a fill. Dark mode flattens tinted backgrounds
+   almost to nothing; a 3px bar survives it. */
+.profile-row.is-active::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 12px;
+    bottom: 12px;
+    width: 3px;
+    border-radius: 3px;
+    background: var(--coral-deep);
+}
+
+.rail .profile-chip {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 46px;
+    gap: 10px;
+    padding: 0 4px 0 10px;
+    border: 0;
+    background: none;
+    border-radius: 14px;
+    font-weight: 600;
+}
+
+.rail .profile-chip[aria-pressed="true"] {
+    background: none;
+    border-color: transparent;
+}
+
+@media (hover: hover) { .rail .profile-chip:hover { background: none; } }
+
+.profile-chip__avatar {
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--coral-strong);
+    background: color-mix(in srgb, var(--coral) 26%, var(--card));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--coral) 34%, transparent);
+}
+
+.profile-chip__name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.profile-more {
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    margin-right: 5px;
+    display: grid;
+    place-items: center;
+    border-radius: 9px;
+    color: var(--ink-2);
+    opacity: 0;
+    transition: opacity var(--dur-micro) var(--ease-out),
+                background-color var(--dur-micro) var(--ease-out);
+}
+
+/* Hidden until wanted on a mouse; always present on touch, where
+   there is no hover to reveal it with. */
+@media (hover: none) { .profile-more { opacity: 1; } }
+
+.profile-row:hover .profile-more,
+.profile-row:focus-within .profile-more,
+.profile-row.is-menu-open .profile-more { opacity: 1; }
+
+.profile-more:hover,
+.profile-row.is-menu-open .profile-more {
+    background: color-mix(in srgb, var(--ink) 8%, transparent);
+    color: var(--ink);
+}
+
+.profile-menu {
+    position: absolute;
+    z-index: var(--z-sticky);
+    top: calc(100% + 6px);
+    left: 4px;
+    right: 4px;
+    padding: 5px;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    box-shadow: var(--shadow-lift);
+    animation: menu-in var(--dur-micro) var(--ease-out);
+}
+
+@keyframes menu-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: none; }
+}
+
+.profile-menu__item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 8px 10px;
+    border-radius: 9px;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--ink);
+}
+
+@media (hover: hover) {
+    .profile-menu__item:hover { background: color-mix(in srgb, var(--coral) 16%, transparent); }
+}
+
+.profile-menu__note {
+    padding: 8px 10px;
+    font-size: var(--text-sm);
+    color: var(--ink-2);
+}
+
+.rail__add {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: 100%;
+    height: 36px;
+    margin-top: 7px;
+    border-radius: 12px;
+    border: 1px dashed color-mix(in srgb, var(--coral) 45%, transparent);
+    color: var(--coral-strong);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    transition: background-color var(--dur-micro) var(--ease-out);
+}
+
+@media (hover: hover) {
+    .rail__add:hover:not([disabled]) { background: color-mix(in srgb, var(--coral) 14%, transparent); }
+}
+
+.rail__add[disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
+    border-style: solid;
+    border-color: var(--rule-soft);
+    color: var(--ink-2);
+}
+
+.rail__note {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--ink-2);
+    padding: 6px 6px 0;
+}
+
+.rail__note:empty { display: none; }
+
+/* ── Rail navigation ── */
+
+.rail .viewtab {
+    position: relative;
+    height: 42px;
+    padding: 0 10px;
+    gap: 11px;
+    border-radius: 12px;
+    transition: background-color var(--dur-micro) var(--ease-out),
+                color var(--dur-micro) var(--ease-out);
+}
+
+.rail .viewtab__icon {
+    width: 19px;
+    height: 19px;
+    flex: 0 0 auto;
+    opacity: 1;
+    color: var(--ink-2);
+}
+
+@media (hover: hover) {
+    .rail .viewtab:hover { background: color-mix(in srgb, var(--ink) 5%, transparent); color: var(--ink); }
+}
+
+.rail .viewtab[aria-selected="true"] {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    box-shadow: var(--shadow-card);
+}
+
+.rail .viewtab[aria-selected="true"]::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 11px;
+    bottom: 11px;
+    width: 3px;
+    border-radius: 3px;
+    background: var(--coral-deep);
+}
+
+.rail .viewtab[aria-selected="true"] .viewtab__icon { color: var(--coral-deep); }
+
+.rail__foot {
+    gap: 4px;
+    padding-top: var(--sp-sm);
+    border-top: 1px solid var(--rule-soft);
+}
+
+.rail__user { padding: 0 6px 2px; font-size: 0.75rem; }
+
+.rail__signout {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    height: 36px;
+    padding: 0 10px;
+    border-radius: 11px;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--ink-2);
+    transition: background-color var(--dur-micro) var(--ease-out),
+                color var(--dur-micro) var(--ease-out);
+}
+
+@media (hover: hover) {
+    .rail__signout:hover { background: color-mix(in srgb, var(--ink) 6%, transparent); color: var(--ink); }
+}
+
+/* ── Page header ──
+   Greeting left, the day you are looking at right, on one line. The
+   date used to sit under the greeting as a caption, which made the
+   single most important piece of state on the screen — WHICH DAY —
+   look like a subtitle. */
+
+.app .shell { padding: var(--sp-xl) var(--sp-xl) var(--sp-2xl); }
+
+.page-head {
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: var(--sp-lg);
+}
+
+.app .greeting h1 {
+    font-size: clamp(1.75rem, 1.1rem + 1.9vw, 2.35rem);
+    letter-spacing: -0.01em;
+}
+
+.greeting__date { margin: 0; }
+
+/* The stepper reads as one control: a card with two arrows and a
+   label, not three things that happen to be near each other. */
+.app .dayline {
+    gap: 2px;
+    padding: 4px;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-pill);
+    box-shadow: var(--shadow-card);
+    font-size: var(--text-sm);
+    font-weight: 600;
+}
+
+.app .dayline__label { padding: 0 6px; color: var(--ink); }
+
+.app .dayline__nav {
+    width: 30px;
+    height: 30px;
+    border: 0;
+    background: none;
+    color: var(--ink-2);
+    font-size: 1.05rem;
+}
+
+@media (hover: hover) {
+    .app .dayline__nav:hover:not(:disabled) {
+        background: color-mix(in srgb, var(--coral) 18%, transparent);
+        color: var(--ink);
+    }
+}
+
+.app .dayline__today {
+    height: 28px;
+    margin-left: 2px;
+    padding: 0 11px;
+    border-radius: var(--r-pill);
+    background: var(--coral-deep);
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* ── Stat strip ── */
+
+.app .stats {
+    grid-template-columns: repeat(auto-fit, minmax(178px, 1fr));
+    gap: var(--sp-md);
+    margin-bottom: var(--sp-lg);
+}
+
+.app .stat {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    box-shadow: var(--shadow-card);
+    padding: 15px 17px 17px;
+}
+
+/* A single soft light source, top-right, on every tile. Cheaper than
+   a gradient per tile and it survives every theme. */
+.app .stat::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120% 90% at 100% 0%,
+                color-mix(in srgb, var(--coral) 13%, transparent), transparent 62%);
+    pointer-events: none;
+}
+
+.app .stat > * { position: relative; }
+
+.app .stat__label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.625rem;
+    letter-spacing: 0.11em;
+    color: var(--ink-2);
+    margin-bottom: 3px;
+}
+
+.stat__icon {
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    background: color-mix(in srgb, var(--coral) 16%, transparent);
+}
+
+.stat__tag {
+    margin-left: auto;
+    padding: 2px 8px;
+    border-radius: var(--r-pill);
+    background: color-mix(in srgb, var(--coral) 15%, transparent);
+    color: var(--coral-strong);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.app .stat__value {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.7rem, 1.2rem + 1.3vw, 2.15rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+}
+
+.stat__of { color: var(--ink-2); font-size: 0.6em; font-weight: 500; }
+
+.app .stat__meta { margin-top: 2px; }
+
+.stat__bar {
+    height: 6px;
+    margin: 8px 0 2px;
+    border-radius: var(--r-pill);
+    background: color-mix(in srgb, var(--ink) 8%, transparent);
+    overflow: hidden;
+}
+
+.stat__bar span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--coral-deep);
+    transition: width var(--dur-long) var(--ease-out);
+}
+
+/* The week chart. Every day now has a track, so a day with nothing
+   done is an empty slot rather than a bar that failed to draw — the
+   old version made a quiet week look like a broken chart. */
+.chart-week {
+    gap: 8px;
+    margin-top: 10px;
+    height: 74px;
+}
+
+.chart-week__col { gap: 6px; height: 100%; justify-content: flex-end; }
+
+.chart-week__track {
+    position: relative;
+    width: 100%;
+    max-width: 30px;
+    flex: 1 1 auto;
+    display: flex;
+    align-items: flex-end;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--ink) 6%, transparent);
+    overflow: hidden;
+}
+
+.chart-week__bar {
+    width: 100%;
+    max-width: none;
+    border-radius: 8px;
+    background: linear-gradient(180deg, var(--coral), var(--coral-deep));
+    transition: height var(--dur-long) var(--ease-out);
+}
+
+.chart-week__bar.is-empty { background: color-mix(in srgb, var(--ink) 12%, transparent); }
+
+.chart-week__day {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--ink-2);
+}
+
+/* ── Panels ── */
+
+.app .panel {
+    border: 1px solid var(--rule);
+    border-radius: 20px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 10px 28px -22px rgba(0, 0, 0, 0.5);
+    padding: 19px 21px 21px;
+    transition: box-shadow var(--dur-short) var(--ease-out);
+}
+
+.app .panel:hover { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 14px 34px -20px rgba(0, 0, 0, 0.45); }
+
+.app .panel__head {
+    gap: var(--sp-xs);
+    padding-bottom: 13px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--rule-soft);
+}
+
+.app .panel__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+    letter-spacing: -0.005em;
+}
+
+.app .columns { gap: var(--sp-lg); }
+
+/* ── One button language ──
+   Ghost = secondary action, 11px radius. Chip = a choice among a few,
+   pill. Primary = the one thing this form is for. They were all
+   variations on a pill before, so nothing announced its weight. */
+
+.btn-ghost {
+    height: 34px;
+    padding: 0 13px;
+    border-radius: 11px;
+    border: 1px solid var(--rule-soft);
+    background: color-mix(in srgb, var(--ink) 3%, transparent);
+    color: var(--ink);
+    transition: background-color var(--dur-micro) var(--ease-out),
+                border-color var(--dur-micro) var(--ease-out),
+                transform var(--dur-micro) var(--ease-out);
+}
+
+@media (hover: hover) {
+    .btn-ghost:hover {
+        background: color-mix(in srgb, var(--coral) 16%, transparent);
+        border-color: color-mix(in srgb, var(--coral) 30%, transparent);
+    }
+}
+
+.btn-ghost:active { transform: translateY(1px); }
+.btn-ghost[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+.filter-chip { height: 32px; }
+
+.app select,
+.quick-add select {
+    height: 38px;
+    padding: 0 30px 0 12px;
+    border-radius: var(--r-input);
+    border: 1px solid var(--rule-soft);
+    background-color: var(--card);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1.5 1.75 6 6.25l4.5-4.5' fill='none' stroke='%23888' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 11px center;
+    -webkit-appearance: none;
+    appearance: none;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+}
+
+.app .quick-add { gap: var(--sp-xs); margin-bottom: 14px; }
+
+.app .quick-add input {
+    height: 42px;
+    border-radius: var(--r-input);
+    border: 1px solid var(--rule-soft);
+    background: color-mix(in srgb, var(--ink) 3%, transparent);
+    transition: background-color var(--dur-micro) var(--ease-out),
+                border-color var(--dur-micro) var(--ease-out);
+}
+
+.app .quick-add input:focus {
+    background: var(--card);
+    border-color: color-mix(in srgb, var(--coral) 45%, transparent);
+}
+
+.app .quick-add button[type="submit"],
+.app #btn-quick-add {
+    height: 42px;
+    padding: 0 18px;
+    border-radius: var(--r-input);
+    font-weight: 600;
+}
+
+/* ── Rows ──
+   Task, reward, activity and setup rows now share one hover: a tinted
+   ground with the same radius. They used to have three different ones,
+   which is the kind of thing you cannot name but do notice. */
+
+.app .task-row { border-radius: 14px; padding-block: 9px; }
+
+.app .reward-row,
+.app .activity-row {
+    padding: 11px 8px;
+    border-radius: 12px;
+    margin-inline: -8px;
+    transition: background-color var(--dur-micro) var(--ease-out);
+}
+
+.app .reward-row + .reward-row,
+.app .activity-row + .activity-row { border-top: 1px solid var(--rule-soft); }
+
+@media (hover: hover) {
+    .app .reward-row:hover,
+    .app .activity-row:hover,
+    .app .manage-row:hover { background: color-mix(in srgb, var(--ink) 4%, transparent); }
+}
+
+.app .manage-row {
+    padding: 12px 8px;
+    margin-inline: -8px;
+    border-radius: 12px;
+    border-bottom: 1px solid var(--rule-soft);
+    transition: background-color var(--dur-micro) var(--ease-out);
+}
+
+.app .manage-row:last-child { border-bottom: 0; }
+
+/* ── Setup view ── */
+
+.setup-intro { margin: 0 0 var(--sp-lg); }
+
+.setup-intro h2 {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+.viewpane[data-pane="manage"] .panel__head {
+    border-bottom: 1px solid var(--rule-soft);
+    padding-bottom: 13px;
+    margin-bottom: 12px;
+}
+
+.viewpane[data-pane="manage"] .rnote {
+    margin: -4px 0 var(--sp-sm);
+    color: var(--ink-2);
+    font-size: var(--text-sm);
+}
+
+/* ── Modals ── */
+
+dialog.modal {
+    border-radius: 22px;
+    padding: 24px;
+    border: 1px solid var(--rule);
+    box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.55);
+}
+
+dialog.modal::backdrop { backdrop-filter: blur(3px); }
+
+.modal__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.3rem;
+}
+
+/* ── Footer ── */
+
+.shell-foot {
+    padding: var(--sp-md) var(--sp-xl);
+    border-top: 1px solid var(--rule-soft);
+    background: color-mix(in srgb, var(--coral) 7%, var(--paper));
+    font-size: var(--text-sm);
+}
+
+/* ── Scrollbars ──
+   Only where they sit on our own surfaces; the page scrollbar stays
+   the platform's. */
+
+.rail::-webkit-scrollbar,
+.copy-list::-webkit-scrollbar { width: 8px; }
+
+.rail::-webkit-scrollbar-thumb,
+.copy-list::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+::selection { background: color-mix(in srgb, var(--coral) 40%, transparent); }
+
+/* ── Narrow ── */
+
+@media (max-width: 60rem) {
+    .app { grid-template-columns: minmax(0, 1fr); }
+
+    .rail-toggle {
+        border-radius: 12px;
+        background: var(--card);
+        border-color: var(--rule);
+    }
+
+    .app .shell { padding: calc(var(--sp-xl) + 20px) var(--sp-md) var(--sp-2xl); }
+    .page-head { gap: var(--sp-sm); }
+    .shell-foot { padding-inline: var(--sp-md); }
+}
+
+@media (max-width: 34rem) {
+    .app .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-sm); }
+    .app .stat--chart { grid-column: span 2; }
+    .greeting__date { width: 100%; }
+}
+
+/* ── Form controls inside modals ──
+   The task and profile editors were half styled: inputs and textareas
+   had a look, native <select> did not, so every second field in a row
+   was a system control sitting next to a designed one. */
+
+dialog.modal select,
+dialog.modal input[type="number"],
+dialog.modal input[type="date"],
+dialog.modal input[type="color"] {
+    width: 100%;
+    height: 46px;
+    padding: 0 14px;
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: var(--r-input);
+    color: var(--ink);
+    font: inherit;
+}
+
+dialog.modal select {
+    padding-right: 34px;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1.5 1.75 6 6.25l4.5-4.5' fill='none' stroke='%23888' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 13px center;
+    cursor: pointer;
+}
+
+dialog.modal input[type="color"] { padding: 4px; cursor: pointer; }
+
+dialog.modal .toggle-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+dialog.modal .toggle-row label {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 38px;
+    padding: 0 13px;
+    border: 1px solid var(--rule-soft);
+    border-radius: var(--r-pill);
+    background: var(--paper);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+dialog.modal .toggle-row input[type="checkbox"] { accent-color: var(--coral-deep); }
+
+/* Keep the three in-page selects in the same family as the buttons
+   beside them rather than the pill they used to be. */
+#quick-add-period {
+    border-radius: var(--r-input);
+    padding: 0 30px 0 12px;
+}
+
+#quick-add-period { height: 42px; }
+
+/* ── Grid corrections ──
+   `.panel + .panel { margin-top }` was written for the stacked Today
+   column and was also matching siblings inside the Setup grid, so the
+   right-hand card in every pair sat 24px lower than the left one. The
+   grid supplies its own gap; the stacking margin has no business
+   inside it. */
+
+.setup-grid > .panel + .panel,
+.columns > div > .panel:first-child { margin-top: 0; }
+
+.setup-grid > .panel { margin-bottom: 0; }
+.viewpane[data-pane="manage"] .setup-grid .panel { margin-bottom: 0; }
+
+/* A one-line form does not need the full width of a 1180px shell. */
+#modal-share, .setup-grid--single .quick-add { max-width: 520px; }
+
+/* The week chart wants two columns' worth of room, but on a three-up
+   grid that leaves a hole beside it. Below the width where four tiles
+   fit, it takes the whole row instead. */
+@media (max-width: 78rem) {
+    .app .stat--chart { grid-column: 1 / -1; }
+}
+
+/* ── Modal corrections ──
+   The task editor is the most-used dialog on the site and it had four
+   buttons in a 440px row with no wrapping, so "Save changes" — the one
+   the dialog exists for — was clipped by the modal's own edge. */
+
+dialog.modal { width: min(520px, calc(100vw - 2 * var(--sp-md))); }
+
+#modal-task, #modal-profile { width: min(600px, calc(100vw - 2 * var(--sp-md))); }
+
+.modal__actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--sp-xs);
+    margin-top: var(--sp-md);
+    padding-top: var(--sp-md);
+    border-top: 1px solid var(--rule-soft);
+}
+
+.modal__actions .btn-primary { height: 44px; padding: 0 var(--sp-md); }
+
+/* Weekdays as chips rather than seven loose checkboxes. Same control,
+   but a tappable target and a state you can see from across the row. */
+.recurrence label {
+    gap: 7px;
+    height: 34px;
+    padding: 0 11px;
+    border: 1px solid var(--rule-soft);
+    border-radius: var(--r-pill);
+    background: var(--paper);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.recurrence label:has(input:checked) {
+    background: color-mix(in srgb, var(--coral) 18%, transparent);
+    border-color: color-mix(in srgb, var(--coral) 40%, transparent);
+}
+
+.recurrence input[type="checkbox"] { accent-color: var(--coral-deep); }
+
+/* The file input was the last raw system control in the editor. */
+input[type="file"]::file-selector-button {
+    height: 32px;
+    margin-right: 10px;
+    padding: 0 12px;
+    border: 1px solid var(--rule-soft);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--ink) 4%, transparent);
+    color: var(--ink);
+    font: inherit;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.recurrence { display: block; }
+.recurrence__days { display: flex; flex-wrap: wrap; gap: 7px; }
+.recurrence__presets { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 9px; }
+
+/* The month stepper is the same control as the day stepper, so it gets
+   the same shape rather than two bare arrows around a label. */
+.app .cal__nav {
+    gap: 2px;
+    padding: 4px;
+    background: color-mix(in srgb, var(--ink) 3%, transparent);
+    border: 1px solid var(--rule-soft);
+    border-radius: var(--r-pill);
+    font-size: var(--text-sm);
+    font-weight: 600;
+}
+
+.app .cal__nav > span { padding: 0 8px; }
+
+.app .cal__nav .dayline__nav {
+    width: 28px;
+    height: 28px;
+    border: 0;
+    background: none;
+    color: var(--ink-2);
+}
+
+@media (hover: hover) {
+    .app .cal__nav .dayline__nav:hover:not(:disabled) {
+        background: color-mix(in srgb, var(--coral) 18%, transparent);
+        color: var(--ink);
+    }
+}
+
+/* Tracks are a hint, not a shape: at the weight they started they read
+   as seven empty containers with a little colour at the bottom. */
+.chart-week { height: 66px; }
+.chart-week__track { background: color-mix(in srgb, var(--ink) 4%, transparent); }
+
+/* ══════════════════════════════════════════════════════
+   STATISTICS
+   ══════════════════════════════════════════════════════
+
+   The old version failed in three specific ways, not one:
+
+   1. The bar charts drew their labels inside a 720-wide viewBox and
+      then displayed it at ~360px, so the type on this screen was
+      smaller than anywhere else on the site. Those charts are HTML
+      now — see charts.js — and this block styles them.
+   2. The trend chart had no scale. "peak 5" in the corner tells you
+      the ceiling; it does not tell you whether the hump in the middle
+      is a 4 or a 1.
+   3. Everything sat in one panel, so a summary, a trend, two
+      breakdowns and a ranked table all carried the same weight.
+   ────────────────────────────────────────────────────── */
+
+.report-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--sp-md);
+    flex-wrap: wrap;
+}
+
+.report-kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: var(--sp-md);
+    margin-bottom: var(--sp-xs);
+}
+
+/* The KPI tiles are the stat tiles from Today, deliberately — the same
+   number should not have two looks on two screens. */
+.report-kpis .stat {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    box-shadow: var(--shadow-card);
+    padding: 15px 17px 17px;
+}
+
+.report-kpis .stat::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120% 90% at 100% 0%,
+                color-mix(in srgb, var(--coral) 13%, transparent), transparent 62%);
+    pointer-events: none;
+}
+
+.report-kpis .stat > * { position: relative; }
+
+.report-kpis .stat__label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    margin-bottom: 3px;
+}
+
+.report-kpis .stat__value {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.7rem, 1.2rem + 1.3vw, 2.15rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+}
+
+.report-kpis .stat__meta { font-size: var(--text-sm); color: var(--ink-2); }
+
+/* Direction is the point, so it is carried by the arrow and the word
+   as well as the colour — a red number alone is unreadable to a good
+   share of the people this app is built for. */
+.delta {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    padding: 2px 8px;
+    border-radius: var(--r-pill);
+    white-space: nowrap;
+}
+
+.delta.is-up   { background: color-mix(in srgb, var(--done-green) 16%, transparent); color: var(--done-green); }
+.delta.is-down { background: color-mix(in srgb, var(--danger) 12%, transparent); color: var(--danger); }
+.delta.is-flat { background: color-mix(in srgb, var(--ink) 7%, transparent); color: var(--ink-2); }
+
+.report-window {
+    margin: 0 0 var(--sp-lg);
+    padding: 0 2px;
+    font-size: var(--text-sm);
+    color: var(--ink-2);
+}
+
+/* ── What stands out ── */
+
+.panel--insights {
+    background: color-mix(in srgb, var(--coral) 8%, var(--card));
+    margin-bottom: var(--sp-lg);
+}
+
+.insights { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+
+.insight {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    line-height: 1.5;
+}
+
+.insight__icon {
+    flex: 0 0 auto;
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border-radius: 9px;
+    background: var(--card);
+    box-shadow: var(--shadow-card);
+    font-size: 0.85rem;
+}
+
+/* ── Trend chart ── */
+
+.viewpane[data-pane="stats"] .panel { margin-bottom: var(--sp-lg); }
+.viewpane[data-pane="stats"] .chart { margin-bottom: 0; }
+
+.chart__key {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.chart__key-line {
+    width: 18px;
+    height: 0;
+    border-top: 2px dashed var(--coral-deep);
+    opacity: 0.75;
+}
+
+.chart-line.is-average {
+    stroke: var(--coral-deep);
+    stroke-width: 2;
+    stroke-dasharray: 7 6;
+    opacity: 0.75;
+}
+
+.chart-dot.is-peak {
+    fill: var(--card);
+    stroke: var(--coral-deep);
+    stroke-width: 3;
+}
+
+/* The y scale lives in a gutter beside the plot, in HTML, so it is the
+   same size as every other label on the page regardless of how wide the
+   chart ends up. */
+.chart__plot { position: relative; padding-left: 30px; }
+
+.chart__ylab {
+    position: absolute;
+    left: 0;
+    width: 24px;
+    text-align: right;
+    transform: translateY(-50%);
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-2);
+}
+
+.chart__axis span:nth-child(2) { flex: 1; text-align: center; }
+
+/* ── Column chart (weekdays) ── */
+
+.colchart {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 190px;
+}
+
+.colchart__col {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.colchart__n {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+}
+
+.colchart__n.is-zero { color: var(--ink-2); font-weight: 500; }
+
+.colchart__track {
+    flex: 1 1 auto;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--ink) 4%, transparent);
+    overflow: hidden;
+}
+
+.colchart__bar {
+    width: 100%;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--coral) 55%, var(--card));
+    transition: height var(--dur-long) var(--ease-out);
+}
+
+/* The busiest day is the answer to "which days work"; the rest is the
+   context that makes it mean something. */
+.colchart__bar.is-peak { background: linear-gradient(180deg, var(--coral), var(--coral-deep)); }
+
+.colchart__label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--ink-2);
+}
+
+/* ── Ranked bars (time of day) ── */
+
+.rankbars { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+
+.rankbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "label n" "track track";
+    align-items: center;
+    gap: 4px 10px;
+}
+
+.rankbar__label {
+    grid-area: label;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.rankbar__n {
+    grid-area: n;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.rankbar__n small { font-weight: 500; color: var(--ink-2); margin-left: 6px; }
+
+.rankbar__track {
+    grid-area: track;
+    height: 10px;
+    border-radius: var(--r-pill);
+    background: color-mix(in srgb, var(--ink) 5%, transparent);
+    overflow: hidden;
+}
+
+.rankbar__fill {
+    display: block;
+    height: 100%;
+    border-radius: var(--r-pill);
+    background: color-mix(in srgb, var(--coral) 55%, var(--card));
+    transition: width var(--dur-long) var(--ease-out);
+}
+
+.rankbar__fill.is-peak { background: linear-gradient(90deg, var(--coral), var(--coral-deep)); }
+
+/* ── Ranked task list ── */
+
+.viewpane[data-pane="stats"] .rhead {
+    margin: var(--sp-md) 0 var(--sp-xs);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+}
+
+.viewpane[data-pane="stats"] .rhead:first-of-type { margin-top: 0; }
+.viewpane[data-pane="stats"] .rel-list { margin-bottom: 0; }
+
+@media (max-width: 34rem) {
+    .colchart { height: 150px; }
+    .report-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-sm); }
+}
+
+/* Statistics opens with four KPI tiles of its own, so the Today strip
+   above them would be two summaries stacked — and the top one would be
+   about a different question. */
+body[data-view="stats"] .stats { display: none; }
+
+/* Line the date labels up with the plot, not with the scale gutter. */
+.chart__plot + .chart__axis { padding-left: 30px; }

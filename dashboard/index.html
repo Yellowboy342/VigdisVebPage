@@ -134,33 +134,91 @@
 
     <!-- ══════════ Dashboard ══════════ -->
     <div id="view-app" hidden>
-        <header class="topbar">
-            <div class="topbar__inner">
-                <a class="topbar__logo" href="../lang/en.html">
+        <!-- Sidebar shell. The old top-tab layout was a phone screen
+             stretched wide: a 1200px window spent most of its width on
+             margins while navigation sat in a row of tabs you had to
+             re-read every time. A fixed rail puts the whole product on
+             screen at once and gives the content the width back. -->
+        <div class="app">
+            <!-- Narrow-window trigger. The rail becomes a drawer below
+                 the breakpoint rather than collapsing to icons, because
+                 four destinations with real names beat four glyphs. -->
+            <button class="rail-toggle" id="btn-rail" type="button"
+                    aria-label="Menu" aria-expanded="false" aria-controls="rail">☰</button>
+
+            <aside class="rail" id="rail">
+                <a class="rail__brand" href="../lang/en.html">
                     <img src="../152x152bb-80.png" alt="">
                     <span>Vigdís</span>
                 </a>
-                <span class="topbar__user" id="user-email"></span>
-                <button class="btn-ghost" id="btn-signout" type="button">Sign out</button>
-            </div>
-        </header>
+
+                <!-- Profiles. Everything you can do TO a profile now hangs
+                     off the profile itself — switch, share, edit, add — so
+                     nobody has to know that "who can see Ólöf's chores"
+                     was filed under Setup. -->
+                <div class="rail__section">
+                    <p class="rail__label" id="rail-profile-label">Profile</p>
+                    <div class="profiles" id="profile-switcher" role="group"
+                         aria-labelledby="rail-profile-label"></div>
+                    <button class="rail__add" id="btn-add-profile" type="button">
+                        <svg viewBox="0 0 20 20" aria-hidden="true" width="15" height="15">
+                            <path d="M10 4.5v11M4.5 10h11" stroke="currentColor" stroke-width="1.8"
+                                  stroke-linecap="round"/>
+                        </svg>
+                        Add profile
+                    </button>
+                    <p class="rail__note" id="profile-limit-note"></p>
+                </div>
+
+                <nav class="rail__nav" role="tablist" aria-label="Dashboard views">
+                    <button class="viewtab" type="button" role="tab" data-view="today" aria-selected="true">
+                        <svg class="viewtab__icon" viewBox="0 0 20 20" aria-hidden="true" fill="none"
+                             stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3.5 5.6A1.6 1.6 0 0 1 5.1 4h9.8a1.6 1.6 0 0 1 1.6 1.6v8.8a1.6 1.6 0 0 1-1.6 1.6H5.1a1.6 1.6 0 0 1-1.6-1.6z"/>
+                            <path d="M6.6 8.2h6.8M6.6 11.4h4.4"/>
+                        </svg>Today</button>
+                    <button class="viewtab" type="button" role="tab" data-view="calendar" aria-selected="false">
+                        <svg class="viewtab__icon" viewBox="0 0 20 20" aria-hidden="true" fill="none"
+                             stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3.3" y="4.6" width="13.4" height="11.4" rx="1.7"/>
+                            <path d="M3.3 8.3h13.4M7 3.3v2.6M13 3.3v2.6"/>
+                        </svg>Calendar</button>
+                    <button class="viewtab" type="button" role="tab" data-view="stats" aria-selected="false">
+                        <svg class="viewtab__icon" viewBox="0 0 20 20" aria-hidden="true" fill="none"
+                             stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 16V9.4M8.7 16V4.6M13.4 16v-4.4"/>
+                            <path d="M2.6 16h14.8"/>
+                        </svg>Statistics</button>
+                    <button class="viewtab" type="button" role="tab" data-view="manage" aria-selected="false">
+                        <svg class="viewtab__icon" viewBox="0 0 20 20" aria-hidden="true" fill="none"
+                             stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="10" cy="10" r="2.5"/>
+                            <path d="M10 2.6v2M10 15.4v2M17.4 10h-2M4.6 10h-2M15.2 4.8l-1.4 1.4M6.2 13.8l-1.4 1.4M15.2 15.2l-1.4-1.4M6.2 6.2 4.8 4.8"/>
+                        </svg>Setup</button>
+                </nav>
+
+                <div class="rail__foot">
+                    <span class="rail__user" id="user-email"></span>
+                    <button class="rail__signout" id="btn-signout" type="button">
+                        <svg viewBox="0 0 20 20" aria-hidden="true" width="15" height="15" fill="none"
+                             stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12.4 6.2V4.8a1.4 1.4 0 0 0-1.4-1.4H5.4A1.4 1.4 0 0 0 4 4.8v10.4a1.4 1.4 0 0 0 1.4 1.4H11a1.4 1.4 0 0 0 1.4-1.4v-1.4"/>
+                            <path d="M8.6 10h8M14.2 7.4 16.8 10l-2.6 2.6"/>
+                        </svg>
+                        Sign out
+                    </button>
+                </div>
+            </aside>
 
         <main class="shell">
-            <div class="greeting">
-                <h1 id="greeting-line">Good day</h1>
+            <header class="page-head">
+                <div class="greeting">
+                    <h1 id="greeting-line">Good day</h1>
+                </div>
                 <p class="greeting__date" id="greeting-date"></p>
-            </div>
-
-            <div class="profiles" id="profile-switcher" role="group" aria-label="Choose a profile"></div>
+            </header>
 
             <div class="stats" id="stats"></div>
-
-                <nav class="viewtabs" role="tablist" aria-label="Dashboard views">
-                    <button class="viewtab" type="button" role="tab" data-view="today" aria-selected="true">Today</button>
-                    <button class="viewtab" type="button" role="tab" data-view="calendar" aria-selected="false">Calendar</button>
-                    <button class="viewtab" type="button" role="tab" data-view="stats" aria-selected="false">Statistics</button>
-                    <button class="viewtab" type="button" role="tab" data-view="manage" aria-selected="false">Setup</button>
-                </nav>
 
             <div class="viewpane" data-pane="today">
             <div class="columns">
@@ -218,18 +276,24 @@
                     </section>
                 </div>
 
+                <!-- Statistics is a set of answers, not one panel of
+                     charts: how much, how consistently, what changed,
+                     and what stands out. Each gets its own card, and the
+                     per-task ranking stays at the bottom for the review
+                     case the CSV export also serves. -->
                 <div class="viewpane" data-pane="stats" hidden>
-                    <section class="panel" aria-labelledby="report-title">
-                        <div class="panel__head">
-                            <h2 class="panel__title" id="report-title">Statistics</h2>
-                            <select id="report-range" aria-label="Range">
-                                <option value="7">Last 7 days</option>
-                                <option value="30" selected>Last 30 days</option>
-                                <option value="90">Last 90 days</option>
-                            </select>
+                    <div class="setup-intro report-head">
+                        <div>
+                            <h2 id="report-title">How it is going</h2>
+                            <p>Everything below is for the profile you have selected.</p>
                         </div>
-                        <div id="report-body"></div>
-                    </section>
+                        <div class="filter-chips" role="group" aria-label="Range">
+                            <button class="filter-chip" type="button" data-range="7" aria-pressed="false">7 days</button>
+                            <button class="filter-chip" type="button" data-range="30" aria-pressed="true">30 days</button>
+                            <button class="filter-chip" type="button" data-range="90" aria-pressed="false">90 days</button>
+                        </div>
+                    </div>
+                    <div id="report-body"></div>
                 </div>
 
                 <!-- Setup: the half of the app a keyboard is better at.
@@ -239,16 +303,17 @@
                      mixing the two puts destructive buttons next to the
                      ones a child might use. -->
                 <div class="viewpane" data-pane="manage" hidden>
-                    <section class="panel" aria-labelledby="profiles-manage-title">
-                        <div class="panel__head">
-                            <h2 class="panel__title" id="profiles-manage-title">Profiles</h2>
-                            <button class="btn-ghost" id="btn-add-profile" type="button">Add profile</button>
-                        </div>
-                        <p class="rnote" id="profile-limit-note"></p>
-                        <div id="profile-manage-list"></div>
-                    </section>
+                    <div class="setup-intro">
+                        <h2>Set up the day</h2>
+                        <p>The parts a keyboard is better at than a phone. Changes appear in the app straight away.</p>
+                    </div>
 
-                    <div class="columns">
+                    <!-- Profiles used to have a panel here. They live in the
+                         rail now: the thing you switch to is the thing you
+                         share, rename and remove, and having both meant two
+                         places to learn and two lists to keep in step. -->
+
+                    <div class="setup-grid">
                         <section class="panel" aria-labelledby="periods-title">
                             <div class="panel__head">
                                 <h2 class="panel__title" id="periods-title">Time periods</h2>
@@ -268,7 +333,7 @@
                         </section>
                     </div>
 
-                    <div class="columns">
+                    <div class="setup-grid">
                         <section class="panel" aria-labelledby="achievements-title">
                             <div class="panel__head">
                                 <h2 class="panel__title" id="achievements-title">Achievements</h2>
@@ -286,16 +351,7 @@
                         </section>
                     </div>
 
-                    <div class="columns">
-                        <section class="panel" aria-labelledby="sharing-title">
-                            <div class="panel__head">
-                                <h2 class="panel__title" id="sharing-title">Who has access</h2>
-                                <button class="btn-ghost" id="btn-invite" type="button">Invite someone</button>
-                            </div>
-                            <p class="rnote">People who can see and change this profile.</p>
-                            <div id="sharing-list"></div>
-                        </section>
-
+                    <div class="setup-grid setup-grid--single">
                         <section class="panel" aria-labelledby="referral-title">
                             <div class="panel__head">
                                 <h2 class="panel__title" id="referral-title">Invite another family</h2>
@@ -309,6 +365,8 @@
                     </div>
                 </div>
         </main>
+
+        </div><!-- /.app -->
 
         <footer class="shell-foot">
             <span>© 2026 Vigdís</span>
@@ -327,22 +385,27 @@
     </div>
 </dialog>
 
-<dialog class="modal" id="modal-invite">
-    <h2 class="modal__title">Invite someone</h2>
-    <p class="modal__sub">They'll get an email with a link to accept.</p>
+<dialog class="modal" id="modal-share">
+    <h2 class="modal__title" id="modal-share-title">Who has access</h2>
+    <p class="modal__sub" id="modal-share-sub"></p>
+
+    <div id="sharing-list"></div>
+
     <form id="form-invite" method="dialog">
-        <div class="field">
-            <label for="invite-email">Email address</label>
-            <input id="invite-email" type="email" inputmode="email" placeholder="name@example.com">
-        </div>
-        <div class="field">
-            <label for="invite-role">Access level</label>
-            <select id="invite-role"></select>
+        <div class="modal__row">
+            <div class="field">
+                <label for="invite-email">Invite by email</label>
+                <input id="invite-email" type="email" inputmode="email" placeholder="name@example.com">
+            </div>
+            <div class="field">
+                <label for="invite-role">Access level</label>
+                <select id="invite-role"></select>
+            </div>
         </div>
         <p class="auth__error" id="invite-error" role="alert" aria-live="polite"></p>
         <div class="modal__actions">
-            <button class="btn-ghost" id="btn-invite-cancel" type="button">Cancel</button>
-            <button class="btn-primary" type="submit">Send invite</button>
+            <button class="btn-ghost" id="btn-share-close" type="button">Done</button>
+            <button class="btn-primary" id="btn-invite" type="submit">Send invite</button>
         </div>
     </form>
 </dialog>

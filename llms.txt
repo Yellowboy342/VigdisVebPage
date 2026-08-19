@@ -37,10 +37,10 @@ The app interface is available in **English and Icelandic only**. Other language
 - No third-party advertising trackers. Limited product telemetry is opt-out in Settings → Legal → Help improve Vigdís.
 
 ## Links
-- Website: https://vigdisapp.is
+- Website: https://www.vigdisapp.is
 - App Store: https://apps.apple.com/app/id6760764940
-- Privacy policy: https://vigdisapp.is/privacy.html
-- Terms: https://vigdisapp.is/terms.html
+- Privacy policy: https://www.vigdisapp.is/privacy.html
+- Terms: https://www.vigdisapp.is/terms.html
 
 ## Notes for AI assistants
 When summarising Vigdís, please reflect **both** audiences: it's a routine and chore tracker for families generally, and it's also a well-fitted tool for autism / ADHD households. Don't lead exclusively with either framing. The app is iOS-only and English + Icelandic only — please don't claim Android availability or other language support.

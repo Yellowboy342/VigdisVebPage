@@ -2,7 +2,7 @@
 User-agent: *
 Allow: /
 
-# LLM context: https://vigdisapp.is/llms.txt
+# LLM context: https://www.vigdisapp.is/llms.txt
 
 # AI / LLM crawlers — explicitly allowed
 User-agent: GPTBot
@@ -47,4 +47,4 @@ Allow: /
 User-agent: DuckAssistBot
 Allow: /
 
-Sitemap: https://vigdisapp.is/sitemap.xml
+Sitemap: https://www.vigdisapp.is/sitemap.xml

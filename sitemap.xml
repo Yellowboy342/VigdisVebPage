@@ -2,77 +2,77 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://vigdisapp.is/</loc>
+    <loc>https://www.vigdisapp.is/</loc>
     <lastmod>2026-05-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="is" href="https://vigdisapp.is/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://vigdisapp.is/lang/en.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://vigdisapp.is/"/>
+    <xhtml:link rel="alternate" hreflang="is" href="https://www.vigdisapp.is/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vigdisapp.is/lang/en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vigdisapp.is/"/>
   </url>
   <url>
-    <loc>https://vigdisapp.is/lang/en.html</loc>
+    <loc>https://www.vigdisapp.is/lang/en.html</loc>
     <lastmod>2026-05-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://vigdisapp.is/privacy.html</loc>
+    <loc>https://www.vigdisapp.is/privacy.html</loc>
     <lastmod>2026-05-16</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://vigdisapp.is/terms.html</loc>
+    <loc>https://www.vigdisapp.is/terms.html</loc>
     <lastmod>2026-05-16</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://vigdisapp.is/lang/privacy-is.html</loc>
+    <loc>https://www.vigdisapp.is/lang/privacy-is.html</loc>
     <lastmod>2026-05-16</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://vigdisapp.is/lang/terms-is.html</loc>
+    <loc>https://www.vigdisapp.is/lang/terms-is.html</loc>
     <lastmod>2026-05-16</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://vigdisapp.is/help.html</loc>
+    <loc>https://www.vigdisapp.is/help.html</loc>
     <lastmod>2026-06-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://vigdisapp.is/help.html"/>
-    <xhtml:link rel="alternate" hreflang="is" href="https://vigdisapp.is/lang/help-is.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://vigdisapp.is/help.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vigdisapp.is/help.html"/>
+    <xhtml:link rel="alternate" hreflang="is" href="https://www.vigdisapp.is/lang/help-is.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vigdisapp.is/help.html"/>
   </url>
   <url>
-    <loc>https://vigdisapp.is/lang/help-is.html</loc>
+    <loc>https://www.vigdisapp.is/lang/help-is.html</loc>
     <lastmod>2026-06-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-    <xhtml:link rel="alternate" hreflang="is" href="https://vigdisapp.is/lang/help-is.html"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://vigdisapp.is/help.html"/>
+    <xhtml:link rel="alternate" hreflang="is" href="https://www.vigdisapp.is/lang/help-is.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vigdisapp.is/help.html"/>
   </url>
   <url>
-    <loc>https://vigdisapp.is/schools.html</loc>
+    <loc>https://www.vigdisapp.is/schools.html</loc>
     <lastmod>2026-08-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://vigdisapp.is/schools.html"/>
-    <xhtml:link rel="alternate" hreflang="is" href="https://vigdisapp.is/lang/schools-is.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://vigdisapp.is/schools.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vigdisapp.is/schools.html"/>
+    <xhtml:link rel="alternate" hreflang="is" href="https://www.vigdisapp.is/lang/schools-is.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vigdisapp.is/schools.html"/>
   </url>
   <url>
-    <loc>https://vigdisapp.is/lang/schools-is.html</loc>
+    <loc>https://www.vigdisapp.is/lang/schools-is.html</loc>
     <lastmod>2026-08-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://vigdisapp.is/schools.html"/>
-    <xhtml:link rel="alternate" hreflang="is" href="https://vigdisapp.is/lang/schools-is.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://vigdisapp.is/schools.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vigdisapp.is/schools.html"/>
+    <xhtml:link rel="alternate" hreflang="is" href="https://www.vigdisapp.is/lang/schools-is.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vigdisapp.is/schools.html"/>
   </url>
 </urlset>
