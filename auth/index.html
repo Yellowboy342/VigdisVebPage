@@ -28,20 +28,30 @@
   So `redirectTo` now points here, and this page is what forwards them
   into the app.
 
-  WHY NOT A UNIVERSAL LINK
+  LINK SHAPES (all forwarded verbatim — query AND fragment)
 
-  The app does own `applinks:vigdisapp.is`, so in principle iOS could
-  open it directly. It will not: universal links fire on a user-initiated
-  tap, not on a cross-domain server redirect, which is exactly how the
-  user arrives here. The custom scheme is the thing that reliably works
-  from a script, so that is what this uses.
+    /auth/?token_hash=…&type=recovery|signup   preferred: the email links
+        straight here; the APP verifies the token. Nothing is spent by
+        opening this page, so a mail scanner or a laptop click cannot
+        burn the link, and it still works when opened on the phone.
+    /auth/?code=…                               PKCE redirect from
+        {{ .ConfirmationURL }} (older emails, web-dashboard resets).
+    /auth/#access_token=…&type=…                implicit flow.
+    /auth/?error=…&error_code=otp_expired       Supabase rejected the
+        link; the app shows "expired" with "Send a new link".
+
+  UNIVERSAL LINK FIRST, THIS PAGE SECOND
+
+  `/auth/*` is claimed in the apple-app-site-association, so tapping a
+  token_hash link in Mail opens the app directly and this page never
+  loads. It loads when that does not happen: app not installed, an
+  in-app browser, a link-scanner redirect, or the user chose Safari.
+  Then it hands off through the `vigdis://` scheme.
 
   THE TOKENS
 
-  Supabase returns the session in the URL *fragment*
-  (`#access_token=...&type=recovery`). Fragments are never sent to the
-  server, so GitHub Pages never receives them and they appear in no
-  access log. This page keeps that property, and it is easy to destroy:
+  Tokens ride in the query string or the URL *fragment*. This page must
+  never transmit either. It is easy to destroy that property:
 
     * No analytics, no third-party script, no fetch, no beacon — nothing
       on this page may transmit anything, ever.
@@ -138,19 +148,36 @@
          one tap away via the toggle, because a browser's language
          setting is a decent guess and not a fact. -->
     <div id="mobile" hidden>
-      <div data-lang="is" hidden>
-        <h1>Opnaðu Vigdísi til að halda áfram</h1>
-        <p>Smelltu hér að neðan ef appið opnaðist ekki sjálfkrafa.</p>
+      <div data-state="ok">
+        <div data-lang="is" hidden>
+          <h1>Opnaðu Vigdísi til að halda áfram</h1>
+          <p>Smelltu hér að neðan ef appið opnaðist ekki sjálfkrafa.</p>
+        </div>
+        <div data-lang="en" hidden>
+          <h1>Open Vigdís to continue</h1>
+          <p>Tap below if the app didn't open automatically.</p>
+        </div>
       </div>
-      <div data-lang="en" hidden>
-        <h1>Open Vigdís to continue</h1>
-        <p>Tap below if the app didn't open automatically.</p>
+      <div data-state="expired" hidden>
+        <div data-lang="is" hidden>
+          <h1>Þessi hlekkur er útrunninn</h1>
+          <p>Opnaðu Vigdísi til að fá nýjan hlekk sendan.</p>
+        </div>
+        <div data-lang="en" hidden>
+          <h1>This link has expired</h1>
+          <p>Open Vigdís to get a new link sent.</p>
+        </div>
       </div>
 
       <a class="btn" id="open-app" href="#">
         <span data-lang="is" hidden>Opna Vigdísi</span>
         <span data-lang="en" hidden>Open Vigdís</span>
       </a>
+
+      <p class="hint">
+        <span data-lang="is" hidden>Opnaðist ekki? Gakktu úr skugga um að appið sé uppsett.</span>
+        <span data-lang="en" hidden>Didn't open? Make sure the app is installed.</span>
+      </p>
 
       <p class="store">
         <span data-lang="is" hidden>Ekki með appið?</span>
@@ -163,6 +190,17 @@
     <!-- Desktop: say so plainly rather than offering a button that
          cannot work. A dead button is worse than an explanation. -->
     <div id="desktop" hidden>
+      <div data-state="expired" hidden>
+        <div data-lang="is" hidden>
+          <h1>Þessi hlekkur er útrunninn</h1>
+          <p>Hlekkir í póstum frá okkur virka einu sinni og í takmarkaðan tíma. Biddu um nýjan í Vigdísi í símanum.</p>
+        </div>
+        <div data-lang="en" hidden>
+          <h1>This link has expired</h1>
+          <p>Links in our emails work once, for a limited time. Ask for a new one in Vigdís on your phone.</p>
+        </div>
+      </div>
+      <div data-state="ok">
       <div data-lang="is" hidden>
         <h1>Opnaðu þennan hlekk í símanum</h1>
         <p>Vigdís er app fyrir síma og spjaldtölvur, svo þessi hlekkur virkar ekki í tölvu. Opnaðu póstinn í símanum þínum og smelltu á hlekkinn aftur.</p>
@@ -172,6 +210,7 @@
         <h1>Open this link on your phone</h1>
         <p>Vigdís is a phone and tablet app, so this link can't open on a computer. Open the email on your phone and tap the link again.</p>
         <p class="hint">The link is valid for one hour.</p>
+      </div>
       </div>
     </div>
 
@@ -189,6 +228,16 @@
   // setting, so this must not assume either.
   var payload = window.location.search + window.location.hash;
   var target = 'vigdis://auth-callback' + payload;
+
+  // Supabase reports a rejected link (expired, already used) as
+  // error / error_code, in the query for PKCE and in the fragment for
+  // the implicit flow. Say so here too; the app still gets the payload
+  // so it can offer "Send a new link".
+  var isExpired = /[?#&](error|error_code)=/.test(payload);
+  var states = document.querySelectorAll('[data-state]');
+  for (var s = 0; s < states.length; s++) {
+    states[s].hidden = states[s].getAttribute('data-state') !== (isExpired ? 'expired' : 'ok');
+  }
 
   var link = document.getElementById('open-app');
   if (link) link.setAttribute('href', target);
