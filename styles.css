@@ -227,6 +227,19 @@ section {
   box-shadow: var(--shadow-soft);
 }
 
+/* Store mark leads each CTA; sized to the cap height of the label. */
+.hero-btn__icon {
+  width: 1.25em;
+  height: 1.25em;
+  flex: 0 0 auto;
+  display: block;
+}
+
+.hero-btn-secondary .hero-btn__icon {
+  /* Play mark keeps its own colours on the coral pill. */
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.18));
+}
+
 .hero-btn-primary:hover,
 .hero-btn-secondary:hover {
   transform: translateY(-2px);
