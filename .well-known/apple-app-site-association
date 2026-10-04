@@ -4,7 +4,7 @@
     "details": [
       {
         "appID": "9CKXTA2Z6D.com.vigdis.vigdis",
-        "paths": [ "NOT /auth/*", "NOT /auth", "/i/*", "/i", "/r/*", "/r" ]
+        "paths": [ "/auth/*", "/auth", "/i/*", "/i", "/r/*", "/r" ]
       }
     ]
   }

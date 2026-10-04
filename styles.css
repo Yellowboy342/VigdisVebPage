@@ -209,8 +209,10 @@ section {
   font-weight: 600;
 }
 
-/* Primary CTA — solid coral pill (no gradient), AA with white text */
-.hero-btn-primary {
+/* Hero store CTAs — App Store and Google Play share one solid coral pill
+   (no gradient), AA with white text, so neither store looks secondary. */
+.hero-btn-primary,
+.hero-btn-secondary {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -225,7 +227,8 @@ section {
   box-shadow: var(--shadow-soft);
 }
 
-.hero-btn-primary:hover {
+.hero-btn-primary:hover,
+.hero-btn-secondary:hover {
   transform: translateY(-2px);
   background: var(--color-coral-strong);
   box-shadow: 0 22px 46px -26px rgba(160, 80, 80, 0.6);
