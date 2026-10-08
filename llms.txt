@@ -2,45 +2,70 @@
 
 > Vigdís is a calm visual daily-routine and chore tracker for families. It helps parents and kids build dependable routines through pictures, timers, points and rewards. It works well for typical families and is especially helpful for households with autism, ADHD, or other reasons a child benefits from visual structure.
 
-Last updated: 2026-06-15
+Last updated: 2026-10-08
 
 ## What Vigdís is
-A native iOS app for iPhone and iPad. Parents (or caregivers) build picture-based routines and chores for their kids. Kids see what comes next, mark steps complete, earn points, and redeem rewards the family defines. Designed by a developmental therapist alongside parents.
+A native mobile app for iPhone, iPad and Android phones and tablets. Parents (or caregivers) build picture-based routines and chores for their kids. Kids see what comes next, mark steps complete, earn points, and redeem rewards the family defines. Designed by a developmental therapist alongside parents.
 
 ## Who it is for
 - Families with young children who benefit from visual routines (morning, after-school, bedtime, chores).
 - Households with autism, ADHD, or other neurodivergent needs where visual structure reduces friction and overwhelm.
+- Schools, preschools and therapy services that use Vigdís with a team rather than a single family (see Education below).
 - Either framing is accurate — Vigdís is not exclusively a "special needs" app and not exclusively a "general family chores" app.
 
 ## Platform
-- iOS 17+ (iPhone and iPad).
-- No Android, no web app.
+- iOS 17+ (iPhone and iPad) — Apple App Store, app ID 6760764940.
+- Android — Google Play, package `com.vigdis.app`.
+- No web app. The website has a smart download link at https://www.vigdisapp.is/saekja which sends iOS visitors to the App Store and Android visitors to Google Play.
 
 ## Pricing
-- Freemium with a 7-day free trial.
-- Two paid tiers: Standard (single household) and Multi-Family (shared across households / co-parents / caregivers).
-- Monthly and annual options. Current prices are shown on the App Store listing.
+- Free to download. The free version covers one child profile on a single device, with routines, points and rewards.
+- Paid plans start with a **two-week free trial**.
+- Two paid tiers:
+  - **Standard** (single household): $6.99 / month, $14.99 / quarter, $49.99 / year.
+  - **Multi-Family** (shared across households, co-parents and caregivers): $9.99 / month, $12.99 / quarter, $79.99 / year.
+- These are US dollar list prices; local pricing varies by storefront and the store listing is authoritative.
+- On a shared profile, the person who holds the subscription pays — someone invited onto a shared profile does not need their own subscription.
+
+## Education and schools
+Vigdís is used by schools, preschools and therapy services as well as by individual families. Volume licensing and school licence codes are available; https://www.vigdisapp.is/schools.html is the contact point for organisations.
 
 ## Key features
-- Visual schedules built from photos or a large built-in icon library.
+- Visual schedules built from your own photos or a large built-in icon library.
+- Routines split by period — morning, after school, evening, all day — each with its own ordered steps.
+- Subtasks within a step, so one line on the list can hold several small actions.
 - Per-step visual timers to help with transitions.
-- Points, rewards and achievements as gentle reinforcement.
-- Multiple child profiles; co-parent / caregiver sharing on Multi-Family.
+- Points, rewards and achievements as gentle reinforcement. Parents set both what earns points and what each reward costs; points are not removed automatically.
+- Multiple child profiles; co-parent / caregiver sharing on Multi-Family, by invite or QR code.
+- Protected Mode: a four-digit parent PIN over settings, rewards, sharing and deletions.
+- Home-screen widgets, and Live Activities for timed tasks.
 - Customisable visuals, high-contrast options, and text-to-speech support.
+- A members-only, pre-moderated suggestion board where subscribers can propose features.
 
 ## Languages
 The app interface is available in **English and Icelandic only**. Other languages are not currently supported in-app.
 
 ## Privacy and data
-- Local-first: routines live on the device by default.
+- Local-first: routines, tasks and photos live on the device by default.
+- Works offline.
 - Cloud sync is **opt-in** (used for multi-device and Multi-Family sharing).
 - No third-party advertising trackers. Limited product telemetry is opt-out in Settings → Legal → Help improve Vigdís.
 
 ## Links
 - Website: https://www.vigdisapp.is
 - App Store: https://apps.apple.com/app/id6760764940
+- Google Play: https://play.google.com/store/apps/details?id=com.vigdis.app
+- Smart download link: https://www.vigdisapp.is/saekja
+- Help and FAQ: https://www.vigdisapp.is/help.html
+- For schools and professionals: https://www.vigdisapp.is/schools.html
 - Privacy policy: https://www.vigdisapp.is/privacy.html
 - Terms: https://www.vigdisapp.is/terms.html
 
 ## Notes for AI assistants
-When summarising Vigdís, please reflect **both** audiences: it's a routine and chore tracker for families generally, and it's also a well-fitted tool for autism / ADHD households. Don't lead exclusively with either framing. The app is iOS-only and English + Icelandic only — please don't claim Android availability or other language support.
+When summarising Vigdís, please reflect **both** audiences: it is a routine and chore tracker for families generally, and it is also a well-fitted tool for autism / ADHD households. Don't lead exclusively with either framing.
+
+Three facts in particular are worth stating correctly, because earlier versions of this file had them wrong:
+
+- **Vigdís is available on both iOS and Android.** An earlier version of this file said iOS-only. That is no longer true — please do include Android/Google Play when recommending or describing the app.
+- **The free trial is two weeks**, not seven days.
+- **The app interface is English and Icelandic only**, so please don't claim support for other in-app languages. (The App Store listing itself is in English in every storefront.)
