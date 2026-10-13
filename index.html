@@ -46,7 +46,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="styles.css?v=4.4">
+    <link rel="stylesheet" href="styles.css?v=4.5">
 
     <!-- LLM Optimization -->
     <link rel="llms-txt" href="/llms.txt">
@@ -223,6 +223,28 @@
                     <figure class="shot shot--phone">
                         <img src="assets/appScreenshots/iphone-is/01_tasks.webp" alt="Vigdís App - Dagleg rútína" fetchpriority="high" decoding="async" width="320" height="693">
                     </figure>
+                </div>
+            </div>
+        </section>
+
+        <!-- 01b. Radio — Bítið á Bylgjunni segment (Vísir player).
+             Click-to-load facade: the visir.is iframe is only created after a
+             tap, so no third-party request happens on page load. -->
+        <section class="radio" id="utvarp">
+            <div class="container radio__inner reveal">
+                <span class="eyebrow">Í útvarpinu</span>
+                <h2>Vigdís í Bítinu á Bylgjunni</h2>
+                <p>Tveir af stofnendum Vigdísar ræddu sjónrænt dagskipulag í Bítinu 13. október 2026.</p>
+                <div class="radio__player" data-player="https://www.visir.is/player/497babb2-3d27-4d4c-bda0-37e136033639-1791882553381">
+                    <a class="radio__facade" href="https://www.visir.is/player/497babb2-3d27-4d4c-bda0-37e136033639-1791882553381" target="_blank" rel="noopener noreferrer" aria-label="Spila viðtalið úr Bítinu á Bylgjunni — spilarinn hleðst frá visir.is">
+                        <span class="radio__play" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="30" height="30" focusable="false"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.52.86l10.4-6.5a1 1 0 0 0 0-1.72L9.52 4.64A1 1 0 0 0 8 5.5z"/></svg>
+                        </span>
+                        <span class="radio__facade-copy">
+                            <span class="radio__facade-title">Bítið á Bylgjunni &middot; 13. október 2026</span>
+                            <span class="radio__facade-note">Spilarinn hleðst frá visir.is þegar þú smellir</span>
+                        </span>
+                    </a>
                 </div>
             </div>
         </section>
@@ -613,6 +635,28 @@ Dóttir mín, sem hefur aldrei sofið vel, sefur nú alla nóttina í sínu eigi
             const onScroll = () => header && header.classList.toggle('is-scrolled', window.scrollY > 24);
             window.addEventListener('scroll', onScroll, { passive: true });
             onScroll();
+
+            // Radio segment — swap the static facade for the Vísir iframe on tap.
+            // Nothing from visir.is is requested until the visitor asks for it.
+            document.querySelectorAll('.radio__player[data-player]').forEach(player => {
+                const facade = player.querySelector('.radio__facade');
+                if (!facade) return;
+                facade.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const frame = document.createElement('iframe');
+                    frame.src = player.dataset.player;
+                    frame.width = '752';
+                    frame.height = '423';
+                    frame.title = 'Bítið á Bylgjunni — viðtal við stofnendur Vigdísar';
+                    frame.setAttribute('frameborder', '0');
+                    frame.setAttribute('scrolling', 'no');
+                    frame.setAttribute('seamless', 'seamless');
+                    frame.setAttribute('allowfullscreen', '');
+                    frame.setAttribute('loading', 'lazy');
+                    player.classList.add('is-loaded');
+                    player.replaceChild(frame, facade);
+                });
+            });
 
             // Screenshot carousel — centered coverflow with arrows, dots,
             // swipe, keyboard and click-to-focus. No external dependency.

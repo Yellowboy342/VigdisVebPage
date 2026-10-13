@@ -515,6 +515,117 @@ section {
   width: min(100%, 320px);
 }
 
+/* ===== Radio — Bítið á Bylgjunni segment (click-to-load Vísir player) ===== */
+.radio {
+  padding: var(--space-2xl) 0 var(--space-xl);
+  background: var(--color-background);
+}
+
+.radio__inner {
+  max-width: 800px; /* 752px player + the container's 24px side padding */
+  margin: 0 auto;
+  text-align: center;
+}
+
+.radio__inner .eyebrow { justify-content: center; }
+
+.radio__inner h2 { margin-bottom: var(--space-xs); }
+
+.radio__inner p { max-width: 52ch; margin: 0 auto; }
+
+.radio__player {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-top: var(--space-lg);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-primary-mist);
+  box-shadow: var(--shadow-card);
+}
+
+.radio__player iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* Facade: a static brand card that stands in for the iframe until tapped. */
+.radio__facade {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  text-decoration: none;
+  color: var(--color-white);
+  background:
+    radial-gradient(70% 80% at 20% 15%, rgba(255, 255, 255, 0.22), transparent 70%),
+    radial-gradient(60% 70% at 85% 95%, rgba(162, 73, 74, 0.5), transparent 70%),
+    linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-deep) 100%);
+  cursor: pointer;
+}
+
+.radio__facade:hover .radio__play,
+.radio__facade:focus-visible .radio__play {
+  transform: scale(1.06);
+}
+
+.radio__facade:focus-visible {
+  outline: 3px solid var(--color-white);
+  outline-offset: -6px;
+}
+
+.radio__play {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: var(--color-white);
+  color: var(--color-primary-deep);
+  box-shadow: 0 12px 30px -12px rgba(60, 20, 20, 0.6);
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.radio__play svg { margin-left: 4px; }
+
+.radio__facade-copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+}
+
+.radio__facade-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1rem + 0.8vw, 1.45rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.radio__facade-note {
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  opacity: 0.88;
+}
+
+@media (max-width: 600px) {
+  .radio__facade { gap: var(--space-2xs); padding: var(--space-sm); }
+  .radio__play { width: 56px; height: 56px; }
+  .radio__play svg { width: 22px; height: 22px; }
+  .radio__facade-title { font-size: 1rem; }
+  .radio__facade-note { font-size: 0.72rem; }
+}
+
 /* ===== Gallery carousel (centered coverflow — arrows, dots, swipe) ===== */
 .gallery {
   padding: var(--space-xl) 0 var(--space-2xl);
