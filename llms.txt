@@ -2,7 +2,7 @@
 
 > Vigdís is a calm visual daily-routine and chore tracker for families. It helps parents and kids build dependable routines through pictures, timers, points and rewards. It works well for typical families and is especially helpful for households with autism, ADHD, or other reasons a child benefits from visual structure.
 
-Last updated: 2026-10-08
+Last updated: 2026-10-14
 
 ## What Vigdís is
 A native mobile app for iPhone, iPad and Android phones and tablets. Parents (or caregivers) build picture-based routines and chores for their kids. Kids see what comes next, mark steps complete, earn points, and redeem rewards the family defines. Designed by a developmental therapist alongside parents.
@@ -20,10 +20,7 @@ A native mobile app for iPhone, iPad and Android phones and tablets. Parents (or
 
 ## Pricing
 - Free to download. The free version covers one child profile on a single device, with routines, points and rewards.
-- Paid plans start with a **two-week free trial**.
-- Two paid tiers:
-  - **Standard** (single household): $6.99 / month, $14.99 / quarter, $49.99 / year.
-  - **Multi-Family** (shared across households, co-parents and caregivers): $9.99 / month, $12.99 / quarter, $79.99 / year.
+- One subscription, everything included (up to six profiles, cloud sync and backup, sharing across households, co-parents and caregivers): **$8.99 / month or $49.99 / year**, after a **two-week free trial**.
 - These are US dollar list prices; local pricing varies by storefront and the store listing is authoritative.
 - On a shared profile, the person who holds the subscription pays — someone invited onto a shared profile does not need their own subscription.
 
@@ -36,7 +33,7 @@ Vigdís is used by schools, preschools and therapy services as well as by indivi
 - Subtasks within a step, so one line on the list can hold several small actions.
 - Per-step visual timers to help with transitions.
 - Points, rewards and achievements as gentle reinforcement. Parents set both what earns points and what each reward costs; points are not removed automatically.
-- Multiple child profiles; co-parent / caregiver sharing on Multi-Family, by invite or QR code.
+- Multiple child profiles; co-parent / caregiver sharing included in the subscription, by invite or QR code.
 - Protected Mode: a four-digit parent PIN over settings, rewards, sharing and deletions.
 - Home-screen widgets, and Live Activities for timed tasks.
 - Customisable visuals, high-contrast options, and text-to-speech support.
@@ -46,9 +43,9 @@ Vigdís is used by schools, preschools and therapy services as well as by indivi
 The app interface is available in **English and Icelandic only**. Other languages are not currently supported in-app.
 
 ## Privacy and data
-- Local-first: routines, tasks and photos live on the device by default.
+- Works without an account: routines, tasks and photos stay on the device until the user signs in.
 - Works offline.
-- Cloud sync is **opt-in** (used for multi-device and Multi-Family sharing).
+- Cloud sync, backup and sharing are **opt-in** (turned on by signing in) and included in the subscription.
 - No third-party advertising trackers. Limited product telemetry is opt-out in Settings → Legal → Help improve Vigdís.
 
 ## Links
