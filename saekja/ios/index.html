@@ -166,6 +166,39 @@ img{display:block;max-width:100%;height:auto}
   </section>
 
 </main>
+<!-- Landing beacon: first-party, cookieless, anonymous. Two events go to our own
+     Supabase telemetry (the same insert-only table the app uses): one on page
+     load, one when the store button is tapped. Nothing is stored on the device,
+     no identifiers are read, no third party is involved — so it needs no consent
+     banner. device_id is a FIXED per-page constant (not per visitor) so these
+     rows add at most one "device" a day to the app's active-device rollup and
+     can never be used to tell visitors apart. Count by event, not by device.
+     The key below is the publishable (anon) key: insert-only under RLS. -->
+<script>
+(function(){
+  var PAGE="ios";
+  var DEVICE="00000000-0000-4000-8000-0000000a1105";
+  var URL="https://vfdjirmowbjdmieeyjkl.supabase.co/rest/v1/telemetry_events";
+  var KEY="sb_publishable_XxI8jNl0ERoIlLLKdS93_g_cuNyvLy5";
+  var q=new URLSearchParams(location.search);
+  var ref="";
+  try{ref=document.referrer?new URL(document.referrer).hostname.replace(/^(www|l|lm|m)\./,""):"";}catch(e){}
+  var props={page:PAGE,src:"meta",ref:ref.slice(0,64),fbclid:q.has("fbclid"),
+             utm_campaign:(q.get("utm_campaign")||"").slice(0,64),
+             lang:(navigator.language||"").slice(0,8)};
+  function send(name){
+    try{
+      fetch(URL,{method:"POST",keepalive:true,mode:"cors",
+        headers:{"apikey":KEY,"Authorization":"Bearer "+KEY,"Content-Type":"application/json","Prefer":"return=minimal"},
+        body:JSON.stringify({device_id:DEVICE,event_name:name,event_props:props,app_version:"web",
+          locale:props.lang,client_timestamp:new Date().toISOString()})}).catch(function(){});
+    }catch(e){}
+  }
+  send("web_landing_view");
+  var cta=document.querySelector(".cta");
+  if(cta){cta.addEventListener("click",function(){send("web_store_click");},{passive:true});}
+})();
+</script>
 </body>
 
 </html>
