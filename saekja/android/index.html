@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="is">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<!-- Paid-traffic landing page for Android (Meta). One deliberate tap, no redirect.
+     /saekja (the smart link) stays untouched and keeps doing device sniffing;
+     this page exists so Meta can optimise for "landing page views" and so the
+     Facebook/Instagram in-app browser isn't asked to follow a redirect.
+     NO auto-redirect of any kind belongs on this page. -->
+<meta name="robots" content="noindex, nofollow">
+
+<title>Sækja Vigdís — sjónrænt dagskrárapp</title>
+<meta name="description" content="Sjónrænt dagskrárapp fyrir daglega rútínu, hannað af þroskaþjálfa. Sækja á Google Play.">
+<link rel="icon" type="image/webp" href="icon.webp">
+
+<!-- Hallmark · component-scope landing card · genre: editorial
+     theme: Vigdís coral/cream (locked, reused from styles.css)
+     enrichment: none (real screenshot) · nav: none · footer: none
+     Critical CSS inlined on purpose: this page must paint in one round trip. -->
+<style>
+:root{
+  --color-background:#FFFAF8;
+  --color-primary-mist:#F8E6E3;
+  --color-primary-soft:#FDF1EE;
+  --color-coral-strong:#A2494A;
+  --color-coral-deep:#8E3E3F;
+  --color-text-dark:#2C2C2C;
+  --color-text-muted:#666666;
+  --color-white:#FFFFFF;
+  --color-rule:rgba(216,112,112,.18);
+  --font-display:Georgia,"Times New Roman",serif;
+  --font-main:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --space-3xs:4px;--space-2xs:8px;--space-xs:12px;--space-sm:16px;--space-md:20px;
+  --radius-sm:10px;--radius-md:16px;--radius-pill:999px;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{overflow-x:clip}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--font-main);
+  background:var(--color-background);
+  color:var(--color-text-dark);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+}
+img{display:block;max-width:100%;height:auto}
+
+.card{
+  flex:1 1 auto;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:var(--space-sm);
+  width:100%;
+  max-width:440px;
+  margin:0 auto;
+  padding:max(var(--space-md),env(safe-area-inset-top)) var(--space-sm)
+          max(var(--space-md),env(safe-area-inset-bottom));
+}
+
+/* --- masthead: icon + wordmark, left-aligned, no nav --- */
+.mast{display:flex;align-items:center;gap:var(--space-xs)}
+.mast__icon{width:46px;height:46px;border-radius:11px;box-shadow:0 2px 10px -4px rgba(140,70,70,.5)}
+.mast__name{font-family:var(--font-display);font-size:1.22rem;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+.mast__kicker{display:block;font-family:var(--font-main);font-size:.69rem;font-weight:600;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--color-coral-strong);margin-top:2px}
+
+/* --- the one line of what it is --- */
+.headline{
+  font-family:var(--font-display);
+  font-size:clamp(1.65rem,1.15rem+2.6vw,2.3rem);
+  font-weight:400;line-height:1.1;letter-spacing:-.018em;
+  overflow-wrap:anywhere;min-width:0;
+  text-wrap:balance;
+}
+.lead{font-size:.95rem;color:var(--color-text-muted);max-width:34ch}
+
+/* --- the single action --- */
+.cta{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  min-height:58px;padding:var(--space-xs) var(--space-md);
+  background:var(--color-coral-strong);
+  color:var(--color-white);
+  font-size:1.08rem;font-weight:650;letter-spacing:-.005em;
+  text-decoration:none;border-radius:var(--radius-pill);
+  box-shadow:0 10px 26px -14px rgba(142,62,63,.75);
+  transition:transform .18s var(--ease-out),background-color .18s var(--ease-out);
+}
+.cta__icon{width:21px;height:21px;flex:none}
+.cta:hover{background:var(--color-coral-deep)}
+.cta:active{transform:translateY(1px);background:var(--color-coral-deep)}
+.cta:focus-visible{outline:3px solid var(--color-coral-strong);outline-offset:3px}
+.cta-note{font-size:.76rem;color:var(--color-text-muted);text-align:center;margin-top:calc(-1 * var(--space-2xs))}
+
+/* --- proof: real screenshot beside a real user review --- */
+.proof{
+  display:grid;grid-template-columns:minmax(0,118px) minmax(0,1fr);
+  gap:var(--space-sm);align-items:center;
+  padding-top:var(--space-2xs);
+  border-top:1px solid var(--color-rule);
+  margin-top:var(--space-2xs);
+}
+.proof__shot{border-radius:var(--radius-sm);box-shadow:0 10px 26px -18px rgba(120,60,60,.6)}
+.stars{color:var(--color-coral-strong);font-size:.95rem;letter-spacing:.11em;line-height:1}
+.quote{font-family:var(--font-display);font-size:.95rem;line-height:1.35;margin-top:var(--space-2xs)}
+.byline{font-size:.72rem;color:var(--color-text-muted);margin-top:var(--space-3xs)}
+
+@media (prefers-reduced-motion:reduce){.cta{transition:none}}
+
+/* Very short viewports (in-app browser chrome eats ~130px): keep one screen. */
+@media (max-height:700px){
+  .card{gap:var(--space-xs)}
+  .proof{grid-template-columns:minmax(0,96px) minmax(0,1fr)}
+  .lead{font-size:.9rem}
+}
+@media (max-height:600px){
+  .proof{grid-template-columns:minmax(0,78px) minmax(0,1fr)}
+}
+</style>
+</head>
+
+<body>
+<main class="card">
+
+  <div class="mast">
+    <img class="mast__icon" src="icon.webp" alt="" width="46" height="46" fetchpriority="high" decoding="sync">
+    <p class="mast__name">Vigdís<span class="mast__kicker">Sjónrænt dagskrárapp</span></p>
+  </div>
+
+  <h1 class="headline">Sjónrænt skipulag fyrir daglega rútínu</h1>
+
+  <p class="lead">Sjónrænt dagskrárapp hannað af þroskaþjálfa. Skýr yfirsýn yfir daglegt líf — fyrir alla fjölskylduna.</p>
+
+  <!-- Google Play link with an Install Referrer. Play Console → Statistics →
+       Acquisition → "UTM campaigns" reports installs by utm_source / utm_medium /
+       utm_campaign, so the referrer below MUST stay URL-encoded exactly like this.
+       Same naming as the iOS page: campaign "meta-android-okt".
+       Play attributes only installs that go through this exact link; organic
+       searches that follow an ad view are not counted. -->
+  <a class="cta" href="https://play.google.com/store/apps/details?id=com.vigdis.app&amp;referrer=utm_source%3Dmeta%26utm_medium%3Dpaid%26utm_campaign%3Dmeta-android-okt">
+    <svg class="cta__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M3.6 2.3c-.3.3-.5.8-.5 1.4v16.6c0 .6.2 1.1.5 1.4l.1.1 9.3-9.3v-.2L3.7 2.2l-.1.1z"/><path fill="currentColor" d="M16.1 15.6 13 12.5v-.2l3.1-3.1.1.1 3.7 2.1c1.1.6 1.1 1.6 0 2.2l-3.7 2.1-.1-.1z" opacity=".85"/><path fill="currentColor" d="M16.2 15.5 13 12.4 3.6 21.7c.4.4.9.4 1.6 0l11-6.2z" opacity=".7"/><path fill="currentColor" d="M16.2 9.3 5.2 3.1c-.7-.4-1.2-.3-1.6 0L13 12.4l3.2-3.1z" opacity=".55"/></svg>
+    <span>Sækja á Google Play</span>
+  </a>
+  <p class="cta-note">Appið er á íslensku og ensku.</p>
+
+  <section class="proof" aria-label="Umsögn frá notanda">
+    <img class="proof__shot" src="shot.webp" alt="Skjámynd úr Vigdís: sjónræn verkefnalisti dagsins" width="300" height="652" decoding="async">
+    <figure>
+      <div class="stars" aria-label="5 af 5 stjörnum">★★★★★</div>
+      <blockquote class="quote" lang="is">„Þetta app er mesta snilld sem ég hef séð! Akkúrat það sem vantaði á mitt heimili!“</blockquote>
+      <figcaption class="byline">Nafnlaus umsögn · Ísland</figcaption>
+    </figure>
+  </section>
+
+</main>
+</body>
+
+</html>
