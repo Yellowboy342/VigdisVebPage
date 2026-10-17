@@ -178,7 +178,7 @@ img{display:block;max-width:100%;height:auto}
 (function(){
   var PAGE="ios";
   var DEVICE="00000000-0000-4000-8000-0000000a1105";
-  var URL="https://vfdjirmowbjdmieeyjkl.supabase.co/rest/v1/telemetry_events";
+  var ENDPOINT="https://vfdjirmowbjdmieeyjkl.supabase.co/rest/v1/telemetry_events";
   var KEY="sb_publishable_XxI8jNl0ERoIlLLKdS93_g_cuNyvLy5";
   var q=new URLSearchParams(location.search);
   var ref="";
@@ -188,7 +188,7 @@ img{display:block;max-width:100%;height:auto}
              lang:(navigator.language||"").slice(0,8)};
   function send(name){
     try{
-      fetch(URL,{method:"POST",keepalive:true,mode:"cors",
+      fetch(ENDPOINT,{method:"POST",keepalive:true,mode:"cors",
         headers:{"apikey":KEY,"Authorization":"Bearer "+KEY,"Content-Type":"application/json","Prefer":"return=minimal"},
         body:JSON.stringify({device_id:DEVICE,event_name:name,event_props:props,app_version:"web",
           locale:props.lang,client_timestamp:new Date().toISOString()})}).catch(function(){});
