@@ -757,7 +757,7 @@ async function deleteStep(subtaskId) {
  * than leaving it out until the resolver is fixed.
  */
 
-const LIST_STYLES = [
+export const LIST_STYLES = [
     ['standard', 'Standard'],
     ['traditional', 'Traditional'],
 ];
@@ -774,7 +774,7 @@ const LIST_STYLES = [
    correctly but could not be re-selected — and, because a <select>
    silently falls back to its first option, saving that profile would
    have quietly reset it to Coral. Same failure the period icons had. */
-const THEMES = [
+export const THEMES = [
     ['coral', 'Coral'],
     ['ocean', 'Ocean'],
     ['forest', 'Forest'],
@@ -800,17 +800,17 @@ const THEMES = [
     ['apricot', 'Apricot'],
 ];
 
-const APPEARANCES = [
+export const APPEARANCES = [
     ['light', 'Light'], ['dark', 'Dark'], ['system', 'Match device'],
 ];
 
-const CHIMES = [
+export const CHIMES = [
     ['felt', 'Felt'], ['sunrise', 'Sunrise'], ['bounce', 'Bounce'],
     ['pluck', 'Pluck'], ['smile', 'Smile'], ['chime', 'Chime'],
     ['bloom', 'Bloom'], ['vigdis', 'Vigdís'], ['system', 'System'],
 ];
 
-const PROFILE_LANGUAGES = [
+export const PROFILE_LANGUAGES = [
     ['en', 'English'],
     ['is', 'Íslenska'],
 ];
@@ -1051,7 +1051,7 @@ function bindBonusUI() {
     $('#btn-bonus-cancel')?.addEventListener('click', () => $('#modal-bonus').close());
 }
 
-function openBonusModal() {
+export function openBonusModal() {
     $('#bonus-amount').value = 5;
     $('#bonus-reason').value = '';
     $('#bonus-error').textContent = '';

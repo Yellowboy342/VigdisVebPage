@@ -16,6 +16,10 @@ import {
 /* The completion moment — points fly, Lóa cheers, confetti. */
 import { celebrateCompletion, clearCelebrations } from './celebrate.js';
 import { trendChart, barChart, rankBars, reliabilityRows } from './charts.js';
+/* The Settings tab — the app's grouped list and its sub-pages. */
+import {
+    initSettings, bindSettings, renderSettings, settingsHeader, settingsBack, resetSettings,
+} from './settings.js';
 
 const SUPABASE_URL = 'https://vfdjirmowbjdmieeyjkl.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_XxI8jNl0ERoIlLLKdS93_g_cuNyvLy5';
@@ -38,7 +42,6 @@ const state = {
     session: null,
     profiles: [],
     activeProfileId: null,
-    filter: 'today',
     data: { timePeriods: [], tasks: [], subtasks: [], rewards: [], redemptions: [], bonus: [] },
     channel: null,
     editingTaskId: null,
@@ -334,6 +337,11 @@ async function signInWithPassword(email, password) {
     }
 }
 
+async function signOut() {
+    if (DEMO) { location.href = location.pathname; return; }
+    await sb.auth.signOut();
+}
+
 function bindAuthUI() {
     $('#btn-apple').addEventListener('click', () => signInWithProvider('apple'));
     $('#btn-google').addEventListener('click', () => signInWithProvider('google'));
@@ -391,11 +399,7 @@ function bindAuthUI() {
         enterApp();
     });
 
-    document.querySelectorAll('#btn-signout, [data-signout]').forEach((b) =>
-        b.addEventListener('click', async () => {
-            if (DEMO) { location.href = location.pathname; return; }
-            await sb.auth.signOut();
-        }));
+    $('#btn-signout').addEventListener('click', signOut);
 }
 
 /* ── Data loading ──────────────────────────────────── */
@@ -574,6 +578,17 @@ function renderHead() {
             renderAll();
         });
         $('#day-today')?.addEventListener('click', () => { viewKey = todayKey(); renderAll(); });
+    } else if (view === 'settings') {
+        const h = settingsHeader();
+        host.innerHTML = `
+            ${h.back ? `<button class="back-link" type="button" id="btn-set-back">
+                <svg width="13" height="22" viewBox="0 0 13 22" aria-hidden="true"><path d="M11 2 2 11l9 9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                ${esc(h.back)}</button>` : ''}
+            <div class="apphead__row apphead__row--titled">
+                <div class="apphead__titles"><h1 class="large-title">${esc(h.title)}</h1></div>
+                <div class="apphead__actions">${h.back ? '' : avatarHtml(profile)}</div>
+            </div>`;
+        $('#btn-set-back')?.addEventListener('click', settingsBack);
     } else {
         const actions = view === 'rewards'
             ? `<button class="icon-btn" type="button" id="btn-reward-history" aria-label="History">
@@ -740,7 +755,8 @@ function inPeriodHours(p, hour) {
 }
 
 function visibleTasks() {
-    return state.data.tasks.filter((t) => state.filter === 'all' || isScheduledOn(t, viewDate()));
+    // Only what is scheduled for the day on screen, as in the app.
+    return state.data.tasks.filter((t) => isScheduledOn(t, viewDate()));
 }
 
 function periodTiles() {
@@ -860,15 +876,6 @@ function renderTasks() {
            </div>`
         : '';
 
-    /* Tasks that exist but are not on this day — "All" used to be a
-       filter chip; it is a quiet link under the list now. */
-    const hiddenCount = state.data.tasks.length - visibleTasks().length;
-    const filterLink = state.filter === 'all'
-        ? '<button class="linkish" type="button" data-show="today">Show only what is scheduled for this day</button>'
-        : hiddenCount > 0
-            ? `<button class="linkish" type="button" data-show="all">${hiddenCount} more ${hiddenCount === 1 ? 'task is' : 'tasks are'} not on this day · Show all</button>`
-            : '';
-
     if (!state.data.tasks.length) {
         host.innerHTML = `
             <div class="empty empty--tasks">
@@ -882,9 +889,9 @@ function renderTasks() {
                 <img src="../assets/mascot/loa-sleeping.svg" alt="">
                 <strong>Nothing in ${esc(tile?.name || 'this period')}${isViewingToday() ? ' today' : ' that day'}</strong>
                 <p>Pick another time of day above, or tap + to add a task here.</p>
-            </div>${filterLink}`;
+            </div>`;
     } else {
-        host.innerHTML = `<div class="task-list">${tasks.map(taskRowHtml).join('')}</div>${filterLink}`;
+        host.innerHTML = `<div class="task-list">${tasks.map(taskRowHtml).join('')}</div>`;
     }
 
     host.querySelectorAll('[data-toggle]').forEach((btn) => {
@@ -893,10 +900,6 @@ function renderTasks() {
     host.querySelectorAll('[data-edit]').forEach((btn) => {
         btn.addEventListener('click', () => openTaskModal(btn.dataset.edit));
     });
-    host.querySelectorAll('[data-show]').forEach((btn) => btn.addEventListener('click', () => {
-        state.filter = btn.dataset.show;
-        renderTasks();
-    }));
     hydrateImages(host);
 }
 
@@ -1041,6 +1044,7 @@ function renderAll() {
     if (!$('[data-pane="calendar"]')?.hidden) renderCalendar();
     if (!$('[data-pane="analytics"]')?.hidden) { renderAnalytics(); renderReport(); }
     renderHead();
+    renderSettings();
     renderProfiles();
     renderTasks();
     renderRewards();
@@ -1427,6 +1431,11 @@ function wireManagement() {
         },
     });
 
+    initSettings({
+        state, sb, esc, toast, DEMO, hydrateImages, exportCSV, signOut, selectProfile,
+        renderAll, renderHead,
+    });
+
     /* Adding or removing a profile changes a list that lives outside
        the per-profile data bundle, so the setup module needs its own
        way to re-read it and land the user somewhere valid. */
@@ -1446,8 +1455,6 @@ function wireManagement() {
 async function enterApp() {
     showView('view-app');
     $('#user-email').textContent = state.session?.user?.email || '';
-    $('#user-email-settings').textContent = state.session?.user?.email
-        ? `Signed in as ${state.session.user.email}` : '';
     wireManagement();
 
     state.profiles = await loadProfiles();
@@ -2271,7 +2278,7 @@ function setView(name, pushHash = true) {
     renderHead();
     if (name === 'calendar') renderCalendar();
     if (name === 'analytics') { renderAnalytics(); renderReport(); }
-    if (name === 'settings') renderManagement();
+    if (name === 'settings') { renderManagement(); renderSettings(); }
     // Hash must not collide with an element id or the browser scroll-jumps
     // to it on load. None of these five match an id.
     const hash = name === 'tasks' ? '' : `#${name}`;
@@ -2288,6 +2295,7 @@ function setRail(open) {
 
 function bindAppUI() {
     const rail = $('#rail');
+    bindSettings();
     document.addEventListener('keydown', (e) => {
         if (e.key !== 'Escape') return;
         setRail(false);
@@ -2306,6 +2314,8 @@ function bindAppUI() {
 
     document.querySelectorAll('.viewtab').forEach((t) =>
         t.addEventListener('click', () => {
+            // Choosing Settings again pops back to its root, as a tab bar does.
+            if (t.dataset.view === 'settings' && document.body.dataset.view === 'settings') resetSettings();
             setView(t.dataset.view);
             setRail(false);
             window.scrollTo({ top: 0 });
@@ -2478,7 +2488,6 @@ function demoData(profileId) {
 async function enterDemo() {
     showView('view-app');
     $('#user-email').textContent = 'Sample data';
-    $('#user-email-settings').textContent = 'Sample data — nothing is saved.';
     wireManagement();
     state.profiles = [
         { id: 'demo-1', name: 'Anna', avatar_path: null },

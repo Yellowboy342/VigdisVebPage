@@ -256,72 +256,73 @@
                     <div id="report-body"></div>
                 </div>
 
-                <!-- ── Settings ── -->
+                <!-- ── Settings ──
+                     The app's Settings (MoreView): one inset-grouped list
+                     that pushes sub-pages. Rows the web cannot do
+                     (notifications, sounds, Protected mode, backup) are
+                     left out rather than shown dead. Pages are rendered
+                     by settings.js; the few elements manage.js binds at
+                     start-up (Add period, Add reward, referral copy) live
+                     here statically so their listeners survive. -->
                 <div class="viewpane" data-pane="settings" hidden>
-                    <p class="settings-note">Changes appear in the app straight away.</p>
+                    <div class="set">
+                        <div class="sp" data-sp="root"></div>
+                        <div class="sp" data-sp="account" hidden></div>
+                        <div class="sp" data-sp="switch" hidden></div>
+                        <div class="sp" data-sp="profile" hidden></div>
+                        <div class="sp" data-sp="choice" hidden></div>
 
-                    <div class="setup-grid">
-                        <section class="card" aria-labelledby="profiles-title">
-                            <div class="card__head">
-                                <h2 class="eyebrow" id="profiles-title">Profiles</h2>
+                        <div class="sp" data-sp="periods" hidden>
+                            <div class="grp" id="period-list"></div>
+                            <div class="grp">
+                                <button class="grow" id="btn-add-period" type="button">
+                                    <span class="grow__icon" style="--ic:#34C759"><svg aria-hidden="true"><use href="#s-plus"/></svg></span>
+                                    <span class="grow__label">Add Period</span>
+                                </button>
                             </div>
-                            <div id="profile-manage-list"></div>
-                        </section>
+                            <p class="grp-foot">Every task belongs to one part of the day.</p>
+                        </div>
 
-                        <section class="card" aria-labelledby="periods-title">
-                            <div class="card__head">
-                                <h2 class="eyebrow" id="periods-title">Time periods</h2>
-                                <button class="btn-ghost" id="btn-add-period" type="button">Add period</button>
+                        <div class="sp" data-sp="rewards" hidden>
+                            <div class="grp" id="manage-reward-list"></div>
+                            <div class="grp">
+                                <button class="grow" id="btn-add-reward" type="button">
+                                    <span class="grow__icon" style="--ic:#34C759"><svg aria-hidden="true"><use href="#s-plus"/></svg></span>
+                                    <span class="grow__label">Add Reward</span>
+                                </button>
                             </div>
-                            <div id="period-list"></div>
-                        </section>
+                            <p class="grp-foot">What points can be spent on.</p>
+                        </div>
+
+                        <div class="sp" data-sp="achievements" hidden>
+                            <div class="grp" id="achievement-list"></div>
+                        </div>
+
+                        <div class="sp" data-sp="timers" hidden>
+                            <div class="grp" id="timer-list"></div>
+                            <p class="grp-foot">The last 20 timed runs, newest first.</p>
+                        </div>
+
+                        <div class="sp" data-sp="help" hidden>
+                            <div class="grp" id="help-rows"></div>
+                            <h2 class="grp-head">Invite</h2>
+                            <div class="grp">
+                                <div class="grow grow--static">
+                                    <span class="grow__icon" style="--ic:#FF2D55"><svg aria-hidden="true"><use href="#s-gift"/></svg></span>
+                                    <span class="grow__label">Your Code</span>
+                                    <strong class="grow__value" id="referral-code">…</strong>
+                                </div>
+                                <div class="grow grow--static grow--field">
+                                    <input id="referral-link" type="text" readonly aria-label="Referral link" placeholder="Your link appears here">
+                                    <button class="grow__action" id="btn-referral-copy" type="button">Copy</button>
+                                </div>
+                            </div>
+                            <p class="grp-foot">Another family joins with your link.</p>
+                        </div>
+
+                        <div class="sp" data-sp="about" hidden></div>
                     </div>
-
-                    <div class="setup-grid">
-                        <section class="card" aria-labelledby="manage-rewards-title">
-                            <div class="card__head">
-                                <h2 class="eyebrow" id="manage-rewards-title">Rewards</h2>
-                                <button class="btn-ghost" id="btn-add-reward" type="button">Add reward</button>
-                            </div>
-                            <div id="manage-reward-list"></div>
-                        </section>
-
-                        <section class="card" aria-labelledby="achievements-title">
-                            <div class="card__head">
-                                <h2 class="eyebrow" id="achievements-title">Achievements</h2>
-                                <button class="btn-ghost" id="btn-award-bonus" type="button">Award points</button>
-                            </div>
-                            <div id="achievement-list"></div>
-                        </section>
-                    </div>
-
-                    <div class="setup-grid">
-                        <section class="card" aria-labelledby="timers-title">
-                            <div class="card__head">
-                                <h2 class="eyebrow" id="timers-title">Focus timer sessions</h2>
-                            </div>
-                            <p class="rnote">The last 20 timed runs, newest first.</p>
-                            <div id="timer-list"></div>
-                        </section>
-
-                        <section class="card" aria-labelledby="referral-title">
-                            <div class="card__head">
-                                <h2 class="eyebrow" id="referral-title">Invite another family</h2>
-                            </div>
-                            <p class="rnote">Your code: <strong id="referral-code">…</strong></p>
-                            <div class="quick-add">
-                                <input id="referral-link" type="text" readonly aria-label="Referral link">
-                                <button class="btn-ghost" id="btn-referral-copy" type="button">Copy</button>
-                            </div>
-                        </section>
-                    </div>
-
-                    <section class="card card--account" aria-label="Account">
-                        <span class="rnote" id="user-email-settings"></span>
-                        <button class="btn-ghost" type="button" data-signout>Sign out</button>
-                    </section>
                 </div>
-
                 <footer class="shell-foot">
                     <span>© 2026 Vigdís</span>
                     <a href="../privacy.html">Privacy</a>
@@ -435,6 +436,31 @@
                 <circle cx="12" cy="12" r="9.6" fill="currentColor"/>
                 <path style="stroke:var(--knock,#fff)" d="M12 6.6V12l3.6 2.2" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
             </symbol>
+            <!-- Settings glyphs (white on a coloured tile, as SettingsIcon). -->
+            <symbol id="s-arrows" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h15M15.5 4.5 19 8l-3.5 3.5"/><path d="M20 16H5M8.5 12.5 5 16l3.5 3.5"/></g></symbol>
+            <symbol id="s-star" viewBox="0 0 24 24"><path d="M12 2.5L14.53 9.02L21.51 9.41L16.09 13.83L17.88 20.59L12 16.8L6.12 20.59L7.91 13.83L2.49 9.41L9.47 9.02Z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+            <symbol id="s-plus" viewBox="0 0 24 24"><path d="M12 4.5v15M4.5 12h15" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></symbol>
+            <symbol id="s-question" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8.6 8.4a3.5 3.5 0 0 1 6.8 1.1c0 2.4-3.4 2.9-3.4 5"/></g><circle cx="12" cy="19" r="1.6" fill="currentColor"/></symbol>
+            <symbol id="s-info" viewBox="0 0 24 24"><circle cx="12" cy="5.6" r="1.8" fill="currentColor"/><path d="M12 10.2v9" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></symbol>
+            <symbol id="s-palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 0 18c1.3 0 1.9-.9 1.9-1.8 0-1.2-1-1.6-1-2.6 0-1 .8-1.6 1.8-1.6H17a4 4 0 0 0 4-4C21 6.4 17 3 12 3z" fill="currentColor"/><g style="fill:var(--knock,#fff)"><circle cx="7.5" cy="11" r="1.5"/><circle cx="10" cy="7" r="1.5"/><circle cx="14.5" cy="7" r="1.5"/></g></symbol>
+            <symbol id="s-halfcircle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></symbol>
+            <symbol id="s-globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="8.6"/><ellipse cx="12" cy="12" rx="3.8" ry="8.6"/><path d="M3.6 9.2h16.8M3.6 14.8h16.8"/></g></symbol>
+            <symbol id="s-list" viewBox="0 0 24 24"><g fill="currentColor"><circle cx="5" cy="6.5" r="1.7"/><circle cx="5" cy="12" r="1.7"/><circle cx="5" cy="17.5" r="1.7"/></g><path d="M9.5 6.5H20M9.5 12H20M9.5 17.5H20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+            <symbol id="s-sparkles" viewBox="0 0 24 24"><path d="M10 3l1.6 4.6L16 9.2l-4.4 1.6L10 15.4l-1.6-4.6L4 9.2l4.4-1.6zM17.5 13.5l.9 2.4 2.4.9-2.4.9-.9 2.4-.9-2.4-2.4-.9 2.4-.9z" fill="currentColor"/></symbol>
+            <symbol id="s-speaker" viewBox="0 0 24 24"><path d="M3.5 9.5h3.2L11.5 5v14l-4.8-4.5H3.5z" fill="currentColor"/><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.5 9a4 4 0 0 1 0 6"/><path d="M17.2 6.5a7.5 7.5 0 0 1 0 11"/></g></symbol>
+            <symbol id="s-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M12 7v5.2l3.4 2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+            <symbol id="s-gift" viewBox="0 0 24 24"><g fill="currentColor"><rect x="3.5" y="8" width="17" height="4" rx="1"/><rect x="5" y="13" width="14" height="7.5" rx="1"/></g><path d="M12 8v12.5" style="stroke:var(--knock,#fff)" stroke-width="1.8"/><path d="M12 8C10.5 4.5 6.5 4.5 7.5 7c.4 1 2.5 1 4.5 1zm0 0c1.5-3.5 5.5-3.5 4.5-1-.4 1-2.5 1-4.5 1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+            <symbol id="s-trophy" viewBox="0 0 24 24"><path d="M7 4h10v5a5 5 0 0 1-10 0z" fill="currentColor"/><path d="M7 6H4.5v1.5A3 3 0 0 0 7.5 10.5M17 6h2.5v1.5a3 3 0 0 1-3 3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 14v3.5M8.5 20h7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+            <symbol id="s-timer" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M12 13.5V9.5M9.5 3h5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+            <symbol id="s-starplus" viewBox="0 0 24 24"><path d="M10.5 3l2.2 4.8 5.2.6-3.9 3.6 1.1 5.2-4.6-2.7-4.6 2.7 1.1-5.2L3.1 8.4l5.2-.6z" fill="currentColor"/><path d="M18.5 15v6M15.5 18h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+            <symbol id="s-people" viewBox="0 0 24 24"><g fill="currentColor"><circle cx="9" cy="8" r="3.4"/><path d="M2.5 19c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6z"/><circle cx="16.5" cy="8.6" r="2.7"/><path d="M16.8 13.2c2.8.2 4.7 2.3 4.7 5.3h-4.4c0-2-.4-3.7-1.6-5z"/></g></symbol>
+            <symbol id="s-envelope" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2.4" fill="currentColor"/><path d="M4 7l8 6 8-6" fill="none" style="stroke:var(--knock,#fff)" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+            <symbol id="s-share" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5v11M8 7l4-3.5L16 7"/><path d="M8.5 10.5H6.5v9.5h11v-9.5h-2"/></g></symbol>
+            <symbol id="s-hand" viewBox="0 0 24 24"><path d="M8 11V5.2a1.4 1.4 0 0 1 2.8 0V10V4a1.4 1.4 0 0 1 2.8 0v6V5a1.4 1.4 0 0 1 2.8 0v6.5V8.4a1.3 1.3 0 0 1 2.6 0V14a7 7 0 0 1-12.6 4.2L4.2 14a1.4 1.4 0 0 1 2.2-1.7L8 14z" fill="currentColor"/></symbol>
+            <symbol id="s-doc" viewBox="0 0 24 24"><path d="M6 3h8l4.5 4.5V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" fill="currentColor"/><path d="M8.5 12h7M8.5 15.5h7" style="stroke:var(--knock,#fff)" stroke-width="1.7" stroke-linecap="round"/></symbol>
+            <symbol id="s-external" viewBox="0 0 24 24"><path d="M8 16 16.5 7.5M9.5 7.5h7v7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+            <symbol id="s-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+            <symbol id="s-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15 15l5 5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
         </defs>
     </svg>
 
