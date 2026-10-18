@@ -11,6 +11,7 @@ import {
     initManagement, loadEntitlement, renderManagement, renderTaskSteps,
     setProfileReloader, setRecurrence, readRecurrence, loadReadOnlyExtras,
     loadReferralCode, applyProfileTheme, openProfileModal, openShareModal,
+    openRewardModal,
 } from './manage.js';
 /* The completion moment — points fly, Lóa cheers, confetti. */
 import { celebrateCompletion, clearCelebrations } from './celebrate.js';
@@ -41,6 +42,9 @@ const state = {
     data: { timePeriods: [], tasks: [], subtasks: [], rewards: [], redemptions: [], bonus: [] },
     channel: null,
     editingTaskId: null,
+    /* Which time-of-day tile is selected on Tasks. Null means "pick the
+       one that fits the clock", resolved in renderTasks. */
+    periodSel: null,
 };
 
 /* ── Tiny helpers ──────────────────────────────────── */
@@ -387,10 +391,11 @@ function bindAuthUI() {
         enterApp();
     });
 
-    $('#btn-signout').addEventListener('click', async () => {
-        if (DEMO) { location.href = location.pathname; return; }
-        await sb.auth.signOut();
-    });
+    document.querySelectorAll('#btn-signout, [data-signout]').forEach((b) =>
+        b.addEventListener('click', async () => {
+            if (DEMO) { location.href = location.pathname; return; }
+            await sb.auth.signOut();
+        }));
 }
 
 /* ── Data loading ──────────────────────────────────── */
@@ -500,37 +505,95 @@ function activeProfile() {
     return state.profiles.find((p) => p.id === state.activeProfileId);
 }
 
-function renderGreeting() {
-    const hour = new Date().getHours();
-    const part = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
-    const name = activeProfile()?.name;
-    $('#greeting-line').textContent = name ? `${part}, ${name}` : part;
+/* ── Page header ───────────────────────────────────────
+   Mirrors the top of each app screen. Tasks: a date pill, the streak
+   and points pills, the avatar, then the child's name as a large
+   title. Every other screen: the name as a small eyebrow over a large
+   screen title, with that screen's actions on the right. */
 
-    const host = $('#greeting-date');
-    // Naming the day explicitly matters once you can leave today: a bare
-    // date gives no clue you are no longer looking at the live view.
-    const label = isViewingToday() ? `Today · ${fmtDate(viewDate())}` : fmtDate(viewDate());
-    host.innerHTML = `
-        <span class="dayline">
-            <button class="dayline__nav" type="button" id="day-prev" aria-label="Previous day">‹</button>
-            <span class="dayline__label">${esc(label)}</span>
-            <button class="dayline__nav" type="button" id="day-next" aria-label="Next day"${isViewingToday() ? ' disabled' : ''}>›</button>
-            ${isViewingToday() ? '' : '<button class="dayline__today" type="button" id="day-today">Back to today</button>'}
-        </span>`;
-    $('#day-prev').addEventListener('click', () => shiftDay(-1));
-    $('#day-next').addEventListener('click', () => shiftDay(1));
-    $('#day-today')?.addEventListener('click', () => { viewKey = todayKey(); renderAll(); });
+const VIEW_TITLES = {
+    calendar: 'Calendar', rewards: 'Rewards', analytics: 'Analytics', settings: 'Settings',
+};
+
+function avatarHtml(profile) {
+    const initial = esc((profile?.name || '?').trim().charAt(0).toUpperCase() || '?');
+    const label = profile?.name ? `Profiles — showing ${esc(profile.name)}` : 'Profiles';
+    return `
+        <button class="avatar-btn js-rail-toggle" type="button" aria-label="${label}"
+                aria-expanded="${document.body.classList.contains('rail-open')}" aria-controls="rail">
+            ${profile?.avatar_path
+                ? `<img data-storage-path="${esc(profile.avatar_path)}" alt="" hidden><span>${initial}</span>`
+                : `<span>${initial}</span>`}
+        </button>`;
 }
 
-/* Never past today. Completing a future task would bank points for work
-   nobody has done yet — the iOS app blocks the same move. */
-function shiftDay(delta) {
-    const d = viewDate();
-    d.setUTCDate(d.getUTCDate() + delta);
-    const next = dayKey(d);
-    if (next > todayKey()) return;
-    viewKey = next;
-    renderAll();
+function renderHead() {
+    const host = $('#apphead');
+    if (!host) return;
+    const view = document.body.dataset.view || 'tasks';
+    const profile = activeProfile();
+    const name = profile?.name || '';
+
+    if (view === 'tasks') {
+        const counts = completionsByDay();
+        const label = viewDate().toLocaleDateString('en-US',
+            { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+        host.innerHTML = `
+            <div class="apphead__row">
+                <button class="pill pill--date" type="button" id="btn-view-date"
+                        aria-label="${isViewingToday() ? 'Today' : 'Showing'}, ${esc(label)}. Choose another day">
+                    <span>${esc(label)}</span>
+                    <svg width="14" height="14" aria-hidden="true"><use href="#i-chev-down"/></svg>
+                </button>
+                <input class="visually-hidden" type="date" id="in-view-date" tabindex="-1"
+                       max="${todayKey()}" value="${viewKey}" aria-hidden="true">
+                ${isViewingToday() ? '' : '<button class="pill pill--today" type="button" id="day-today">Today</button>'}
+                <span class="apphead__spacer"></span>
+                <span class="pill pill--stat" title="Streak — days in a row">
+                    <svg class="pill__flame" width="18" height="18" aria-hidden="true"><use href="#i-flame"/></svg>
+                    <span class="visually-hidden">Streak:</span>${streakDays(counts)}
+                </span>
+                <span class="pill pill--stat" id="stat-balance" title="Points available to spend">
+                    <svg class="pill__star" width="17" height="17" aria-hidden="true"><use href="#i-star"/></svg>
+                    <span class="visually-hidden">Points:</span>${pointsBalance()}
+                </span>
+                ${avatarHtml(profile)}
+            </div>
+            <h1 class="large-title">${esc(name || 'Tasks')}</h1>`;
+
+        const input = $('#in-view-date');
+        $('#btn-view-date').addEventListener('click', () => {
+            try { input.showPicker(); } catch { input.focus(); input.click(); }
+        });
+        input.addEventListener('change', () => {
+            const v = input.value;
+            if (!v) return;
+            // Never past today — completing a future task would bank
+            // points for work nobody has done yet (the app blocks it too).
+            viewKey = v > todayKey() ? todayKey() : v;
+            renderAll();
+        });
+        $('#day-today')?.addEventListener('click', () => { viewKey = todayKey(); renderAll(); });
+    } else {
+        const actions = view === 'rewards'
+            ? `<button class="icon-btn" type="button" id="btn-reward-history" aria-label="History">
+                   <svg width="22" height="22" aria-hidden="true"><use href="#i-history"/></svg></button>
+               <button class="icon-btn" type="button" id="btn-reward-new" aria-label="New reward">
+                   <svg width="22" height="22" aria-hidden="true"><use href="#i-plus"/></svg></button>`
+            : '';
+        host.innerHTML = `
+            <div class="apphead__row apphead__row--titled">
+                <div class="apphead__titles">
+                    ${name ? `<p class="eyebrow">${esc(name)}</p>` : ''}
+                    <h1 class="large-title">${VIEW_TITLES[view] || ''}</h1>
+                </div>
+                <div class="apphead__actions">${actions}${avatarHtml(profile)}</div>
+            </div>`;
+        $('#btn-reward-history')?.addEventListener('click', () =>
+            $('#reward-history')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+        $('#btn-reward-new')?.addEventListener('click', () => openRewardModal(null));
+    }
+    hydrateImages(host);
 }
 
 /* One row per profile: the chip switches, the ⋯ opens the things you do
@@ -584,8 +647,7 @@ function renderProfiles() {
             closeMenus();
             selectProfile(btn.dataset.profile);
             // Same reason as the nav items: the choice is made, get out of the way.
-            $('#rail')?.classList.remove('is-open');
-            $('#btn-rail')?.setAttribute('aria-expanded', 'false');
+            setRail(false);
         });
     });
 
@@ -623,143 +685,207 @@ function closeProfileMenus(except) {
     });
 }
 
+/* Re-renders "the summary" after a write. The summary used to be a
+   strip of stat tiles; it is the header's streak and points pills now. */
 function renderStats() {
-    const counts = completionsByDay();
-    const balance = pointsBalance();
-    const streak = streakDays(counts);
+    renderHead();
+}
 
-    const scheduled = state.data.tasks.filter((t) => isScheduledOn(t, viewDate()));
-    const doneToday = scheduled.filter((t) => isCompletedOn(t, viewKey)).length;
+/* ── Time of day ───────────────────────────────────────
+   The app splits the list into period tiles (Morning / Afternoon /
+   Evening by default) and shows one period at a time, tinted with that
+   period's own colour. Periods are per-profile data with their own
+   name, colour and SF Symbol, so everything here reads from the row;
+   the glyph map only translates the symbol name into a drawing. */
 
-    const days = [];
-    for (let i = 6; i >= 0; i--) {
-        const d = viewDate();
-        d.setUTCDate(d.getUTCDate() - i);
-        days.push({ label: WEEKDAY_SHORT[new Date(dayKey(d) + 'T12:00:00Z').getUTCDay()], n: counts.get(dayKey(d)) || 0 });
+const ANYTIME_COLOR = '#F0918F';
+
+const PERIOD_GLYPHS = {
+    'sunrise.fill': 'i-sunrise', sunrise: 'i-sunrise',
+    'sun.max.fill': 'i-sun', 'sun.max': 'i-sun', 'sun.min.fill': 'i-sun',
+    'sunset.fill': 'i-sunset', sunset: 'i-sunset',
+    'moon.stars.fill': 'i-moon', 'moon.fill': 'i-moon', 'moon.stars': 'i-moon', moon: 'i-moon',
+};
+const PERIOD_EMOJI = {
+    'cup.and.saucer.fill': '☕', 'briefcase.fill': '💼', 'house.fill': '🏠', 'figure.walk': '🚶',
+    'book.fill': '📚', 'gamecontroller.fill': '🎮', 'tv.fill': '📺', 'bed.double.fill': '🛏️',
+};
+/* The app's built-in names, both languages — TimePeriod.builtInPeriodKey. */
+const BUILTIN_BY_NAME = {
+    morning: 'i-sunrise', morgunn: 'i-sunrise',
+    afternoon: 'i-sun', 'eftirmiðdagur': 'i-sun',
+    evening: 'i-moon', 'kvöld': 'i-moon',
+};
+
+function glyphSvg(id) {
+    return `<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#${id}"/></svg>`;
+}
+
+function periodGlyph(period) {
+    if (!period) return glyphSvg('i-clock');
+    const icon = (period.icon || '').trim();
+    if (PERIOD_GLYPHS[icon]) return glyphSvg(PERIOD_GLYPHS[icon]);
+    if (PERIOD_EMOJI[icon]) return `<span class="emoji" aria-hidden="true">${PERIOD_EMOJI[icon]}</span>`;
+    const byName = BUILTIN_BY_NAME[(period.name || '').trim().toLowerCase()];
+    if (byName) return glyphSvg(byName);
+    if (icon && !/^[a-z0-9.]+$/i.test(icon)) return `<span class="emoji" aria-hidden="true">${esc(icon)}</span>`;
+    return glyphSvg('i-clock');
+}
+
+function inPeriodHours(p, hour) {
+    const s = p.start_hour ?? 0, e = p.end_hour ?? 0;
+    if (s < e) return hour >= s && hour < e;
+    if (s > e) return hour >= s || hour < e;
+    return true;
+}
+
+function visibleTasks() {
+    return state.data.tasks.filter((t) => state.filter === 'all' || isScheduledOn(t, viewDate()));
+}
+
+function periodTiles() {
+    const vis = visibleTasks();
+    const tiles = [...state.data.timePeriods]
+        .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+        .map((p) => ({
+            id: p.id,
+            name: p.name || 'Period',
+            color: safeColor(p.color),
+            period: p,
+            tasks: vis.filter((t) => t.time_period_id === p.id),
+        }));
+    const known = new Set(state.data.timePeriods.map((p) => p.id));
+    const loose = vis.filter((t) => !t.time_period_id || !known.has(t.time_period_id));
+    if (loose.length || !tiles.length) {
+        tiles.push({ id: 'none', name: 'Anytime', color: ANYTIME_COLOR, period: null, tasks: loose });
     }
-    const max = Math.max(1, ...days.map((d) => d.n));
-    const weekTotal = days.reduce((s, d) => s + d.n, 0);
+    return tiles;
+}
 
-    const pct = scheduled.length ? Math.round((doneToday / scheduled.length) * 100) : 0;
+/* Which tile to open on. Remembered while you click around; otherwise
+   the one the clock is in (as the app does), then the first period
+   with something left to do. */
+function resolvePeriodSel(tiles) {
+    if (tiles.some((t) => t.id === state.periodSel)) return state.periodSel;
+    const hour = new Date().getHours();
+    const now = isViewingToday()
+        ? tiles.filter((t) => t.period && inPeriodHours(t.period, hour)) : [];
+    const pick = now.find((t) => t.tasks.length)
+        || tiles.find((t) => t.tasks.some((x) => !isCompletedOn(x, viewKey)))
+        || tiles.find((t) => t.tasks.length)
+        || now[0]
+        || tiles[0];
+    state.periodSel = pick?.id ?? null;
+    return state.periodSel;
+}
 
-    $('#stats').innerHTML = `
-        <div class="stat" id="stat-balance">
-            <div class="stat__label"><span class="stat__icon" aria-hidden="true">⭐</span>Points</div>
-            <div class="stat__value">${balance}</div>
-            <div class="stat__meta">available to spend</div>
-        </div>
-        <div class="stat">
-            <div class="stat__label"><span class="stat__icon" aria-hidden="true">🔥</span>Streak</div>
-            <div class="stat__value">${streak}</div>
-            <div class="stat__meta">${streak === 1 ? 'day' : 'days'} in a row</div>
-        </div>
-        <div class="stat">
-            <div class="stat__label"><span class="stat__icon" aria-hidden="true">✅</span>${isViewingToday() ? 'Today' : 'That day'}</div>
-            <div class="stat__value">${doneToday}<span class="stat__of">/${scheduled.length}</span></div>
-            <div class="stat__bar" role="img" aria-label="${pct}% of tasks done">
-                <span style="width:${pct}%"></span>
-            </div>
-            <div class="stat__meta">tasks done</div>
-        </div>
-        <div class="stat stat--chart">
-            <div class="stat__label">
-                <span class="stat__icon" aria-hidden="true">📈</span>Last 7 days
-                <span class="stat__tag">${weekTotal} done</span>
-            </div>
-            <div class="chart-week" role="img" aria-label="${weekTotal} completions in the last 7 days">
-                ${days.map((d) => `
-                    <div class="chart-week__col">
-                        <div class="chart-week__track" title="${d.n} on ${d.label}">
-                            <div class="chart-week__bar ${d.n === 0 ? 'is-empty' : ''}"
-                                 style="height:${d.n === 0 ? 3 : Math.max(8, Math.round((d.n / max) * 100))}%"></div>
-                        </div>
-                        <span class="chart-week__day">${d.label}</span>
-                    </div>`).join('')}
-            </div>
-        </div>`;
+function selectedTile() {
+    const tiles = periodTiles();
+    const id = resolvePeriodSel(tiles);
+    return { tiles, tile: tiles.find((t) => t.id === id) };
+}
+
+/* Play routine plays the selected period, like the app — not every
+   unfinished task in the day. */
+function doQueueForSelected() {
+    const { tile } = selectedTile();
+    return (tile?.tasks || []).filter((t) => !isCompletedOn(t, viewKey));
+}
+
+function taskIconHtml(task) {
+    return task.image_path
+        ? `<img data-storage-path="${esc(task.image_path)}" alt="" hidden><span>${iconFor(task)}</span>`
+        : iconFor(task);
 }
 
 function taskRowHtml(task) {
     const done = isCompletedOn(task, viewKey);
-    const period = state.data.timePeriods.find((p) => p.id === task.time_period_id);
-    const tint = period ? safeColor(period.color) + '22' : null;
-
     const steps = state.data.subtasks.filter((s) => s.task_id === task.id);
     const stepsDone = steps.filter((s) => s.is_completed).length;
-
-    let rec = null;
-    if (Array.isArray(task.recurrence_days) && task.recurrence_days.length) {
-        const days = [...task.recurrence_days].sort((a, b) => a - b);
-        if (days.length === 7) rec = 'Daily';
-        else if (days.join() === '2,3,4,5,6') rec = 'Weekdays';
-        else rec = days.map((d) => WEEKDAY_SHORT[(d - 1 + 7) % 7]).join(' · ');
-    }
-
     const due = task.due_date ? new Date(task.due_date) : null;
     const overdue = due && !done && dayKey(due) < todayKey();
 
+    const meta = [];
+    if (steps.length) meta.push(`<span>${stepsDone}/${steps.length} steps</span>`);
+    if (due) {
+        meta.push(`<span class="${overdue ? 'is-overdue' : ''}">${overdue ? 'Overdue · ' : 'Due '}${fmtDate(due, { day: 'numeric', month: 'short' })}</span>`);
+    }
+
     return `
-        <div class="task-row ${done ? 'is-done' : ''}" ${done && tint ? `style="--tp-tint:${tint}"` : ''}>
-            <button class="task-row__tile" type="button" data-edit="${task.id}"
-                    aria-label="Edit ${esc(task.title)}">
-                ${task.image_path
-                    ? `<img data-storage-path="${esc(task.image_path)}" alt="" hidden><span>${iconFor(task)}</span>`
-                    : iconFor(task)}
+        <div class="trow${done ? ' is-done' : ''}">
+            <button class="trow__main" type="button" data-edit="${esc(task.id)}" aria-label="Edit ${esc(task.title)}">
+                <span class="trow__icon" aria-hidden="true">${taskIconHtml(task)}</span>
+                <span class="trow__text">
+                    <span class="trow__title">${esc(task.title)}</span>
+                    ${meta.length ? `<span class="trow__meta">${meta.join('')}</span>` : ''}
+                </span>
             </button>
-            <button class="task-row__body" type="button" data-edit="${task.id}">
-                <div class="task-row__title">${esc(task.title)}</div>
-                <div class="task-row__meta">
-                    ${task.points ? `<span class="points-pill">★ ${task.points}</span>` : ''}
-                    ${rec ? `<span title="Repeats">↻ ${rec}</span>` : ''}
-                    ${due ? `<span class="${overdue ? 'is-overdue' : ''}">${overdue ? 'Overdue · ' : ''}${fmtDate(due, { day: 'numeric', month: 'short' })}</span>` : ''}
-                    ${steps.length ? `<span>${stepsDone}/${steps.length} steps</span>` : ''}
-                </div>
-            </button>
-            <button class="ring-btn ${done ? 'is-done' : ''}" type="button" data-toggle="${task.id}"
+            ${task.points ? `<span class="trow__pts" aria-label="${task.points} points">
+                <svg width="14" height="14" aria-hidden="true"><use href="#i-star"/></svg>${task.points}</span>` : ''}
+            <button class="trow__check${done ? ' is-done' : ''}" type="button" data-toggle="${esc(task.id)}"
                     aria-pressed="${done}" aria-label="${done ? 'Mark not done' : 'Mark done'}: ${esc(task.title)}">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                    <path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.5"
-                          stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+                ${done ? '<svg width="30" height="30" aria-hidden="true"><use href="#i-check"/></svg>' : ''}
             </button>
         </div>`;
 }
 
 function renderTasks() {
     const host = $('#task-groups');
-    const visible = state.data.tasks.filter((t) => state.filter === 'all' || isScheduledOn(t, viewDate()));
+    const tilesHost = $('#period-tiles');
+    const progressHost = $('#task-progress');
+    if (!host) return;
 
-    if (!visible.length) {
+    const { tiles, tile } = selectedTile();
+    document.documentElement.style.setProperty('--period', tile?.color || ANYTIME_COLOR);
+
+    tilesHost.innerHTML = tiles.map((t) => {
+        const sel = t.id === tile?.id;
+        return `
+            <button class="ptile${sel ? ' is-selected' : ''}" type="button" data-period="${esc(t.id)}"
+                    aria-pressed="${sel}" style="--pc:${t.color}">
+                <span class="ptile__icon">${periodGlyph(t.period)}</span>
+                <span class="ptile__name">${esc(t.name)}</span>
+            </button>`;
+    }).join('');
+    tilesHost.querySelectorAll('[data-period]').forEach((b) => b.addEventListener('click', () => {
+        state.periodSel = b.dataset.period;
+        renderTasks();
+    }));
+
+    const tasks = tile?.tasks || [];
+    const doneCount = tasks.filter((t) => isCompletedOn(t, viewKey)).length;
+    progressHost.innerHTML = tasks.length
+        ? `<div class="segments__track" role="img" aria-label="${doneCount} of ${tasks.length} done">
+               ${tasks.map((t) => `<span class="seg${isCompletedOn(t, viewKey) ? ' is-done' : ''}"></span>`).join('')}
+           </div>`
+        : '';
+
+    /* Tasks that exist but are not on this day — "All" used to be a
+       filter chip; it is a quiet link under the list now. */
+    const hiddenCount = state.data.tasks.length - visibleTasks().length;
+    const filterLink = state.filter === 'all'
+        ? '<button class="linkish" type="button" data-show="today">Show only what is scheduled for this day</button>'
+        : hiddenCount > 0
+            ? `<button class="linkish" type="button" data-show="all">${hiddenCount} more ${hiddenCount === 1 ? 'task is' : 'tasks are'} not on this day · Show all</button>`
+            : '';
+
+    if (!state.data.tasks.length) {
         host.innerHTML = `
-            <div class="empty">
+            <div class="empty empty--tasks">
                 <img src="../assets/mascot/loa-sleeping.svg" alt="">
-                <strong>${state.data.tasks.length ? 'Nothing scheduled today' : 'No tasks yet'}</strong>
-                <p>${state.data.tasks.length
-                    ? 'Switch to “All” to see every task on this profile.'
-                    : 'Add one above, or create tasks in the Vigdís app.'}</p>
+                <strong>No tasks yet</strong>
+                <p>Tap + to add one, or create tasks in the Vigdís app.</p>
             </div>`;
-        return;
+    } else if (!tasks.length) {
+        host.innerHTML = `
+            <div class="empty empty--tasks">
+                <img src="../assets/mascot/loa-sleeping.svg" alt="">
+                <strong>Nothing in ${esc(tile?.name || 'this period')}${isViewingToday() ? ' today' : ' that day'}</strong>
+                <p>Pick another time of day above, or tap + to add a task here.</p>
+            </div>${filterLink}`;
+    } else {
+        host.innerHTML = `<div class="task-list">${tasks.map(taskRowHtml).join('')}</div>${filterLink}`;
     }
-
-    const groups = [];
-    for (const period of state.data.timePeriods) {
-        const tasks = visible.filter((t) => t.time_period_id === period.id);
-        if (tasks.length) groups.push({ period, tasks });
-    }
-    const loose = visible.filter((t) => !t.time_period_id
-        || !state.data.timePeriods.some((p) => p.id === t.time_period_id));
-    if (loose.length) groups.push({ period: null, tasks: loose });
-
-    host.innerHTML = groups.map(({ period, tasks }) => `
-        <div class="tp-group">
-            <div class="tp-group__head">
-                <span class="tp-group__dot" style="background:${period ? safeColor(period.color) : 'var(--rule)'}"></span>
-                ${esc(period ? period.name : 'Anytime')}
-                ${period && (period.start_hour || period.end_hour)
-                    ? `<span class="tp-group__time">${period.start_hour}:00–${period.end_hour}:00</span>` : ''}
-            </div>
-            <div class="task-list">${tasks.map(taskRowHtml).join('')}</div>
-        </div>`).join('');
 
     host.querySelectorAll('[data-toggle]').forEach((btn) => {
         btn.addEventListener('click', () => toggleTask(btn.dataset.toggle));
@@ -767,42 +893,121 @@ function renderTasks() {
     host.querySelectorAll('[data-edit]').forEach((btn) => {
         btn.addEventListener('click', () => openTaskModal(btn.dataset.edit));
     });
+    host.querySelectorAll('[data-show]').forEach((btn) => btn.addEventListener('click', () => {
+        state.filter = btn.dataset.show;
+        renderTasks();
+    }));
     hydrateImages(host);
+}
+
+/* ── Rewards ───────────────────────────────────────────
+   The app's Rewards tab: a coral balance card with today's earnings and
+   the next goal, then one card per reward. */
+
+/* Points banked on one day — completions at their snapshot value plus
+   any bonus points awarded that day. */
+function earnedOn(key) {
+    let pts = 0;
+    for (const t of state.data.tasks) {
+        for (const ts of t.completion_history || []) {
+            if (dayKey(ts) === key) pts += pointsAwarded(t, ts);
+        }
+    }
+    for (const b of state.data.bonus) if (dayKey(b.date) === key) pts += b.amount || 0;
+    return pts;
+}
+
+function rewardIconHtml(r) {
+    const icon = iconFor(r) || '🎁';
+    return r.image_path
+        ? `<img data-storage-path="${esc(r.image_path)}" alt="" hidden><span>${icon}</span>`
+        : icon;
 }
 
 function renderRewards() {
     const host = $('#rewards-list');
+    const balanceHost = $('#reward-balance');
+    if (!host) return;
     const balance = pointsBalance();
-    if (!state.data.rewards.length) {
-        host.innerHTML = `
-            <div class="empty">
-                <strong>No rewards yet</strong>
-                <p>Rewards created in the app appear here.</p>
+    const today = earnedOn(todayKey());
+    const rewards = [...state.data.rewards].sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
+    const goal = rewards.filter((r) => (r.cost || 0) > balance).sort((a, b) => a.cost - b.cost)[0];
+
+    let goalHtml = '';
+    if (goal) {
+        const pct = Math.max(2, Math.min(100, Math.round((balance / goal.cost) * 100)));
+        goalHtml = `
+            <div class="goal">
+                <span class="goal__tile" aria-hidden="true">${rewardIconHtml(goal)}</span>
+                <div class="goal__body">
+                    <p class="goal__label">Next goal</p>
+                    <p class="goal__name">${esc(goal.title)}</p>
+                    <div class="goal__bar" role="img" aria-label="${balance} of ${goal.cost} points">
+                        <span style="width:${pct}%"></span>
+                    </div>
+                    <p class="goal__left">${goal.cost - balance} to go</p>
+                </div>
             </div>`;
+    } else if (rewards.length) {
+        goalHtml = `
+            <div class="goal">
+                <span class="goal__tile" aria-hidden="true">🎉</span>
+                <div class="goal__body">
+                    <p class="goal__label">Next goal</p>
+                    <p class="goal__name">Every reward is in reach</p>
+                    <div class="goal__bar" role="img" aria-label="Enough points for every reward"><span style="width:100%"></span></div>
+                </div>
+            </div>`;
+    }
+
+    balanceHost.innerHTML = `
+        <section class="balance" aria-label="Points balance">
+            <p class="balance__label">Your balance</p>
+            <p class="balance__value"><span>${balance}</span> points</p>
+            ${today > 0 ? `<span class="balance__chip">↑ +${today} today</span>` : ''}
+            ${goalHtml}
+        </section>`;
+
+    if (!rewards.length) {
+        host.innerHTML = `
+            <div class="card empty">
+                <strong>No rewards yet</strong>
+                <p>Add something worth saving points for — it appears in the app straight away.</p>
+                <button class="btn-primary btn-primary--inline" type="button" id="btn-reward-empty-add">Add a reward</button>
+            </div>`;
+        $('#btn-reward-empty-add')?.addEventListener('click', () => openRewardModal(null));
+        hydrateImages(balanceHost);
         return;
     }
-    host.innerHTML = state.data.rewards.map((r) => `
-        <div class="reward-row">
-            <span class="reward-row__tile">
-                ${r.image_path
-                    ? `<img data-storage-path="${esc(r.image_path)}" alt="" hidden><span>${iconFor(r) || '🎁'}</span>`
-                    : (iconFor(r) || '🎁')}
-            </span>
-            <div class="reward-row__body">
-                <div class="reward-row__title">${esc(r.title)}</div>
-                <span class="points-pill">★ ${r.cost}</span>
+
+    host.innerHTML = rewards.map((r) => {
+        const need = (r.cost || 0) - balance;
+        return `
+        <div class="rcard">
+            <button class="rcard__tile" type="button" data-reward-open="${esc(r.id)}"
+                    aria-label="Edit ${esc(r.title)}">${rewardIconHtml(r)}</button>
+            <div class="rcard__body">
+                <p class="rcard__name">${esc(r.title)}</p>
+                <div class="rcard__foot">
+                    <span class="rcard__cost"><svg width="17" height="17" aria-hidden="true"><use href="#i-star"/></svg>${r.cost || 0}</span>
+                    <button class="redeem-btn" type="button" data-redeem="${esc(r.id)}"
+                            ${need > 0 ? `disabled title="Needs ${need} more points"` : ''}>
+                        ${need > 0 ? `${need} to go` : 'Redeem <span aria-hidden="true">→</span>'}
+                    </button>
+                </div>
             </div>
-            <button class="btn-redeem" type="button" data-redeem="${r.id}"
-                    ${balance < (r.cost || 0) ? `disabled title="Needs ${(r.cost || 0) - balance} more points"` : ''}>
-                Redeem
-            </button>
-        </div>`).join('');
+        </div>`;
+    }).join('');
     host.querySelectorAll('[data-redeem]').forEach((btn) => {
         btn.addEventListener('click', () => redeemReward(btn.dataset.redeem, btn));
     });
+    host.querySelectorAll('[data-reward-open]').forEach((btn) => {
+        btn.addEventListener('click', () => openRewardModal(
+            state.data.rewards.find((r) => r.id === btn.dataset.rewardOpen)));
+    });
     hydrateImages(host);
+    hydrateImages(balanceHost);
 }
-
 function renderActivity() {
     const host = $('#activity-list');
     const items = [
@@ -834,10 +1039,9 @@ function renderAll() {
     fillPeriodSelect($('#quick-add-period'), $('#quick-add-period')?.value || '');
     renderManagement();
     if (!$('[data-pane="calendar"]')?.hidden) renderCalendar();
-    if (!$('[data-pane="stats"]')?.hidden) renderReport();
-    renderGreeting();
+    if (!$('[data-pane="analytics"]')?.hidden) { renderAnalytics(); renderReport(); }
+    renderHead();
     renderProfiles();
-    renderStats();
     renderTasks();
     renderRewards();
     renderActivity();
@@ -907,14 +1111,16 @@ async function quickAddTask(title) {
         id: crypto.randomUUID(),
         profile_id: state.activeProfileId,
         title,
-        points: 0,
+        points: Math.max(0, parseInt($('#quick-add-points')?.value, 10) || 0),
         task_type: 'regular',
         behavior_type: 'regular',
-        icon: '📝',
+        icon: $('#quick-add-icon')?.value.trim() || '📝',
         tags: [],
         sort_order: sortMax + 1,
         time_period_id: $('#quick-add-period')?.value || null,
     };
+    // Land on the period the task went into, so it is visibly there.
+    state.periodSel = row.time_period_id || 'none';
     if (DEMO) {
         state.data.tasks.push({ ...row, completion_history: [], completion_points: {} });
         renderStats();
@@ -1173,6 +1379,7 @@ function subscribeRealtime(profileId) {
 async function selectProfile(profileId, { skeleton = true } = {}) {
     clearCelebrations();
     state.activeProfileId = profileId;
+    state.periodSel = null;
     /* Wear this profile's theme. Applied before the data loads so the
        skeletons below are already the right colour — switching child and
        watching the page recolour a beat later would look like a glitch. */
@@ -1181,6 +1388,8 @@ async function selectProfile(profileId, { skeleton = true } = {}) {
     if (DEMO) { state.data = demoData(profileId); renderAll(); return; }
     if (skeleton) {
         $('#task-groups').innerHTML = '<div class="skeleton"></div>'.repeat(3);
+        $('#period-tiles').innerHTML = '';
+        $('#task-progress').innerHTML = '';
         $('#rewards-list').innerHTML = '<div class="skeleton"></div>';
         $('#activity-list').innerHTML = '<div class="skeleton"></div>';
     }
@@ -1209,6 +1418,8 @@ function wireManagement() {
            write, the server function and the celebration are identical
            either way. */
         toggleTask,
+        /* Play routine plays the selected time of day. */
+        getDoQueue: doQueueForSelected,
         refresh: async () => {
             if (DEMO) { renderAll(); return; }
             if (state.activeProfileId) await loadProfileData(state.activeProfileId);
@@ -1235,6 +1446,8 @@ function wireManagement() {
 async function enterApp() {
     showView('view-app');
     $('#user-email').textContent = state.session?.user?.email || '';
+    $('#user-email-settings').textContent = state.session?.user?.email
+        ? `Signed in as ${state.session.user.email}` : '';
     wireManagement();
 
     state.profiles = await loadProfiles();
@@ -1250,7 +1463,8 @@ async function enterApp() {
 
     if (!state.profiles.length) {
         $('#profile-switcher').innerHTML = '';
-        $('#stats').innerHTML = '';
+        $('#period-tiles').innerHTML = '';
+        $('#task-progress').innerHTML = '';
         $('#task-groups').innerHTML = `
             <div class="empty">
                 <img src="../assets/mascot/loa-sleeping.svg" alt="">
@@ -1259,7 +1473,7 @@ async function enterApp() {
             </div>`;
         $('#rewards-list').innerHTML = '';
         $('#activity-list').innerHTML = '';
-        renderGreeting();
+        renderHead();
         return;
     }
     const remembered = localStorage.getItem('vigdis-web-profile');
@@ -1467,10 +1681,250 @@ function renderCalendar() {
     host.querySelectorAll('[data-day]').forEach((b) => {
         b.addEventListener('click', () => {
             viewKey = b.dataset.day;
-            setView('today');
+            setView('tasks');
             renderAll();
         });
     });
+}
+
+/* ── Analytics (app-style cards) ───────────────────────
+ *
+ * The four cards at the top of the app's Analytics tab: routines done
+ * this week, the tasks that need a hand, the eight-week trend, and time
+ * of day. All derived from completion_history already in memory.
+ *
+ * "Due" here is stricter than isScheduledOn: a one-off with no date
+ * stays on the list until it is done, but it is not *due* every day, so
+ * counting it would mark a child down for every day before they did it.
+ * Days before the profile's first recorded completion are not counted
+ * either — the same clamp the detailed report uses.
+ */
+
+const MS_DAY = 86400000;
+const addDaysKey = (key, n) => dayKey(new Date(Date.parse(key + 'T12:00:00Z') + n * MS_DAY));
+const WD_LETTER = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+const WD_SHORT_NAME = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+function firstHistoryKey() {
+    let first = null;
+    for (const t of state.data.tasks) {
+        for (const ts of t.completion_history || []) {
+            const k = dayKey(ts);
+            if (!first || k < first) first = k;
+        }
+    }
+    return first;
+}
+
+function isDueOn(task, key) {
+    const hasRec = Array.isArray(task.recurrence_days) && task.recurrence_days.length > 0;
+    if (!task.due_date && !hasRec) return false;
+    if (task.created_at && dayKey(task.created_at) > key) return false;
+    return isScheduledOn(task, new Date(key + 'T12:00:00Z'));
+}
+
+/* A routine is one time period's tasks on one day; it counts as done
+   when every task due in it that day was ticked off. */
+function routinesOn(key) {
+    const groups = new Map();
+    for (const t of state.data.tasks) {
+        if (!isDueOn(t, key)) continue;
+        const g = t.time_period_id || 'none';
+        const cur = groups.get(g) || { due: 0, done: 0 };
+        cur.due += 1;
+        if (isCompletedOn(t, key)) cur.done += 1;
+        groups.set(g, cur);
+    }
+    let total = 0, done = 0;
+    for (const g of groups.values()) { total += 1; if (g.done === g.due) done += 1; }
+    return { total, done };
+}
+
+/* Completion rate of due tasks between two keys (inclusive). */
+function dueRate(tasks, fromKey, toKey) {
+    let due = 0, done = 0;
+    for (let k = fromKey; k <= toKey; k = addDaysKey(k, 1)) {
+        for (const t of tasks) {
+            if (!isDueOn(t, k)) continue;
+            due += 1;
+            if (isCompletedOn(t, k)) done += 1;
+        }
+    }
+    return { due, done, rate: due ? done / due : null };
+}
+
+function renderAnalytics() {
+    const host = $('#analytics-top');
+    if (!host) return;
+    const today = todayKey();
+    const start = firstHistoryKey();
+
+    if (!start) {
+        host.innerHTML = `
+            <section class="card empty an-span">
+                <img src="../assets/mascot/loa-sleeping.svg" alt="">
+                <strong>Nothing to show yet</strong>
+                <p>Tick a few tasks off and this fills with how the routines are going.</p>
+            </section>`;
+        return;
+    }
+    const clamp = (k) => (k < start ? start : k);
+
+    /* ── Routines done — this week, Monday first ── */
+    const wd = new Date(today + 'T12:00:00Z').getUTCDay();
+    const monday = addDaysKey(today, -((wd + 6) % 7));
+    let wTotal = 0, wDone = 0;
+    const bars = [];
+    for (let i = 0; i < 7; i++) {
+        const k = addDaysKey(monday, i);
+        const future = k > today;
+        const r = future || k < start ? { total: 0, done: 0 } : routinesOn(k);
+        wTotal += r.total; wDone += r.done;
+        bars.push({
+            letter: WD_LETTER[new Date(k + 'T12:00:00Z').getUTCDay()],
+            ratio: r.total ? r.done / r.total : 0,
+            isToday: k === today,
+            label: future ? 'still to come' : `${r.done} of ${r.total}`,
+        });
+    }
+    const weekPct = wTotal ? Math.round((wDone / wTotal) * 100) : null;
+
+    /* ── Needs a hand — last four weeks ── */
+    const from28 = clamp(addDaysKey(today, -27));
+    const struggling = [];
+    for (const t of state.data.tasks) {
+        let due = 0, done = 0;
+        const byWd = Array.from({ length: 7 }, () => ({ due: 0, done: 0 }));
+        for (let k = from28; k <= today; k = addDaysKey(k, 1)) {
+            if (!isDueOn(t, k)) continue;
+            const w = new Date(k + 'T12:00:00Z').getUTCDay();
+            due += 1; byWd[w].due += 1;
+            if (isCompletedOn(t, k)) { done += 1; byWd[w].done += 1; }
+        }
+        if (due < 3 || done === due) continue;
+        let hardest = null, worst = 2;
+        byWd.forEach((d, w) => {
+            if (!d.due || d.done === d.due) return;
+            const r = d.done / d.due;
+            if (r < worst) { worst = r; hardest = w; }
+        });
+        struggling.push({ task: t, due, done, rate: done / due, hardest });
+    }
+    struggling.sort((a, b) => a.rate - b.rate || b.due - a.due);
+    const handRows = struggling.slice(0, 3);
+
+    /* ── Last 8 weeks — rolling 7-day windows ending today ── */
+    const weeks = [];
+    for (let w = 7; w >= 0; w--) {
+        const end = addDaysKey(today, -7 * w);
+        const begin = addDaysKey(end, -6);
+        const r = end < start ? { rate: null } : dueRate(state.data.tasks, clamp(begin), end);
+        weeks.push({
+            rate: r.rate,
+            label: new Date(begin + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }),
+        });
+    }
+    const rated = weeks.filter((w) => w.rate != null);
+    let trendTitle = 'Building up', chip = '';
+    if (rated.length >= 2) {
+        const half = Math.floor(rated.length / 2);
+        const avg = (arr) => arr.reduce((s, w) => s + w.rate, 0) / arr.length;
+        const earlier = avg(rated.slice(0, half));
+        const recent = avg(rated.slice(rated.length - half));
+        const change = earlier > 0 ? Math.round(((recent - earlier) / earlier) * 100) : null;
+        if (change == null) trendTitle = recent > 0 ? 'Getting started' : 'Building up';
+        else if (change >= 5) trendTitle = 'Getting easier';
+        else if (change <= -5) trendTitle = 'A harder stretch';
+        else trendTitle = 'Holding steady';
+        if (change != null && change !== 0) {
+            chip = `<span class="delta-chip ${change > 0 ? 'is-up' : 'is-down'}">${change > 0 ? '↑' : '↓'}${Math.abs(change)}%</span>`;
+        }
+    }
+
+    /* ── Time of day — last four weeks ── */
+    const periodRows = periodTiles().map((tile) => {
+        const ids = tile.period ? [tile.period.id] : null;
+        const tasks = state.data.tasks.filter((t) => (ids
+            ? t.time_period_id === ids[0]
+            : !t.time_period_id || !state.data.timePeriods.some((p) => p.id === t.time_period_id)));
+        return { tile, ...dueRate(tasks, from28, today) };
+    }).filter((r) => r.due > 0);
+
+    const pct = (r) => `${Math.round(r * 100)}%`;
+
+    host.innerHTML = `
+        <section class="card an-card" aria-labelledby="an-routines">
+            <div class="card__head">
+                <h2 class="eyebrow" id="an-routines">Routines done</h2>
+            </div>
+            <p class="an-big">${weekPct == null ? '—' : `${weekPct}%`}</p>
+            <p class="an-sub">${wDone} of ${wTotal} this week</p>
+            <div class="daybars" role="img" aria-label="Routines done each day this week">
+                ${bars.map((b) => `
+                    <div class="daybars__col" title="${b.label}">
+                        <div class="daybars__track"><span style="height:${b.ratio ? Math.max(10, Math.round(b.ratio * 100)) : 0}%"></span></div>
+                        <span class="daybars__day${b.isToday ? ' is-today' : ''}">${b.letter}</span>
+                    </div>`).join('')}
+            </div>
+        </section>
+
+        <section class="card an-card" aria-labelledby="an-hand">
+            <div class="card__head">
+                <h2 class="eyebrow" id="an-hand">Needs a hand</h2>
+                <button class="see-all" type="button" id="btn-see-all">See all
+                    <svg width="14" height="14" aria-hidden="true"><use href="#i-chev-right"/></svg></button>
+            </div>
+            ${handRows.length ? `<ul class="hand-list">${handRows.map((h) => `
+                <li class="hand-row">
+                    <span class="hand-row__tile" aria-hidden="true">${iconFor(h.task)}</span>
+                    <span class="hand-row__body">
+                        <span class="hand-row__title">${esc(h.task.title)}</span>
+                        <span class="hand-row__meta">${h.done} of ${h.due}${h.hardest != null ? ` · hardest: ${WD_SHORT_NAME[h.hardest]}` : ''}</span>
+                    </span>
+                    <span class="hand-row__pct">${pct(h.rate)}</span>
+                </li>`).join('')}</ul>`
+                : '<p class="an-quiet">Every routine task landed on the days it was due. Nothing needs a hand right now.</p>'}
+            <p class="an-foot">Last 4 weeks</p>
+        </section>
+
+        <section class="card an-card" aria-labelledby="an-weeks">
+            <p class="eyebrow">Last 8 weeks</p>
+            <div class="card__head card__head--tight">
+                <h2 class="an-title" id="an-weeks">${trendTitle}</h2>
+                ${chip}
+            </div>
+            <div class="weekbars" role="img" aria-label="Share of due tasks done, each of the last 8 weeks">
+                <div class="weekbars__grid" aria-hidden="true">
+                    <span data-l="100%"></span><span data-l="50%"></span><span data-l="0%"></span>
+                </div>
+                <div class="weekbars__cols">
+                    ${weeks.map((w, i) => `
+                        <div class="weekbars__col${i === weeks.length - 1 ? ' is-latest' : ''}"
+                             title="${w.label}: ${w.rate == null ? 'no data' : pct(w.rate)}">
+                            <div class="weekbars__track"><span style="height:${w.rate == null ? 0 : Math.max(3, Math.round(w.rate * 100))}%"></span></div>
+                            <span class="weekbars__label">${i % 2 === 1 ? w.label : '&nbsp;'}</span>
+                        </div>`).join('')}
+                </div>
+            </div>
+        </section>
+
+        <section class="card an-card" aria-labelledby="an-tod">
+            <div class="card__head">
+                <h2 class="eyebrow" id="an-tod">Time of day</h2>
+            </div>
+            ${periodRows.length ? `<ul class="tod-list">${periodRows.map((r) => `
+                <li class="tod-row" style="--pc:${r.tile.color}">
+                    <span class="tod-row__icon">${periodGlyph(r.tile.period)}</span>
+                    <span class="tod-row__name">${esc(r.tile.name)}</span>
+                    <span class="tod-row__pct">${pct(r.rate)}</span>
+                    <span class="tod-row__bar"><span style="width:${Math.round(r.rate * 100)}%"></span></span>
+                </li>`).join('')}</ul>`
+                : '<p class="an-quiet">No repeating tasks in the last four weeks yet.</p>'}
+            <p class="an-foot">Last 4 weeks</p>
+        </section>`;
+
+    $('#btn-see-all')?.addEventListener('click', () =>
+        $('#reliability-title')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
 }
 
 /* ── Statistics ────────────────────────────────────────
@@ -1799,41 +2253,41 @@ function renderReport() {
     $('#btn-export-stats')?.addEventListener('click', exportCSV);
 }
 
+/* The app's five tabs. Old hashes (#statistics, #manage) still land. */
+const VIEWS = ['tasks', 'calendar', 'rewards', 'analytics', 'settings'];
+const LEGACY_VIEWS = { today: 'tasks', stats: 'analytics', statistics: 'analytics', manage: 'settings' };
+
 function setView(name, pushHash = true) {
-    /* The pane is not the only thing that changes with the view: the
-       Today summary strip sits outside every pane and has no business
-       being on Statistics, which opens with a better summary of its
-       own. One attribute on <body> lets CSS handle that. */
+    name = LEGACY_VIEWS[name] || name;
+    if (!VIEWS.includes(name)) name = 'tasks';
+    /* One attribute on <body> lets CSS change the page wash with the
+       screen: the period colour on Tasks, the app's soft pink elsewhere. */
     document.body.dataset.view = name;
-    document.querySelectorAll('.viewtab').forEach((t) =>
-        t.setAttribute('aria-selected', String(t.dataset.view === name)));
+    document.querySelectorAll('.viewtab').forEach((t) => {
+        if (t.dataset.view === name) t.setAttribute('aria-current', 'page');
+        else t.removeAttribute('aria-current');
+    });
     document.querySelectorAll('.viewpane').forEach((p) => { p.hidden = p.dataset.pane !== name; });
+    renderHead();
     if (name === 'calendar') renderCalendar();
-    if (name === 'stats') renderReport();
-    if (name === 'manage') renderManagement();
+    if (name === 'analytics') { renderAnalytics(); renderReport(); }
+    if (name === 'settings') renderManagement();
     // Hash must not collide with an element id or the browser scroll-jumps
-    // to it on load — "#stats" matched the stats strip and scrolled the
-    // greeting off screen.
-    const hash = name === 'today' ? '' : (name === 'stats' ? '#statistics' : `#${name}`);
+    // to it on load. None of these five match an id.
+    const hash = name === 'tasks' ? '' : `#${name}`;
     if (pushHash) history.replaceState(null, '', hash || location.pathname + location.search);
 }
 
+/* The profile drawer (narrow windows). Opened from the avatar in the
+   header; closed by choosing, Escape, the scrim or an outside click. */
+function setRail(open) {
+    $('#rail')?.classList.toggle('is-open', open);
+    document.body.classList.toggle('rail-open', open);
+    document.querySelectorAll('.js-rail-toggle').forEach((b) => b.setAttribute('aria-expanded', String(open)));
+}
+
 function bindAppUI() {
-    /* Rail drawer, narrow windows only. Closing on navigation matters
-       more than opening does: a drawer that stays over the content
-       after you have chosen where to go is the most common way this
-       pattern goes wrong. */
     const rail = $('#rail');
-    const railToggle = $('#btn-rail');
-    const setRail = (open) => {
-        rail?.classList.toggle('is-open', open);
-        railToggle?.setAttribute('aria-expanded', String(open));
-    };
-    railToggle?.addEventListener('click', () =>
-        setRail(!rail?.classList.contains('is-open')));
-    /* Escape and outside-click, because a drawer with only one way out
-       is a trap on a touch screen. The profile ⋯ menus close on the same
-       two gestures, for the same reason. */
     document.addEventListener('keydown', (e) => {
         if (e.key !== 'Escape') return;
         setRail(false);
@@ -1841,17 +2295,35 @@ function bindAppUI() {
     });
     document.addEventListener('click', (e) => {
         if (!e.target.closest?.('.profile-row')) closeProfileMenus();
+        if (e.target.closest?.('.js-rail-toggle')) {
+            setRail(!rail?.classList.contains('is-open'));
+            return;
+        }
         if (!rail?.classList.contains('is-open')) return;
-        if (rail.contains(e.target) || railToggle?.contains(e.target)) return;
+        if (rail.contains(e.target)) return;
         setRail(false);
     });
 
     document.querySelectorAll('.viewtab').forEach((t) =>
-        t.addEventListener('click', () => { setView(t.dataset.view); setRail(false); }));
-    const initial = location.hash.replace('#', '');
-    if (initial === 'calendar') setView('calendar', false);
-    if (initial === 'statistics') setView('stats', false);
-    if (initial === 'manage') setView('manage', false);
+        t.addEventListener('click', () => {
+            setView(t.dataset.view);
+            setRail(false);
+            window.scrollTo({ top: 0 });
+        }));
+    setView(location.hash.replace('#', '') || 'tasks', false);
+
+    /* + opens the add-task sheet, pre-set to the time of day on screen. */
+    $('#btn-open-add')?.addEventListener('click', () => {
+        if (!state.activeProfileId) return;
+        const sel = state.periodSel && state.periodSel !== 'none' ? state.periodSel : '';
+        fillPeriodSelect($('#quick-add-period'), sel);
+        $('#in-quick-add').value = '';
+        $('#quick-add-icon').value = '';
+        $('#quick-add-points').value = '5';
+        $('#modal-add').showModal();
+        $('#in-quick-add').focus();
+    });
+    $('#btn-add-cancel')?.addEventListener('click', () => $('#modal-add').close());
     $('#cal-prev')?.addEventListener('click', () => {
         calMonth.setUTCMonth(calMonth.getUTCMonth() - 1); renderCalendar();
     });
@@ -1887,25 +2359,17 @@ function bindAppUI() {
 
     $('#btn-export')?.addEventListener('click', exportCSV);
 
-    document.querySelectorAll('.filter-chip').forEach((chip) => {
-        chip.addEventListener('click', () => {
-            state.filter = chip.dataset.filter;
-            document.querySelectorAll('.filter-chip').forEach((c) =>
-                c.setAttribute('aria-pressed', String(c === chip)));
-            renderTasks();
-        });
-    });
-
     $('#form-quick-add').addEventListener('submit', async (e) => {
         e.preventDefault();
         const input = $('#in-quick-add');
         const title = input.value.trim();
-        if (!title || !state.activeProfileId) return;
+        if (!title) { input.focus(); return; }
+        if (!state.activeProfileId) return;
         const btn = $('#btn-quick-add');
         btn.disabled = true;
         const ok = await quickAddTask(title);
         btn.disabled = false;
-        if (ok) input.value = '';
+        if (ok) { input.value = ''; $('#modal-add').close(); }
     });
 
     const modal = $('#modal-task');
@@ -1937,9 +2401,10 @@ function demoData(profileId) {
         id, profile_id: profileId, name, color, start_hour: start, end_hour: end, sort_order: sort,
     });
     const periods = [
-        tp('tp-1', 'Morning', '#F2A659', 7, 9, 0),
-        tp('tp-2', 'After school', '#73BFF2', 14, 17, 1),
-        tp('tp-3', 'Evening', '#8B5CF6', 19, 21, 2),
+        // The app's defaults (TimePeriod.createDefaultPeriods).
+        { ...tp('tp-1', 'Morning', '#FFCC00', 6, 12, 0), icon: 'sunrise.fill' },
+        { ...tp('tp-2', 'Afternoon', '#34C759', 12, 18, 1), icon: 'sun.max.fill' },
+        { ...tp('tp-3', 'Evening', '#007AFF', 18, 24, 2), icon: 'moon.stars.fill' },
     ];
     const everyDay = [1, 2, 3, 4, 5, 6, 7];
 
@@ -1967,11 +2432,13 @@ function demoData(profileId) {
     const tasks = [
         // Nearly perfect: the habit that stuck.
         { id: 't-1', profile_id: profileId, title: 'Brush teeth', icon: '🪥', points: 10, time_period_id: 'tp-1', recurrence_days: everyDay, sort_order: 0, completion_history: history(8, (n) => n % 11 !== 5) },
-        // Was patchy, has taken hold in the last three weeks.
-        { id: 't-2', profile_id: profileId, title: 'Make the bed', icon: '🛏️', points: 5, time_period_id: 'tp-1', recurrence_days: everyDay, sort_order: 1, completion_history: history(8, (n) => (n <= 21 ? n % 2 === 0 : n % 4 === 0)) },
+        { id: 't-7', profile_id: profileId, title: 'Get dressed', icon: '👕', points: 5, time_period_id: 'tp-1', recurrence_days: everyDay, sort_order: 1, completion_history: history(8, (n) => n % 6 !== 3) },
+        // Was patchy, has taken hold in the last three weeks — not yet today.
+        { id: 't-2', profile_id: profileId, title: 'Make the bed', icon: '🛏️', points: 5, time_period_id: 'tp-1', recurrence_days: everyDay, sort_order: 2, completion_history: history(8, (n) => n !== 0 && (n <= 21 ? n % 2 === 0 : n % 4 === 0)) },
+        { id: 't-8', profile_id: profileId, title: 'Eat breakfast', icon: '🥣', points: 5, time_period_id: 'tp-1', recurrence_days: everyDay, sort_order: 3, completion_history: history(8, (n) => n !== 0 && n % 5 !== 2) },
         // Weekdays only, and the one that slips.
         { id: 't-3', profile_id: profileId, title: 'Homework', icon: '📚', points: 20, time_period_id: 'tp-2', recurrence_days: [2, 3, 4, 5, 6], sort_order: 2, completion_history: history(16, (n, w) => !isWeekend(w) && (n <= 14 ? n % 3 !== 0 : n % 2 === 0)) },
-        { id: 't-4', profile_id: profileId, title: 'Read a book', icon: '📖', points: 15, time_period_id: 'tp-3', recurrence_days: everyDay, sort_order: 3, completion_history: history(20, (n) => n % 3 !== 1) },
+        { id: 't-4', profile_id: profileId, title: 'Read a book', icon: '📖', points: 15, time_period_id: 'tp-3', recurrence_days: everyDay, sort_order: 3, completion_history: history(20, (n) => n !== 0 && n % 3 !== 1) },
         // Easy at the weekend, forgotten mid-week.
         { id: 't-5', profile_id: profileId, title: 'Feed the cat', icon: '🐱', points: 10, time_period_id: null, recurrence_days: everyDay, sort_order: 4, completion_history: history(17, (n, w) => isWeekend(w) || n % 4 !== 2) },
         { id: 't-6', profile_id: profileId, title: 'Pack for football practice', icon: '⚽', points: 10, time_period_id: null, recurrence_days: null, due_date: daysAgo(-2), sort_order: 5, completion_history: [] },
@@ -1985,6 +2452,8 @@ function demoData(profileId) {
         { id: 'r-1', profile_id: profileId, title: 'Movie night', icon: '🍿', cost: 100, sort_order: 0 },
         { id: 'r-2', profile_id: profileId, title: 'Ice-cream trip', icon: '🍦', cost: 60, sort_order: 1 },
         { id: 'r-3', profile_id: profileId, title: '30 min extra screen time', icon: '🎮', cost: 40, sort_order: 2 },
+        // Something to save towards, so the balance card has a next goal.
+        { id: 'r-4', profile_id: profileId, title: 'Day at the zoo', icon: '🦁', cost: 2500, sort_order: 3 },
     ];
     /* Enough spending to keep the balance in a range a family would
        recognise — eight weeks of earning with one redemption would show
@@ -2009,6 +2478,7 @@ function demoData(profileId) {
 async function enterDemo() {
     showView('view-app');
     $('#user-email').textContent = 'Sample data';
+    $('#user-email-settings').textContent = 'Sample data — nothing is saved.';
     wireManagement();
     state.profiles = [
         { id: 'demo-1', name: 'Anna', avatar_path: null },

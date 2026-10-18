@@ -9,13 +9,12 @@
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" href="../152x152bb-80.png">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
-
+    <!-- No web fonts: the app is set in SF Pro, so the dashboard uses the
+         system stack and matches it exactly on Apple devices. -->
     <link rel="stylesheet" href="dashboard.css">
+    <!-- The app's visual language (tab bar, period tiles, task cards,
+         balance card). Last layer before the theme tokens. -->
+    <link rel="stylesheet" href="app.css">
     <!-- Generated from the app's Theme.swift. Loaded after dashboard.css
          so a theme block can override the base tokens. -->
     <link rel="stylesheet" href="themes.css">
@@ -133,31 +132,20 @@
     </section>
 
     <!-- ══════════ Dashboard ══════════ -->
+    <!-- Same five destinations as the app's tab bar: Tasks, Calendar,
+         Rewards, Analytics, Settings. Wide windows get them in a sidebar
+         next to the profile list; narrow windows get the app's floating
+         pill tab bar, and the avatar opens the profile drawer. -->
     <div id="view-app" hidden>
-        <!-- Sidebar shell. The old top-tab layout was a phone screen
-             stretched wide: a 1200px window spent most of its width on
-             margins while navigation sat in a row of tabs you had to
-             re-read every time. A fixed rail puts the whole product on
-             screen at once and gives the content the width back. -->
         <div class="app">
-            <!-- Narrow-window trigger. The rail becomes a drawer below
-                 the breakpoint rather than collapsing to icons, because
-                 four destinations with real names beat four glyphs. -->
-            <button class="rail-toggle" id="btn-rail" type="button"
-                    aria-label="Menu" aria-expanded="false" aria-controls="rail">☰</button>
-
-            <aside class="rail" id="rail">
+            <aside class="rail" id="rail" aria-label="Profiles and navigation">
                 <a class="rail__brand" href="../lang/en.html">
                     <img src="../152x152bb-80.png" alt="">
                     <span>Vigdís</span>
                 </a>
 
-                <!-- Profiles. Everything you can do TO a profile now hangs
-                     off the profile itself — switch, share, edit, add — so
-                     nobody has to know that "who can see Ólöf's chores"
-                     was filed under Setup. -->
                 <div class="rail__section">
-                    <p class="rail__label" id="rail-profile-label">Profile</p>
+                    <p class="rail__label" id="rail-profile-label">Profiles</p>
                     <div class="profiles" id="profile-switcher" role="group"
                          aria-labelledby="rail-profile-label"></div>
                     <button class="rail__add" id="btn-add-profile" type="button">
@@ -170,31 +158,17 @@
                     <p class="rail__note" id="profile-limit-note"></p>
                 </div>
 
-                <nav class="rail__nav" role="tablist" aria-label="Dashboard views">
-                    <button class="viewtab" type="button" role="tab" data-view="today" aria-selected="true">
-                        <svg class="viewtab__icon" viewBox="0 0 20 20" aria-hidden="true" fill="none"
-                             stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M3.5 5.6A1.6 1.6 0 0 1 5.1 4h9.8a1.6 1.6 0 0 1 1.6 1.6v8.8a1.6 1.6 0 0 1-1.6 1.6H5.1a1.6 1.6 0 0 1-1.6-1.6z"/>
-                            <path d="M6.6 8.2h6.8M6.6 11.4h4.4"/>
-                        </svg>Today</button>
-                    <button class="viewtab" type="button" role="tab" data-view="calendar" aria-selected="false">
-                        <svg class="viewtab__icon" viewBox="0 0 20 20" aria-hidden="true" fill="none"
-                             stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3.3" y="4.6" width="13.4" height="11.4" rx="1.7"/>
-                            <path d="M3.3 8.3h13.4M7 3.3v2.6M13 3.3v2.6"/>
-                        </svg>Calendar</button>
-                    <button class="viewtab" type="button" role="tab" data-view="stats" aria-selected="false">
-                        <svg class="viewtab__icon" viewBox="0 0 20 20" aria-hidden="true" fill="none"
-                             stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4 16V9.4M8.7 16V4.6M13.4 16v-4.4"/>
-                            <path d="M2.6 16h14.8"/>
-                        </svg>Statistics</button>
-                    <button class="viewtab" type="button" role="tab" data-view="manage" aria-selected="false">
-                        <svg class="viewtab__icon" viewBox="0 0 20 20" aria-hidden="true" fill="none"
-                             stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="10" cy="10" r="2.5"/>
-                            <path d="M10 2.6v2M10 15.4v2M17.4 10h-2M4.6 10h-2M15.2 4.8l-1.4 1.4M6.2 13.8l-1.4 1.4M15.2 15.2l-1.4-1.4M6.2 6.2 4.8 4.8"/>
-                        </svg>Setup</button>
+                <nav class="rail__nav" aria-label="Dashboard views">
+                    <button class="viewtab" type="button" data-view="tasks" aria-current="page">
+                        <svg class="viewtab__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-tasks"/></svg>Tasks</button>
+                    <button class="viewtab" type="button" data-view="calendar">
+                        <svg class="viewtab__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-calendar"/></svg>Calendar</button>
+                    <button class="viewtab" type="button" data-view="rewards">
+                        <svg class="viewtab__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-rewards"/></svg>Rewards</button>
+                    <button class="viewtab" type="button" data-view="analytics">
+                        <svg class="viewtab__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-analytics"/></svg>Analytics</button>
+                    <button class="viewtab" type="button" data-view="settings">
+                        <svg class="viewtab__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-settings"/></svg>Settings</button>
                 </nav>
 
                 <div class="rail__foot">
@@ -210,151 +184,129 @@
                 </div>
             </aside>
 
-        <main class="shell">
-            <header class="page-head">
-                <div class="greeting">
-                    <h1 id="greeting-line">Good day</h1>
-                </div>
-                <p class="greeting__date" id="greeting-date"></p>
-            </header>
+            <main class="shell">
+                <!-- Rendered per view by renderHead(): the date / streak /
+                     points pills and the child's name on Tasks, an eyebrow
+                     and a large title everywhere else. -->
+                <header class="apphead" id="apphead"></header>
 
-            <div class="stats" id="stats"></div>
-
-            <div class="viewpane" data-pane="today">
-            <div class="columns">
-                    <section class="panel" aria-labelledby="tasks-title">
-                    <div class="panel__head">
-                        <h2 class="panel__title" id="tasks-title">Tasks</h2>
-                        <div class="filter-chips" role="group" aria-label="Filter tasks">
-                            <button class="filter-chip" data-filter="today" aria-pressed="true" type="button">Today</button>
-                            <button class="filter-chip" data-filter="all" aria-pressed="false" type="button">All</button>
-                        </div>
-                        <button class="btn-ghost" id="btn-do-mode" type="button">Do mode</button>
-                    </div>
-
-                    <form class="quick-add" id="form-quick-add">
-                        <label class="visually-hidden" for="in-quick-add">Add a task</label>
-                        <input id="in-quick-add" type="text" placeholder="Add a task…" maxlength="120">
-                            <select id="quick-add-period" aria-label="Time period"></select>
-                        <button type="submit" id="btn-quick-add">Add</button>
-                    </form>
-
+                <!-- ── Tasks ── -->
+                <div class="viewpane" data-pane="tasks">
+                    <div class="periods" id="period-tiles" role="group" aria-label="Time of day"></div>
+                    <div class="segments" id="task-progress"></div>
                     <div id="task-groups" aria-live="polite"></div>
-                </section>
 
-                <div>
-                    <section class="panel" aria-labelledby="rewards-title">
-                        <div class="panel__head">
-                            <h2 class="panel__title" id="rewards-title">Rewards</h2>
-                        </div>
-                        <div id="rewards-list"></div>
-                    </section>
-
-                    <section class="panel" aria-labelledby="activity-title">
-                        <div class="panel__head">
-                            <h2 class="panel__title" id="activity-title">Recent activity</h2>
-                            <button class="btn-ghost" id="btn-export" type="button">Export CSV</button>
-                        </div>
-                        <div id="activity-list"></div>
-                    </section>
+                    <div class="fab-bar">
+                        <button class="fab fab--play" id="btn-do-mode" type="button">
+                            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M7 4.8v14.4a1 1 0 0 0 1.5.86l12-7.2a1 1 0 0 0 0-1.72l-12-7.2A1 1 0 0 0 7 4.8z" fill="currentColor"/></svg>
+                            Play routine
+                        </button>
+                        <button class="fab fab--add" id="btn-open-add" type="button" aria-label="Add a task">
+                            <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            </div>
-
-            <div class="viewpane" data-pane="calendar" hidden>
-                    <section class="panel" aria-labelledby="calendar-title">
-                        <div class="panel__head">
-                            <h2 class="panel__title" id="calendar-title">Calendar</h2>
+                <!-- ── Calendar ── -->
+                <div class="viewpane" data-pane="calendar" hidden>
+                    <section class="card" aria-labelledby="calendar-title">
+                        <div class="card__head">
+                            <h2 class="eyebrow" id="calendar-title">Month</h2>
                             <div class="cal__nav">
-                                <button class="dayline__nav" type="button" id="cal-prev" aria-label="Previous month">‹</button>
+                                <button class="icon-btn icon-btn--sm" type="button" id="cal-prev" aria-label="Previous month">‹</button>
                                 <span id="cal-month"></span>
-                                <button class="dayline__nav" type="button" id="cal-next" aria-label="Next month">›</button>
+                                <button class="icon-btn icon-btn--sm" type="button" id="cal-next" aria-label="Next month">›</button>
                             </div>
                         </div>
                         <div id="calendar-grid"></div>
                     </section>
                 </div>
 
-                <!-- Statistics is a set of answers, not one panel of
-                     charts: how much, how consistently, what changed,
-                     and what stands out. Each gets its own card, and the
-                     per-task ranking stays at the bottom for the review
-                     case the CSV export also serves. -->
-                <div class="viewpane" data-pane="stats" hidden>
-                    <div class="setup-intro report-head">
-                        <div>
-                            <h2 id="report-title">How it is going</h2>
-                            <p>Everything below is for the profile you have selected.</p>
+                <!-- ── Rewards ── -->
+                <div class="viewpane" data-pane="rewards" hidden>
+                    <div id="reward-balance"></div>
+                    <div class="reward-grid" id="rewards-list"></div>
+
+                    <section class="card" id="reward-history" aria-labelledby="activity-title">
+                        <div class="card__head">
+                            <h2 class="eyebrow" id="activity-title">History</h2>
                         </div>
-                        <div class="filter-chips" role="group" aria-label="Range">
-                            <button class="filter-chip" type="button" data-range="7" aria-pressed="false">7 days</button>
-                            <button class="filter-chip" type="button" data-range="30" aria-pressed="true">30 days</button>
-                            <button class="filter-chip" type="button" data-range="90" aria-pressed="false">90 days</button>
+                        <div id="activity-list"></div>
+                    </section>
+                </div>
+
+                <!-- ── Analytics ── -->
+                <div class="viewpane" data-pane="analytics" hidden>
+                    <div class="an-grid" id="analytics-top"></div>
+
+                    <!-- The longer review below the app-style cards: the
+                         range-based numbers, trend and per-task ranking
+                         that a review or the CSV export needs. -->
+                    <div class="report-head">
+                        <div>
+                            <p class="eyebrow">In detail</p>
+                            <h2 class="section-title" id="report-title">How it is going</h2>
+                        </div>
+                        <div class="seg-control" role="group" aria-label="Range">
+                            <button class="seg-control__btn" type="button" data-range="7" aria-pressed="false">7 days</button>
+                            <button class="seg-control__btn" type="button" data-range="30" aria-pressed="true">30 days</button>
+                            <button class="seg-control__btn" type="button" data-range="90" aria-pressed="false">90 days</button>
                         </div>
                     </div>
                     <div id="report-body"></div>
                 </div>
 
-                <!-- Setup: the half of the app a keyboard is better at.
-                     Deliberately its own view rather than controls bolted
-                     onto Today — a parent editing the shape of the week is
-                     doing something different from ticking today off, and
-                     mixing the two puts destructive buttons next to the
-                     ones a child might use. -->
-                <div class="viewpane" data-pane="manage" hidden>
-                    <div class="setup-intro">
-                        <h2>Set up the day</h2>
-                        <p>The parts a keyboard is better at than a phone. Changes appear in the app straight away.</p>
-                    </div>
-
-                    <!-- Profiles used to have a panel here. They live in the
-                         rail now: the thing you switch to is the thing you
-                         share, rename and remove, and having both meant two
-                         places to learn and two lists to keep in step. -->
+                <!-- ── Settings ── -->
+                <div class="viewpane" data-pane="settings" hidden>
+                    <p class="settings-note">Changes appear in the app straight away.</p>
 
                     <div class="setup-grid">
-                        <section class="panel" aria-labelledby="periods-title">
-                            <div class="panel__head">
-                                <h2 class="panel__title" id="periods-title">Time periods</h2>
+                        <section class="card" aria-labelledby="profiles-title">
+                            <div class="card__head">
+                                <h2 class="eyebrow" id="profiles-title">Profiles</h2>
+                            </div>
+                            <div id="profile-manage-list"></div>
+                        </section>
+
+                        <section class="card" aria-labelledby="periods-title">
+                            <div class="card__head">
+                                <h2 class="eyebrow" id="periods-title">Time periods</h2>
                                 <button class="btn-ghost" id="btn-add-period" type="button">Add period</button>
                             </div>
-                            <p class="rnote">How the day is divided. Every task belongs to one.</p>
                             <div id="period-list"></div>
-                        </section>
-
-                        <section class="panel" aria-labelledby="manage-rewards-title">
-                            <div class="panel__head">
-                                <h2 class="panel__title" id="manage-rewards-title">Rewards</h2>
-                                <button class="btn-ghost" id="btn-add-reward" type="button">Add reward</button>
-                            </div>
-                            <p class="rnote">What points can be spent on.</p>
-                            <div id="manage-reward-list"></div>
                         </section>
                     </div>
 
                     <div class="setup-grid">
-                        <section class="panel" aria-labelledby="achievements-title">
-                            <div class="panel__head">
-                                <h2 class="panel__title" id="achievements-title">Achievements</h2>
+                        <section class="card" aria-labelledby="manage-rewards-title">
+                            <div class="card__head">
+                                <h2 class="eyebrow" id="manage-rewards-title">Rewards</h2>
+                                <button class="btn-ghost" id="btn-add-reward" type="button">Add reward</button>
+                            </div>
+                            <div id="manage-reward-list"></div>
+                        </section>
+
+                        <section class="card" aria-labelledby="achievements-title">
+                            <div class="card__head">
+                                <h2 class="eyebrow" id="achievements-title">Achievements</h2>
                                 <button class="btn-ghost" id="btn-award-bonus" type="button">Award points</button>
                             </div>
                             <div id="achievement-list"></div>
                         </section>
+                    </div>
 
-                        <section class="panel" aria-labelledby="timers-title">
-                            <div class="panel__head">
-                                <h2 class="panel__title" id="timers-title">Focus timer sessions</h2>
+                    <div class="setup-grid">
+                        <section class="card" aria-labelledby="timers-title">
+                            <div class="card__head">
+                                <h2 class="eyebrow" id="timers-title">Focus timer sessions</h2>
                             </div>
                             <p class="rnote">The last 20 timed runs, newest first.</p>
                             <div id="timer-list"></div>
                         </section>
-                    </div>
 
-                    <div class="setup-grid setup-grid--single">
-                        <section class="panel" aria-labelledby="referral-title">
-                            <div class="panel__head">
-                                <h2 class="panel__title" id="referral-title">Invite another family</h2>
+                        <section class="card" aria-labelledby="referral-title">
+                            <div class="card__head">
+                                <h2 class="eyebrow" id="referral-title">Invite another family</h2>
                             </div>
                             <p class="rnote">Your code: <strong id="referral-code">…</strong></p>
                             <div class="quick-add">
@@ -363,27 +315,170 @@
                             </div>
                         </section>
                     </div>
-                </div>
-        </main>
 
+                    <section class="card card--account" aria-label="Account">
+                        <span class="rnote" id="user-email-settings"></span>
+                        <button class="btn-ghost" type="button" data-signout>Sign out</button>
+                    </section>
+                </div>
+
+                <footer class="shell-foot">
+                    <span>© 2026 Vigdís</span>
+                    <a href="../privacy.html">Privacy</a>
+                    <a href="../help.html">Help</a>
+                </footer>
+            </main>
         </div><!-- /.app -->
 
-        <footer class="shell-foot">
-            <span>© 2026 Vigdís</span>
-            <a href="../privacy.html">Privacy</a>
-            <a href="../help.html">Help</a>
-        </footer>
+        <!-- The app's floating tab bar, narrow windows only. Same buttons,
+             same data-view, so one handler drives both navigations. -->
+        <nav class="tabbar" aria-label="Dashboard views">
+            <button class="viewtab" type="button" data-view="tasks" aria-current="page">
+                <svg class="viewtab__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-tasks"/></svg><span>Tasks</span></button>
+            <button class="viewtab" type="button" data-view="calendar">
+                <svg class="viewtab__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-calendar"/></svg><span>Calendar</span></button>
+            <button class="viewtab" type="button" data-view="rewards">
+                <svg class="viewtab__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-rewards"/></svg><span>Rewards</span></button>
+            <button class="viewtab" type="button" data-view="analytics">
+                <svg class="viewtab__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-analytics"/></svg><span>Analytics</span></button>
+            <button class="viewtab" type="button" data-view="settings">
+                <svg class="viewtab__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-settings"/></svg><span>Settings</span></button>
+        </nav>
+        <div class="rail-scrim" id="rail-scrim" aria-hidden="true"></div>
     </div>
 
-    <!-- ══════════ Edit task ══════════ -->
-    <dialog class="modal modal--do" id="modal-do">
-    <div id="do-body"></div>
-    <div class="modal__actions">
-        <button class="btn-ghost" id="btn-do-close" type="button">Close</button>
-        <button class="btn-ghost" id="btn-do-skip" type="button">Skip</button>
-        <button class="btn-primary" id="btn-do-done" type="button">Done</button>
-    </div>
-</dialog>
+    <!-- SF-Symbol-style glyphs, drawn once and referenced with <use>. -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <defs>
+            <symbol id="i-tasks" viewBox="0 0 24 24">
+                <g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3.4 6.6l2 2 3.6-4.2"/><path d="M12.5 6.8h8.2"/>
+                    <circle cx="6" cy="16.6" r="2.6"/><path d="M12.5 16.6h8.2"/>
+                </g>
+            </symbol>
+            <symbol id="i-calendar" viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="17" rx="4" fill="none" stroke="currentColor" stroke-width="2.1"/>
+                <path d="M3 9.2h18" stroke="currentColor" stroke-width="2.1"/>
+                <g fill="currentColor">
+                    <rect x="6.4" y="11.8" width="2.4" height="2.2" rx=".6"/><rect x="10.8" y="11.8" width="2.4" height="2.2" rx=".6"/><rect x="15.2" y="11.8" width="2.4" height="2.2" rx=".6"/>
+                    <rect x="6.4" y="16" width="2.4" height="2.2" rx=".6"/><rect x="10.8" y="16" width="2.4" height="2.2" rx=".6"/>
+                </g>
+            </symbol>
+            <symbol id="i-rewards" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" fill="currentColor"/>
+                <path style="fill:var(--knock,#fff)" d="M12 6.3L13.4 10L17.4 10.2L14.3 12.7L15.3 16.6L12 14.4L8.7 16.6L9.7 12.7L6.6 10.2L10.6 10Z" stroke-linejoin="round" stroke-width="1"/>
+            </symbol>
+            <symbol id="i-analytics" viewBox="0 0 24 24">
+                <g fill="currentColor">
+                    <rect x="3" y="11.5" width="5" height="9.5" rx="1.6"/>
+                    <rect x="9.5" y="6.5" width="5" height="14.5" rx="1.6"/>
+                    <rect x="16" y="3" width="5" height="18" rx="1.6"/>
+                </g>
+            </symbol>
+            <symbol id="i-settings" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="8.2" fill="none" stroke="currentColor" stroke-width="3.4" stroke-dasharray="3.3 3.14"/>
+                <circle cx="12" cy="12" r="7" fill="currentColor"/>
+                <circle style="fill:var(--knock,#fff)" cx="12" cy="12" r="2.7"/>
+            </symbol>
+            <symbol id="i-star" viewBox="0 0 24 24">
+                <path d="M12 2.5L14.53 9.02L21.51 9.41L16.09 13.83L17.88 20.59L12 16.8L6.12 20.59L7.91 13.83L2.49 9.41L9.47 9.02Z"
+                      fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            </symbol>
+            <symbol id="i-flame" viewBox="0 0 24 24">
+                <path d="M12.2 2c.5 3 2.6 4.8 4.1 6.7 1.3 1.6 2.2 3.3 2.2 5.3a6.5 6.5 0 0 1-13 0c0-2.4 1.2-4.2 2.6-5.5.1 1.8.9 3 2 3.6-.3-3.5.6-7.2 2.1-10.1z" fill="currentColor"/>
+                <path style="fill:var(--knock,#fff)" d="M12 12.4c.9 1.3 2.4 2.3 2.4 4a2.4 2.4 0 0 1-4.8 0c0-1.5 1.2-2.6 2.4-4z" opacity=".55"/>
+            </symbol>
+            <symbol id="i-check" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M7.4 12.4l3 3 6.2-6.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+            <symbol id="i-history" viewBox="0 0 24 24">
+                <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4.2 12a7.8 7.8 0 1 0 2.3-5.5L4 9"/><path d="M4 4.5V9h4.5"/><path d="M12 8v4.4l3 1.8"/>
+                </g>
+            </symbol>
+            <symbol id="i-plus" viewBox="0 0 24 24">
+                <path d="M12 5.5v13M5.5 12h13" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+            </symbol>
+            <symbol id="i-chev-down" viewBox="0 0 24 24">
+                <path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+            <symbol id="i-chev-right" viewBox="0 0 24 24">
+                <path d="M10 7l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+            <!-- Time-of-day glyphs (sunrise.fill / sun.max.fill / sunset.fill / moon.stars.fill) -->
+            <symbol id="i-sunrise" viewBox="0 0 24 24">
+                <path d="M6.6 17.4a5.4 5.4 0 0 1 10.8 0z" fill="currentColor"/>
+                <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2.8 20.6h18.4"/><path d="M12 2.6v6"/><path d="M9.2 5.2 12 2.4l2.8 2.8"/>
+                    <path d="M3.6 13.6l1.8 1M20.4 13.6l-1.8 1M6.2 9.6l1.2 1.4M17.8 9.6l-1.2 1.4"/>
+                </g>
+            </symbol>
+            <symbol id="i-sunset" viewBox="0 0 24 24">
+                <path d="M6.6 17.4a5.4 5.4 0 0 1 10.8 0z" fill="currentColor"/>
+                <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2.8 20.6h18.4"/><path d="M12 2.4v6"/><path d="M9.2 5.8 12 8.6l2.8-2.8"/>
+                    <path d="M3.6 13.6l1.8 1M20.4 13.6l-1.8 1"/>
+                </g>
+            </symbol>
+            <symbol id="i-sun" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="4.6" fill="currentColor"/>
+                <g stroke="currentColor" stroke-width="2.1" stroke-linecap="round">
+                    <path d="M12 1.8v2.4M12 19.8v2.4M1.8 12h2.4M19.8 12h2.4M4.8 4.8l1.7 1.7M17.5 17.5l1.7 1.7M4.8 19.2l1.7-1.7M17.5 6.5l1.7-1.7"/>
+                </g>
+            </symbol>
+            <symbol id="i-moon" viewBox="0 0 24 24">
+                <path d="M10.6 3.2a8.6 8.6 0 1 0 10.2 11.4A7.4 7.4 0 0 1 10.6 3.2z" fill="currentColor"/>
+                <path d="M17.6 2.2l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7zM21 8.4l.45 1.15 1.15.45-1.15.45L21 11.6l-.45-1.15-1.15-.45 1.15-.45z" fill="currentColor"/>
+            </symbol>
+            <symbol id="i-clock" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9.6" fill="currentColor"/>
+                <path style="stroke:var(--knock,#fff)" d="M12 6.6V12l3.6 2.2" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+        </defs>
+    </svg>
+
+    <!-- ══════════ Do mode ══════════ -->
+    <dialog class="modal modal--do" id="modal-do" aria-label="Play routine">
+        <button class="do-close" id="btn-do-close" type="button" aria-label="Close">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+        </button>
+        <div id="do-body"></div>
+        <div class="do-actions">
+            <button class="do-main" id="btn-do-done" type="button">Done</button>
+            <button class="do-skip" id="btn-do-skip" type="button">Skip</button>
+        </div>
+    </dialog>
+
+    <!-- ══════════ Add task ══════════ -->
+    <dialog class="modal" id="modal-add">
+        <h2 class="modal__title">New task</h2>
+        <form id="form-quick-add" method="dialog" novalidate>
+            <div class="field">
+                <label for="in-quick-add">Title</label>
+                <input id="in-quick-add" type="text" maxlength="120" placeholder="Brush teeth" required>
+            </div>
+            <div class="modal__row">
+                <div class="field">
+                    <label for="quick-add-icon">Icon (emoji)</label>
+                    <input id="quick-add-icon" type="text" maxlength="4" placeholder="📝">
+                </div>
+                <div class="field">
+                    <label for="quick-add-points">Points</label>
+                    <input id="quick-add-points" type="number" min="0" max="10000" inputmode="numeric" value="5">
+                </div>
+            </div>
+            <div class="field">
+                <label for="quick-add-period">Time of day</label>
+                <select id="quick-add-period"></select>
+            </div>
+            <p class="field__hint">Repeats, steps and a photo can be added after — tap the task to edit it.</p>
+            <div class="modal__actions">
+                <button class="btn-ghost" id="btn-add-cancel" type="button">Cancel</button>
+                <button class="btn-primary" type="submit" id="btn-quick-add">Add task</button>
+            </div>
+        </form>
+    </dialog>
 
 <dialog class="modal" id="modal-share">
     <h2 class="modal__title" id="modal-share-title">Who has access</h2>

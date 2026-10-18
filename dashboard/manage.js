@@ -25,7 +25,7 @@
 /* Filled in by initManagement. Module-level rather than threaded
    through every function — this is a singleton page, and the
    alternative is an extra parameter on forty call sites. */
-let sb, state, $, esc, toast, refresh, toggleTask;
+let sb, state, $, esc, toast, refresh, toggleTask, getDoQueue;
 
 /* enterApp() runs on every auth transition, not just the first — the
    password-recovery form calls it directly, and onAuthStateChange can
@@ -36,7 +36,7 @@ let sb, state, $, esc, toast, refresh, toggleTask;
 let initialised = false;
 
 export function initManagement(ctx) {
-    ({ sb, state, $, esc, toast, refresh, toggleTask } = ctx);
+    ({ sb, state, $, esc, toast, refresh, toggleTask, getDoQueue } = ctx);
     if (initialised) return;
     initialised = true;
     bindTimePeriodUI();
@@ -1407,6 +1407,9 @@ async function copyReferralCode() {
 
 let doQueue = [];
 let doIndex = 0;
+/* Ticked off during this run, so the progress bar can tell done from
+   skipped. */
+let doDone = new Set();
 
 function bindDoModeUI() {
     $('#btn-do-mode')?.addEventListener('click', startDoMode);
@@ -1416,7 +1419,8 @@ function bindDoModeUI() {
 }
 
 /** Today's still-to-do tasks, in the order the child would meet them:
- *  by time period, then by the list's own order. */
+ *  by time period, then by the list's own order. Used when the page
+ *  does not hand over its own queue. */
 function buildDoQueue() {
     const todayIso = new Date().toISOString().slice(0, 10);
     const periodOrder = new Map(
@@ -1433,15 +1437,30 @@ function buildDoQueue() {
 }
 
 function startDoMode() {
-    doQueue = buildDoQueue();
+    /* The page passes the selected time of day's unfinished tasks — the
+       app's Play routine plays one period, not the whole day. */
+    doQueue = typeof getDoQueue === 'function' ? getDoQueue() : buildDoQueue();
     doIndex = 0;
+    doDone = new Set();
     renderDoMode();
     $('#modal-do').showModal();
 }
 
+/* Symbol names (e.g. "star.fill") are SF Symbols the web cannot draw. */
+function doIcon(task) {
+    const icon = (task?.icon || '').trim();
+    if (!icon) return '📝';
+    return /^[a-z0-9.]+$/i.test(icon) ? '⭐' : esc(icon);
+}
+
 function renderDoMode() {
     const body = $('#do-body');
+    const dialog = $('#modal-do');
     if (!body) return;
+
+    const first = doQueue[0];
+    const period = first && state.data.timePeriods.find((tp) => tp.id === first.time_period_id);
+    dialog?.style.setProperty('--period', safeHex(period?.color) || '#F0918F');
 
     if (doIndex >= doQueue.length) {
         /* Two different endings, because they mean different things: a
@@ -1450,11 +1469,13 @@ function renderDoMode() {
         const finished = doQueue.length > 0;
         body.innerHTML = `
             <div class="do-done">
-                <img src="../assets/mascot/loa-greeting.svg" alt="" width="96">
-                <h3>${finished ? 'That’s everything for today.' : 'Nothing left to do today.'}</h3>
+                <img src="../assets/mascot/loa-greeting.svg" alt="" width="110">
+                <h3 class="do-title">${finished ? 'That’s the routine done!' : 'Nothing left here.'}</h3>
                 <p class="rnote">${finished
-                    ? 'Anything skipped is still on the list.'
-                    : 'Every task for today is already ticked off.'}</p>
+                    ? (doDone.size === doQueue.length
+                        ? `${doDone.size} of ${doQueue.length} done.`
+                        : `${doDone.size} of ${doQueue.length} done. Anything skipped is still on the list.`)
+                    : 'Every task in this part of the day is already ticked off.'}</p>
             </div>`;
         $('#btn-do-done').hidden = true;
         $('#btn-do-skip').hidden = true;
@@ -1462,19 +1483,29 @@ function renderDoMode() {
     }
 
     const task = doQueue[doIndex];
-    const period = state.data.timePeriods.find((tp) => tp.id === task.time_period_id);
+    const next = doQueue[doIndex + 1];
     const steps = state.data.subtasks
         .filter((st) => st.task_id === task.id && !st.deleted_at)
         .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
 
     body.innerHTML = `
-        <p class="do-progress">${doIndex + 1} of ${doQueue.length}${period ? ` · ${esc(period.name)}` : ''}</p>
-        <div class="do-icon" aria-hidden="true">${esc(task.icon || '📝')}</div>
+        <div class="do-head">
+            <p class="do-step">Step ${doIndex + 1} of ${doQueue.length}</p>
+            <p class="do-sub">${doDone.size} done${period ? ` · ${esc(period.name)}` : ''}</p>
+        </div>
+        <div class="do-segs" aria-hidden="true">${doQueue.map((t, i) => `<span class="${
+            i === doIndex ? 'is-current' : doDone.has(t.id) ? 'is-done' : ''}"></span>`).join('')}</div>
+        <div class="do-ring" aria-hidden="true"><div class="do-ring__inner">${doIcon(task)}</div></div>
         <h3 class="do-title">${esc(task.title)}</h3>
-        ${task.points ? `<p class="do-points">${task.points} points</p>` : ''}
+        ${task.points ? `<p class="do-points"><svg width="16" height="16" aria-hidden="true"><use href="#i-star"/></svg>${task.points} points</p>` : ''}
         ${steps.length ? `<ul class="do-steps">${steps.map((st) =>
             `<li class="${st.is_completed ? 'is-done' : ''}">${esc(st.title)}</li>`).join('')}</ul>` : ''}
-        ${task.notes ? `<p class="rnote">${esc(task.notes)}</p>` : ''}`;
+        ${task.notes ? `<p class="rnote do-notes">${esc(task.notes)}</p>` : ''}
+        ${next ? `
+        <div class="do-next">
+            <span class="do-next__icon" aria-hidden="true">${doIcon(next)}</span>
+            <span><span class="do-next__label">Next</span><span class="do-next__title">${esc(next.title)}</span></span>
+        </div>` : ''}`;
 
     $('#btn-do-done').hidden = false;
     $('#btn-do-skip').hidden = false;
@@ -1487,6 +1518,7 @@ async function completeCurrent() {
        same server function and the same celebration — not a second
        implementation that can drift from it. */
     if (typeof toggleTask === 'function') await toggleTask(task.id);
+    doDone.add(task.id);
     doIndex += 1;
     renderDoMode();
 }
