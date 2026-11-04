@@ -180,17 +180,36 @@ img{display:block;max-width:100%;height:auto}
   var props={page:PAGE,src:"meta",ref:ref.slice(0,64),fbclid:q.has("fbclid"),
              utm_campaign:(q.get("utm_campaign")||"").slice(0,64),
              lang:(navigator.language||"").slice(0,8)};
-  function send(name){
+  // 2026-11-04 (v2): only the live site reports (local previews stay out of the
+  // numbers); a view counts once the page is actually on screen, so Meta's
+  // in-app browser preloading can't inflate it; and a store tap is sent BEFORE
+  // the browser leaves for the store, because iOS in-app browsers often drop a
+  // request fired at the same moment as the hand-off to the App Store.
+  var LIVE=/(^|\.)vigdisapp\.is$/.test(location.hostname);
+  props.v=2;
+  function send(name,done){
+    if(!LIVE){if(done)done();return;}
     try{
       fetch(ENDPOINT,{method:"POST",keepalive:true,mode:"cors",
         headers:{"apikey":KEY,"Authorization":"Bearer "+KEY,"Content-Type":"application/json","Prefer":"return=minimal"},
         body:JSON.stringify({device_id:DEVICE,event_name:name,event_props:props,app_version:"web",
-          locale:props.lang,client_timestamp:new Date().toISOString()})}).catch(function(){});
-    }catch(e){}
+          locale:props.lang,client_timestamp:new Date().toISOString()})})
+        .then(function(){if(done)done();},function(){if(done)done();});
+    }catch(e){if(done)done();}
   }
-  send("web_landing_view");
+  var viewed=false;
+  function view(){if(!viewed&&document.visibilityState==="visible"){viewed=true;send("web_landing_view");}}
+  view();
+  if(!viewed)document.addEventListener("visibilitychange",view);
   var cta=document.querySelector(".cta");
-  if(cta){cta.addEventListener("click",function(){send("web_store_click");},{passive:true});}
+  if(cta){cta.addEventListener("click",function(ev){
+    if(ev.metaKey||ev.ctrlKey||ev.shiftKey||ev.button>0){send("web_store_click");return;}
+    ev.preventDefault();
+    var href=cta.href,gone=false;
+    function go(){if(!gone){gone=true;location.href=href;}}
+    send("web_store_click",go);
+    setTimeout(go,350); // never hold the visitor longer than this
+  });}
 })();
 </script>
 </body>
