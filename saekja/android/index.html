@@ -202,14 +202,8 @@ img{display:block;max-width:100%;height:auto}
   view();
   if(!viewed)document.addEventListener("visibilitychange",view);
   var cta=document.querySelector(".cta");
-  if(cta){cta.addEventListener("click",function(ev){
-    if(ev.metaKey||ev.ctrlKey||ev.shiftKey||ev.button>0){send("web_store_click");return;}
-    ev.preventDefault();
-    var href=cta.href,gone=false;
-    function go(){if(!gone){gone=true;location.href=href;}}
-    send("web_store_click",go);
-    setTimeout(go,350); // never hold the visitor longer than this
-  });}
+  // Plain link: let the browser open the store itself (in-app browsers block scripted store hand-offs).
+  if(cta){cta.addEventListener("click",function(){send("web_store_click");},{passive:true});}
 })();
 </script>
 </body>
